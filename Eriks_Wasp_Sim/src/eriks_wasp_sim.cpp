@@ -9,7 +9,7 @@ void reshape(int width, int height) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60.0, aspect_ratio, 1.0, 100.0);
+    gluPerspective(60.0, aspect_ratio, 0.01f, 100.0);
 }
 
 void timer(int value) 

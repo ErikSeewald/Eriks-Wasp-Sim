@@ -1,9 +1,2 @@
 ﻿  eriks_wasp_sim.cpp
-  sim_display.cpp
-C:\Users\Erik\Desktop\Eriks_Wasp_Sim\src\graphics\sim_display.cpp(16,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Erik\Desktop\Eriks_Wasp_Sim\src\graphics\sim_display.cpp(17,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Erik\Desktop\Eriks_Wasp_Sim\src\graphics\sim_display.cpp(18,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Erik\Desktop\Eriks_Wasp_Sim\src\graphics\sim_display.cpp(19,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Erik\Desktop\Eriks_Wasp_Sim\src\graphics\sim_display.cpp(20,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
-  Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe
+  Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe

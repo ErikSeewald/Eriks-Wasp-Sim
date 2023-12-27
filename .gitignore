@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+# Others
+.opendb
+
+# Exceptions
+!/Eriks_Wasp_Sim/dependencies/freeglut/lib/x64/freeglut.lib
+!/Eriks_Wasp_Sim/dependencies/freeglut/bin/x64/freeglut.dll
