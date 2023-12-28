@@ -187,7 +187,9 @@ void SimVisualizer::drawGrid() {
 */
 void SimVisualizer::drawWasp(Wasp wasp)
 {
+    glPushMatrix();
     glColor3f(1.0f, 0.5f, 0.0f);
     glTranslatef(wasp.getPosition().x, wasp.getPosition().y, wasp.getPosition().z);
     glutSolidCube(0.2);
+    glPopMatrix();
 }
