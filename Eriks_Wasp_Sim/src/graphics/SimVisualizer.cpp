@@ -76,11 +76,7 @@ void SimVisualizer::render()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt(camera.position.x, camera.position.y, camera.position.z,  // camera position
-        camera.position.x + camera.direction.x, camera.position.y + camera.direction.y, camera.position.z + camera.direction.z, // Viewing direction
-        0.0, 1.0, 0.0); // Head is up
+    updateGlutCamera();
 
     drawGrid();
 
@@ -89,6 +85,19 @@ void SimVisualizer::render()
     drawWasp(wasp);
 
     glutSwapBuffers();
+}
+
+
+/**
+* Updates the glut 'camera' (gluLookAt) with the camera struct's attributes.
+*/
+void SimVisualizer::updateGlutCamera()
+{
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(camera.position.x, camera.position.y, camera.position.z,  // Camera position
+        camera.position.x + camera.direction.x, camera.position.y + camera.direction.y, camera.position.z + camera.direction.z, // Viewing direction
+        0.0, 1.0, 0.0); // Head is up
 }
 
 
