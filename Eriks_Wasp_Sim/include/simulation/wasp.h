@@ -1,11 +1,10 @@
 /**
- * @file wasp.h
+ * @file Wasp.h
  * @brief This file serves as the header for wasp.cpp.
  */
 
+#pragma once
 #include <DirectXMath.h>
-
-using DirectX::XMFLOAT3;
 
 /**
 * @class Wasp
@@ -14,9 +13,21 @@ using DirectX::XMFLOAT3;
 class Wasp 
 {
 	public:
-		XMFLOAT3 getPosition();
-		void setPosition(XMFLOAT3 position);
+
+		/**
+		* Returns the 3D position vector of this Wasp
+		* 
+		* @return the position as XMFLOAT3
+		*/
+		DirectX::XMFLOAT3 getPosition();
+
+		/**
+		* Sets the 3D position vector of this Wasp to the given XMFLOAT3
+		*
+		* @param position - the XMFLOAT3 to set the Wasp's position to
+		*/
+		void setPosition(DirectX::XMFLOAT3 position);
 
 	private:
-		XMFLOAT3 position;
+		DirectX::XMFLOAT3 position;
 };

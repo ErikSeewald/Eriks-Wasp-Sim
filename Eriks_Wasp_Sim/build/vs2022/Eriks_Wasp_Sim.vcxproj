@@ -114,7 +114,7 @@
     <LibraryPath>..\..\dependencies\freeglut\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -213,13 +213,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h" />
-    <ClInclude Include="..\..\include\graphics\sim_display.h" />
-    <ClInclude Include="..\..\include\simulation\wasp.h" />
+    <ClInclude Include="..\..\include\graphics\SimVisualizer.h" />
+    <ClInclude Include="..\..\include\simulation\Wasp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp" />
-    <ClCompile Include="..\..\src\graphics\sim_display.cpp" />
-    <ClCompile Include="..\..\src\simulation\wasp.cpp" />
+    <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp" />
+    <ClCompile Include="..\..\src\input\KeyboardHandler.cpp" />
+    <ClCompile Include="..\..\src\simulation\Wasp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\include\graphics\Camera.h" />
+    <Text Include="..\..\include\input\KeyboardHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

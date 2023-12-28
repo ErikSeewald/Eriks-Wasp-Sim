@@ -25,15 +25,21 @@
     <Filter Include="Source Files\graphics">
       <UniqueIdentifier>{1a16a564-0a1f-45f2-b219-ec5731dfff34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\input">
+      <UniqueIdentifier>{3a406578-2c88-46da-8cc1-2cc9c0018273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\input">
+      <UniqueIdentifier>{3eff1493-9ab0-40ea-9217-7f98725521ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\simulation\wasp.h">
+    <ClInclude Include="..\..\include\simulation\Wasp.h">
       <Filter>Header Files\simulation</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\graphics\sim_display.h">
+    <ClInclude Include="..\..\include\graphics\SimVisualizer.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,11 +47,22 @@
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\simulation\wasp.cpp">
+    <ClCompile Include="..\..\src\simulation\Wasp.cpp">
       <Filter>Source Files\simulation</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\sim_display.cpp">
+    <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\input\KeyboardHandler.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\include\input\KeyboardHandler.h">
+      <Filter>Header Files\input</Filter>
+    </Text>
+    <Text Include="..\..\include\graphics\Camera.h">
+      <Filter>Header Files\graphics</Filter>
+    </Text>
   </ItemGroup>
 </Project>

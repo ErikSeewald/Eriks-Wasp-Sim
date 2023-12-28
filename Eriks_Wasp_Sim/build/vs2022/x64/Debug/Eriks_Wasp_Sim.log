@@ -1,2 +1,7 @@
-﻿  eriks_wasp_sim.cpp
-  Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe
+﻿  SimVisualizer.cpp
+C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\SimVisualizer.cpp(98,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\SimVisualizer.cpp(99,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\SimVisualizer.cpp(100,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\SimVisualizer.cpp(101,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\SimVisualizer.cpp(102,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe
