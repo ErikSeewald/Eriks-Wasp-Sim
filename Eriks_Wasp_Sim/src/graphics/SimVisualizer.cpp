@@ -6,6 +6,8 @@
 #include "SimVisualizer.h"
 #include "KeyboardHandler.h"
 #include "Camera.h"
+#include <list>
+#include "Simulation.h"
 
 Camera camera;
 
@@ -19,6 +21,7 @@ void SimVisualizer::initGlut(int argc, char** argv)
     glutInitWindowSize(1280, 720);
 
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+
     glutCreateWindow("Eriks Wasp Sim");
 
     glEnable(GL_DEPTH_TEST);
@@ -80,10 +83,12 @@ void SimVisualizer::render()
 
     drawGrid();
 
-    Wasp wasp = Wasp();
-    wasp.setPosition(XMFLOAT3(0.0f, 1.0f, 1.0f));
-    drawWasp(wasp);
-
+    std::list<Wasp*> wasps = Simulation::getWasps();
+    for (Wasp* wasp : wasps)
+    {
+        drawWasp(wasp);
+    }
+    
     glutSwapBuffers();
 }
 
@@ -194,11 +199,12 @@ void SimVisualizer::drawGrid() {
 *
 * @param wasp the Wasp to visualize
 */
-void SimVisualizer::drawWasp(Wasp wasp)
+void SimVisualizer::drawWasp(Wasp* wasp)
 {
+    XMFLOAT3 position = wasp->getPosition();
     glPushMatrix();
     glColor3f(1.0f, 0.5f, 0.0f);
-    glTranslatef(wasp.getPosition().x, wasp.getPosition().y, wasp.getPosition().z);
+    glTranslatef(position.x, position.y, position.z);
     glutSolidCube(0.2);
     glPopMatrix();
 }

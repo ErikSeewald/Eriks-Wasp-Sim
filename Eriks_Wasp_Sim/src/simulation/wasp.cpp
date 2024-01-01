@@ -4,7 +4,25 @@
  */
 
 #include "Wasp.h"
+#include <random>
 using DirectX::XMFLOAT3;
+
+/**
+* Implementation/Override of 'Updatable's update method. Updates the wasps state in the simulation.
+*/
+void Wasp::update()
+{
+	switch (std::rand() % 6)
+	{
+	case 0: this->position.x += 0.01f;  break;
+	case 1: this->position.y += 0.01f;  break;
+	case 2: this->position.z += 0.01f;  break;
+	case 3: this->position.x -= 0.01f;  break;
+	case 4: this->position.y -= 0.01f;  break;
+	case 5: this->position.z -= 0.01f;  break;
+	}
+	
+}
 
 /**
 * Returns the 3D position vector of this Wasp

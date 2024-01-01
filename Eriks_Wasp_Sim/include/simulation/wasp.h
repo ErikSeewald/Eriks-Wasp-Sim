@@ -10,7 +10,9 @@
 * @class Wasp
 * @brief A single wasp within the simulation.
 */
-class Wasp 
+#include "Updatable.h"
+
+class Wasp : Updatable
 {
 	public:
 
@@ -27,6 +29,11 @@ class Wasp
 		* @param position - the XMFLOAT3 to set the Wasp's position to
 		*/
 		void setPosition(DirectX::XMFLOAT3 position);
+
+		/**
+		* Implementation/Override of 'Updatable's update method. Updates the wasps state in the simulation.
+		*/
+		void update();
 
 	private:
 		DirectX::XMFLOAT3 position;

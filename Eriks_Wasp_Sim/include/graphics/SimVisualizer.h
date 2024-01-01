@@ -40,6 +40,11 @@ namespace SimVisualizer
     void render();
 
     /**
+    * Updates the glut 'camera' (gluLookAt) with the camera struct's attributes.
+    */
+    void updateGlutCamera();
+
+    /**
     * Updates the Cameras vectors based on its position, direction, pitch and yaw.
     */
     void updateCameraVectors();
@@ -62,5 +67,5 @@ namespace SimVisualizer
     * 
     * @param wasp the Wasp to visualize
     */
-    void drawWasp(Wasp wasp);
+    void drawWasp(Wasp* wasp);
 };
