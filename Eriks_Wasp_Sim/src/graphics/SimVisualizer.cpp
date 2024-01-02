@@ -205,6 +205,6 @@ void SimVisualizer::drawWasp(Wasp* wasp)
     glPushMatrix();
     glColor3f(1.0f, 0.5f, 0.0f);
     glTranslatef(position.x, position.y, position.z);
-    glutSolidCube(0.2);
+    glutSolidCube(0.1f);
     glPopMatrix();
 }

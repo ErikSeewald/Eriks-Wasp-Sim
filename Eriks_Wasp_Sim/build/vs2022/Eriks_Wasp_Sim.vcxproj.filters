@@ -42,6 +42,12 @@
     <ClInclude Include="..\..\include\graphics\SimVisualizer.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Simulation.h">
+      <Filter>Header Files\simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Updatable.h">
+      <Filter>Header Files\simulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
@@ -55,6 +61,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\input\KeyboardHandler.cpp">
       <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Simulation.cpp">
+      <Filter>Source Files\simulation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

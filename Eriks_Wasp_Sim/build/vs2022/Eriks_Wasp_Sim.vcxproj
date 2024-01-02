@@ -98,27 +98,27 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -214,12 +214,15 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h" />
     <ClInclude Include="..\..\include\graphics\SimVisualizer.h" />
+    <ClInclude Include="..\..\include\simulation\Simulation.h" />
+    <ClInclude Include="..\..\include\simulation\Updatable.h" />
     <ClInclude Include="..\..\include\simulation\Wasp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp" />
     <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp" />
     <ClCompile Include="..\..\src\input\KeyboardHandler.cpp" />
+    <ClCompile Include="..\..\src\simulation\Simulation.cpp" />
     <ClCompile Include="..\..\src\simulation\Wasp.cpp" />
   </ItemGroup>
   <ItemGroup>
