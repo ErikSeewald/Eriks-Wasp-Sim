@@ -30,3 +30,20 @@
 *.exe
 *.out
 *.app
+
+# Others
+*.opendb
+*.blend1
+
+# Exceptions
+!/Eriks_Wasp_Sim/dependencies/freeglut/lib/x64/freeglut.lib
+!/Eriks_Wasp_Sim/dependencies/freeglut/bin/x64/freeglut.dll
+
+# Visual Studio
+.vs/
+/Eriks_Wasp_Sim/build/vs2022/.vs/
+/Eriks_Wasp_Sim/build/vs2022/x64/Debug
+
+!/Eriks_Wasp_Sim/build/vs2022/x64/Debug/Eriks_Wasp_Sim.exe
+!/Eriks_Wasp_Sim/build/vs2022/x64/Debug/freeglut.dll
+!/Eriks_Wasp_Sim/build/vs2022/x64/Debug/glew32.dll
