@@ -1,6 +1,14 @@
 # Eriks-Wasp-Sim
 This project holds all my work on the (yellowjacket) wasp colony simulator.
-So far I am only working on the OpenGL graphics. I am aiming for a visualization limit of about 20 000 wasps.
 
-## Prerequisites
-The repo should include all dependencies (i.e. freeglut, glew, etc.)
+## Dependencies
+If you just want to run the program, clone the repo and use the [executable](Eriks_Wasp_Sim/build/vs2022/x64/Debug/Eriks_Wasp_Sim.exe) in the "/Eriks_Wasp_Sim/build/vs2022/x64/Debug/" directory.
+
+It will not work if you remove it from that directory.
+
+
+If you want to compile the source code, you will have to download the following dependencies and put them into the "/Eriks_Wasp_Sim/dependencies" directory:
+
+- [tinyobjloader](https://github.com/tinyobjloader/tinyobjloader): Put "tiny_obj_loader.h" into "/Eriks_Wasp_Sim/dependencies"
+- [glew-2.1.0](https://sourceforge.net/projects/glew/files/glew/2.1.0/): Put the "glew-2.1.0" directory into "/Eriks_Wasp_Sim/dependencies"
+- [freeglut](https://www.transmissionzero.co.uk/software/freeglut-devel/): Download the MinGW Package and then put the "freeglut" directory into "/Eriks_Wasp_Sim/dependencies"
