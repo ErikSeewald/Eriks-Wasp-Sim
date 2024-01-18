@@ -5,23 +5,69 @@
 
 #include "Wasp.h"
 #include <random>
-using DirectX::XMFLOAT3;
+#include <cmath>
+#include "Simulation.h"
+
+using namespace DirectX;
+
+/**
+* Creates a Wasp object
+*/
+Wasp::Wasp()
+{
+	position = XMFLOAT3(0, 0, 0);
+	viewingVector = XMFLOAT3(0, 0, 1);
+	deltaTime = Simulation::getDeltaTime();
+}
 
 /**
 * Implementation/Override of 'Updatable's update method. Updates the wasps state in the simulation.
 */
 void Wasp::update()
 {
-	switch (std::rand() % 6)
+	deltaTime = Simulation::getDeltaTime();
+
+	updatePosition();
+	updateViewingVector();
+}
+
+/**
+* Updates the Wasp's position based on its current state
+*/
+void Wasp::updatePosition()
+{
+	float speedMultiplier = 0.5f * deltaTime->count(); // speed of 0.5 units per second
+
+	position.x += viewingVector.x * speedMultiplier;
+	position.y += viewingVector.y * speedMultiplier;
+	position.z += viewingVector.z * speedMultiplier;
+}
+
+/**
+* Updates the Wasp's viewingVector based on its current state
+*/
+void Wasp::updateViewingVector()
+{
+	// Wasp has a chance to switch is directione every 0.5 seconds
+	static const double directionSwitchSeconds = 0.5;
+	static double secondsUntilDirectionSwitch = directionSwitchSeconds;
+
+	secondsUntilDirectionSwitch -= deltaTime->count();
+
+	if (secondsUntilDirectionSwitch < 0.0)
 	{
-	case 0: this->position.x += 0.01f;  break;
-	case 1: this->position.y += 0.01f;  break;
-	case 2: this->position.z += 0.01f;  break;
-	case 3: this->position.x -= 0.01f;  break;
-	case 4: this->position.y -= 0.01f;  break;
-	case 5: this->position.z -= 0.01f;  break;
+		secondsUntilDirectionSwitch = directionSwitchSeconds;
+
+		if (std::rand() % 3 == 0) // 30 % chance to switch direction
+		{
+			viewingVector.x += ((float)(std::rand() % 100) - 50) / 10;
+			viewingVector.y += ((float)(std::rand() % 100) - 50) / 10;
+			viewingVector.y += ((float)(std::rand() % 100) - 50) / 10;
+
+			XMVECTOR normalized = XMVector3Normalize(XMLoadFloat3(&viewingVector));
+			XMStoreFloat3(&viewingVector, normalized);
+		}
 	}
-	
 }
 
 /**
@@ -31,7 +77,7 @@ void Wasp::update()
 */
 XMFLOAT3 Wasp::getPosition() 
 {
-	return this->position;
+	return position;
 }
 
 /**
@@ -42,4 +88,24 @@ XMFLOAT3 Wasp::getPosition()
 void Wasp::setPosition(XMFLOAT3 position)
 {
 	this->position = position;
+}
+
+/**
+* Returns the 3D viewing vector of this Wasp
+*
+* @return the viewing vector as XMFLOAT3
+*/
+DirectX::XMFLOAT3 Wasp::getViewingVector()
+{
+	return viewingVector;
+}
+
+/**
+* Sets the 3D viewing vector of this Wasp to the given XMFLOAT3
+*
+* @param position - the XMFLOAT3 to set the Wasp's viewing vector to
+*/
+void Wasp::setViewingVector(DirectX::XMFLOAT3 viewingVector)
+{
+	this->viewingVector = viewingVector;
 }

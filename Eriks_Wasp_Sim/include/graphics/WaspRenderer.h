@@ -27,7 +27,7 @@ namespace WaspRenderer
     *
     * @param wasp the std::list of wasps to visualize
     */
-    void drawWasps(std::list<Wasp*> wasps);
+    void drawWasps(std::list<Wasp*>* wasps);
 
     /**
     * Initializes the WaspRenderer.

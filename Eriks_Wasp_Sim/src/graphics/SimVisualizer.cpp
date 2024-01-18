@@ -153,15 +153,15 @@ void SimVisualizer::drawGrid() {
 
     //X Axis
     glColor3f(1.0f, 0.0f, 0.0f);
-    drawBasicLine(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(10.0f, 0.0f, 0.0f));
+    drawBasicLine(SimVisualizer::zeroVector, XMFLOAT3(10.0f, 0.0f, 0.0f));
 
     //Y Axis
     glColor3f(0.0f, 1.0f, 0.0f);
-    drawBasicLine(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 10.0f, 0.0f));
+    drawBasicLine(SimVisualizer::zeroVector, XMFLOAT3(0.0f, 10.0f, 0.0f));
 
     //Z Axis
     glColor3f(0.0f, 0.0f, 1.0f);
-    drawBasicLine(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(00.0f, 0.0f, 10.0f));
+    drawBasicLine(SimVisualizer::zeroVector, XMFLOAT3(00.0f, 0.0f, 10.0f));
 
     //GRID
     glColor3f(0.3f, 0.3f, 0.3f);
