@@ -25,18 +25,26 @@ void Simulation::loop() {
 
     _loopInit();
 
+    static const double secondsBetweenFrames = 1.0 / 60.0;
+
     while (true) 
     {
-        steady_clock::time_point currentTime = steady_clock::now();
-        deltaTime = duration_cast<duration<double>>(currentTime - previousTime);
-        previousTime = currentTime;
 
         for (Wasp* wasp : wasps)
         {
             wasp->update();
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / 60));
+        //DELTA TIME
+        steady_clock::time_point currentTime = steady_clock::now();
+        deltaTime = duration_cast<duration<double>>(currentTime - previousTime);
+        previousTime = currentTime;
+
+        double sleepTimeSeconds = secondsBetweenFrames - deltaTime.count();
+        if (sleepTimeSeconds > 0)
+        {
+            std::this_thread::sleep_for(milliseconds(static_cast<int>(sleepTimeSeconds * 1000)));
+        }
     }
 }
 
