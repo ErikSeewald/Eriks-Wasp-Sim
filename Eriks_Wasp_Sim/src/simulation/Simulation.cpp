@@ -49,11 +49,11 @@ void Simulation::_loopInit()
     previousTime = steady_clock::now();
 
     //SETUP WASPS
-    for (int x = 0; x < 1; x++)
+    for (int x = 0; x < 2; x++)
     {
-        for (int y = 0; y < 1; y++)
+        for (int y = 0; y < 2; y++)
         {
-            for (int z = 0; z < 1; z++)
+            for (int z = 0; z < 2; z++)
             {
                 Wasp* wasp = new Wasp();
                 wasp->setPosition(XMFLOAT3(x * 2, y * 2, z * 2));
