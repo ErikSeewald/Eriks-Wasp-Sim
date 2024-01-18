@@ -19,6 +19,8 @@ using DirectX::XMFLOAT3;
 */
 namespace SimVisualizer
 {
+    const XMFLOAT3 zeroVector(0.0f, 0.0f, 0.0f);
+
     /**
     * Initializes freeglut with all necessary parameters.
     */

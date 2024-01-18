@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 #include <iostream>
 #include <cstdlib>
+#include "SimVisualizer.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
@@ -25,17 +26,16 @@ const std::string baseDirFallback = "../../../Models/wasp/";
 const std::string modelFile = baseDir + "Wasp.obj";
 const std::string modelFileFallback = baseDirFallback + "Wasp.obj";
 
-
 /**
 * Visualizes the given list of wasps.
 *
 * @param wasp the std::list of wasps to visualize
 */
-void WaspRenderer::drawWasps(std::list<Wasp*> wasps)
+void WaspRenderer::drawWasps(std::list<Wasp*>* wasps)
 {
     glColor3f(1.0f, 0.5f, 0.0f);
     glBindVertexArray(VAO);
-    for (Wasp* wasp : wasps)
+    for (Wasp* wasp : *wasps)
     {
         XMFLOAT3 position = wasp->getPosition();
         glPushMatrix();
@@ -43,6 +43,8 @@ void WaspRenderer::drawWasps(std::list<Wasp*> wasps)
 
         glDrawElements(GL_TRIANGLES, vertexIndices.size(), GL_UNSIGNED_INT, 0);
         
+        SimVisualizer::drawBasicLine(SimVisualizer::zeroVector, wasp->getViewingVector());
+
         glPopMatrix();
     }
     glBindVertexArray(0);
