@@ -36,7 +36,7 @@ void Wasp::update()
 */
 void Wasp::updatePosition()
 {
-	float speedMultiplier = 0.5f * deltaTime->count(); // speed of 0.5 units per second
+	float speedMultiplier = 0.8f * deltaTime->count(); // speed of 0.8 units per second
 
 	position.x += viewingVector.x * speedMultiplier;
 	position.y += viewingVector.y * speedMultiplier;
@@ -48,8 +48,8 @@ void Wasp::updatePosition()
 */
 void Wasp::updateViewingVector()
 {
-	// Wasp has a chance to switch is directione every 0.5 seconds
-	static const double directionSwitchSeconds = 0.5;
+	// Wasp has a chance to switch is directione every 2 seconds
+	static const double directionSwitchSeconds = 2;
 	static double secondsUntilDirectionSwitch = directionSwitchSeconds;
 
 	secondsUntilDirectionSwitch -= deltaTime->count();
@@ -62,7 +62,7 @@ void Wasp::updateViewingVector()
 		{
 			viewingVector.x += ((float)(std::rand() % 100) - 50) / 10;
 			viewingVector.y += ((float)(std::rand() % 100) - 50) / 10;
-			viewingVector.y += ((float)(std::rand() % 100) - 50) / 10;
+			viewingVector.z += ((float)(std::rand() % 100) - 50) / 10;
 
 			XMVECTOR normalized = XMVector3Normalize(XMLoadFloat3(&viewingVector));
 			XMStoreFloat3(&viewingVector, normalized);

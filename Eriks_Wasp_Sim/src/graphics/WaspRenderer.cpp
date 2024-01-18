@@ -33,17 +33,23 @@ const std::string modelFileFallback = baseDirFallback + "Wasp.obj";
 */
 void WaspRenderer::drawWasps(std::list<Wasp*>* wasps)
 {
+    static float pi = 3.14159265359f;
+
     glColor3f(1.0f, 0.5f, 0.0f);
     glBindVertexArray(VAO);
     for (Wasp* wasp : *wasps)
     {
         XMFLOAT3 position = wasp->getPosition();
+        XMFLOAT3 viewingVector = wasp->getViewingVector();
+
         glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
 
+        // Rotate around y-axis to match viewing vector
+        float angle = atan2(viewingVector.x, viewingVector.z);
+        glRotatef(angle * (180.0f / pi), 0.0f, 1.0f, 0.0f);
+
         glDrawElements(GL_TRIANGLES, vertexIndices.size(), GL_UNSIGNED_INT, 0);
-        
-        SimVisualizer::drawBasicLine(SimVisualizer::zeroVector, wasp->getViewingVector());
 
         glPopMatrix();
     }
