@@ -25,7 +25,7 @@ void Simulation::loop() {
 
     _loopInit();
 
-    static const double secondsBetweenFrames = 1.0 / 60.0;
+    static const double secondsBetweenUpdates = 1.0 / 60.0;
 
     while (true) 
     {
@@ -40,7 +40,7 @@ void Simulation::loop() {
         deltaTime = duration_cast<duration<double>>(currentTime - previousTime);
         previousTime = currentTime;
 
-        double sleepTimeSeconds = secondsBetweenFrames - deltaTime.count();
+        double sleepTimeSeconds = secondsBetweenUpdates - deltaTime.count();
         if (sleepTimeSeconds > 0)
         {
             std::this_thread::sleep_for(milliseconds(static_cast<int>(sleepTimeSeconds * 1000)));
