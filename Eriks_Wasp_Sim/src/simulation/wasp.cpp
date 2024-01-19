@@ -36,7 +36,7 @@ void Wasp::update()
 */
 void Wasp::updatePosition()
 {
-	float speedMultiplier = 0.8f * deltaTime->count(); // speed of 0.8 units per second
+	float speedMultiplier = 0.8f * deltaTime->count(); // speed of 5 units per second
 
 	position.x += viewingVector.x * speedMultiplier;
 	position.y += viewingVector.y * speedMultiplier;
