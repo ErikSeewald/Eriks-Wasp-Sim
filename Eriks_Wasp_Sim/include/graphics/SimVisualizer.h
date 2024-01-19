@@ -64,4 +64,18 @@ namespace SimVisualizer
     * Debug helper method. Draws a grid around the center of the coordinate system.
     */
     void drawGrid();
+
+    /**
+    * Converts degrees to radians
+    * 
+    * @return converted radians
+    */
+    float degToRad(float degrees);
+
+    /**
+    * Converts radians to degrees
+    *
+    * @return converted degrees
+    */
+    float radToDeg(float radians);
 };
