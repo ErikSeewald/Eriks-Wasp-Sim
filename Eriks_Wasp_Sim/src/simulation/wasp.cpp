@@ -7,6 +7,7 @@
 #include <random>
 #include <cmath>
 #include "Simulation.h"
+#include "SimVisualizer.h"
 
 using namespace DirectX;
 
@@ -17,6 +18,10 @@ Wasp::Wasp()
 {
 	position = XMFLOAT3(0, 0, 0);
 	viewingVector = XMFLOAT3(0, 0, 1);
+
+	turnSpeed = 0;
+	ascendSpeed = 0;
+
 	deltaTime = Simulation::getDeltaTime();
 }
 
@@ -48,9 +53,19 @@ void Wasp::updatePosition()
 */
 void Wasp::updateViewingVector()
 {
-	// Wasp has a chance to switch is directione every 2 seconds
-	static const double directionSwitchSeconds = 2;
-	static double secondsUntilDirectionSwitch = directionSwitchSeconds;
+	// ROTATE AROUND Y AXIS
+	float theta = turnSpeed * deltaTime->count();
+
+	DirectX::XMFLOAT3 tempVV = viewingVector;
+	viewingVector.x = tempVV.x * cos(theta) + tempVV.z * sin(theta);
+	viewingVector.z = -tempVV.x * sin(theta) + tempVV.z * cos(theta);
+
+	// FLY UP OR DOWN
+	viewingVector.y = ascendSpeed;
+
+	// CHANGE GOAL VIEWING VECTOR
+	static const double directionSwitchSeconds = 3;
+	static double secondsUntilDirectionSwitch = 0;
 
 	secondsUntilDirectionSwitch -= deltaTime->count();
 
@@ -58,14 +73,23 @@ void Wasp::updateViewingVector()
 	{
 		secondsUntilDirectionSwitch = directionSwitchSeconds;
 
-		if (std::rand() % 3 == 0) // 30 % chance to switch direction
+		switch (std::rand() % 5)
 		{
-			viewingVector.x += ((float)(std::rand() % 100) - 50) / 10;
-			viewingVector.y += ((float)(std::rand() % 100) - 50) / 10;
-			viewingVector.z += ((float)(std::rand() % 100) - 50) / 10;
-
-			XMVECTOR normalized = XMVector3Normalize(XMLoadFloat3(&viewingVector));
-			XMStoreFloat3(&viewingVector, normalized);
+			case 0:	
+				turnSpeed = 0;
+				break;
+			case 1: 
+				turnSpeed = ((float)std::rand() / RAND_MAX) * 2.0f - 1.0f;
+				break;
+			case 2: 
+				ascendSpeed = ((float)std::rand() / RAND_MAX) * 2.0f - 1.0f;
+				break;
+			case 3: 
+				turnSpeed = ((float)std::rand() / RAND_MAX) * 2.0f - 1.0f;
+				ascendSpeed = ((float)std::rand() / RAND_MAX) * 2.0f - 1.0f;
+				break;
+			default: 
+				break;
 		}
 	}
 }

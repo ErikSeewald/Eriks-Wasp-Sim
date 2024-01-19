@@ -58,6 +58,10 @@ class Wasp : Updatable
 	private:
 		DirectX::XMFLOAT3 position;
 		DirectX::XMFLOAT3 viewingVector;
+
+		float turnSpeed; // speed of rotating around the y axis
+		float ascendSpeed; // speed of movement along the y axis
+
 		std::chrono::duration<double>* deltaTime;
 
 		/**
