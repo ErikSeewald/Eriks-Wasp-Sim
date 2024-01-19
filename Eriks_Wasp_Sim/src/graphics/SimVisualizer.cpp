@@ -209,7 +209,8 @@ void SimVisualizer::drawGrid() {
 */
 float SimVisualizer::degToRad(float degrees)
 {
-    return degrees * (3.14159265359f / 180.0f);
+    static const float c = 3.14159265359f / 180.0f;
+    return degrees * c;
 }
 
 /**
@@ -219,6 +220,7 @@ float SimVisualizer::degToRad(float degrees)
 */
 float SimVisualizer::radToDeg(float radians)
 {
-    return radians * (180.0 / 3.14159265359f);
+    static const float c = 180.0f / 3.14159265359f;
+    return radians * c;
 }
 
