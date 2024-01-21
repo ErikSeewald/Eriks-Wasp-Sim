@@ -1,8 +1,3 @@
-/**
- * @file Simulation.cpp
- * @brief This file specifies the implementation of Simulation.h
- */
-
 #include "Simulation.h"
 #include <thread>
 #include <DirectXMath.h>

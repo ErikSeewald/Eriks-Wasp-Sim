@@ -1,8 +1,3 @@
-/**
- * @file WaspRenderer.cpp
- * @brief This file specifies the implementation of WaspRenderer.h
- */
-
 #include "WaspRenderer.h"
 #include <GL/glew.h>
 #include <DirectXMath.h>
@@ -27,7 +22,7 @@ const std::string modelFile = baseDir + "Wasp.obj";
 const std::string modelFileFallback = baseDirFallback + "Wasp.obj";
 
 /**
-* Visualizes the given list of wasps.
+* Visualizes the given list of wasps. Assumes glut, glew, etc. are preinitialized.
 *
 * @param wasp the std::list of wasps to visualize
 */

@@ -1,8 +1,3 @@
-/**
- * @file SimVisualizer.cpp
- * @brief This file specifies the implementation of SimVisualizer.h
- */
-
 #include "SimVisualizer.h"
 #include "KeyboardHandler.h"
 #include "Camera.h"

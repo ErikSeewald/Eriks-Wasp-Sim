@@ -1,8 +1,3 @@
-/**
- * @file KeyboardHandler.h
- * @brief This file serves as the header for Keyboardhandler.cpp.
- */
-
 #pragma once
 
 #include "SimVisualizer.h"
