@@ -1,8 +1,3 @@
-/**
- * @file Wasp.cpp
- * @brief This file specifies the implementation of wasp.h
- */
-
 #include "Wasp.h"
 #include <random>
 #include <cmath>
@@ -11,9 +6,6 @@
 
 using namespace DirectX;
 
-/**
-* Creates a Wasp object
-*/
 Wasp::Wasp()
 {
 	position = XMFLOAT3(0, 0, 0);
@@ -26,7 +18,7 @@ Wasp::Wasp()
 }
 
 /**
-* Implementation/Override of 'Updatable's update method. Updates the wasps state in the simulation.
+* Implementation/Override of the 'Updatable' class update method. Updates the wasps state in the simulation.
 */
 void Wasp::update()
 {
@@ -94,41 +86,21 @@ void Wasp::updateViewingVector()
 	}
 }
 
-/**
-* Returns the 3D position vector of this Wasp
-*
-* @return the position as XMFLOAT3
-*/
 XMFLOAT3 Wasp::getPosition() 
 {
 	return position;
 }
 
-/**
-* Sets the 3D position vector of this Wasp to the given XMFLOAT3
-*
-* @param position - the XMFLOAT3 to set the Wasp's position to
-*/
 void Wasp::setPosition(XMFLOAT3 position)
 {
 	this->position = position;
 }
 
-/**
-* Returns the 3D viewing vector of this Wasp
-*
-* @return the viewing vector as XMFLOAT3
-*/
 DirectX::XMFLOAT3 Wasp::getViewingVector()
 {
 	return viewingVector;
 }
 
-/**
-* Sets the 3D viewing vector of this Wasp to the given XMFLOAT3
-*
-* @param position - the XMFLOAT3 to set the Wasp's viewing vector to
-*/
 void Wasp::setViewingVector(DirectX::XMFLOAT3 viewingVector)
 {
 	this->viewingVector = viewingVector;

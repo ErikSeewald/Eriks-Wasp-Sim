@@ -1,8 +1,3 @@
-/**
- * @file Simulation.h
- * @brief This file serves as the header for Simulation.cpp.
- */
-
 #pragma once
 
 #include "Wasp.h"

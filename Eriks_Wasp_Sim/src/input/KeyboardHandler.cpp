@@ -1,8 +1,3 @@
-/**
- * @file KeyboardHandler.cpp
- * @brief This file specifies the implementation of KeyboardHandler.h
- */
-
 #include "KeyboardHandler.h"
 #include "SimVisualizer.h"
 

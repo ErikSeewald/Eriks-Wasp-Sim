@@ -1,8 +1,3 @@
-/**
- * @file WaspRenderer.h
- * @brief This file serves as the header for WaspRenderer.cpp.
- */
-
 #include "Wasp.h"
 #include <list>
 
@@ -23,7 +18,7 @@ namespace WaspRenderer
     };
 
     /**
-    * Visualizes the given list of wasps.
+    * Visualizes the given list of wasps. Assumes glut, glew, etc. are preinitialized.
     *
     * @param wasp the std::list of wasps to visualize
     */

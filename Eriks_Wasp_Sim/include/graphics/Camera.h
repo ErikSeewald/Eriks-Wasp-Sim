@@ -1,8 +1,3 @@
-/**
- * @file Camera.h
- * @brief This file contains the definition of the Camera struct.
- */
-
 #pragma once
 
 #include <DirectXMath.h>

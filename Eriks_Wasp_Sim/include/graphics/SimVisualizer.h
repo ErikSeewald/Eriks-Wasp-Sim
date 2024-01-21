@@ -1,8 +1,3 @@
-/**
- * @file Wasp.h
- * @brief This file serves as the header for SimVisualizer.cpp.
- */
-
 #pragma once
 
 #include <GL/glew.h>
