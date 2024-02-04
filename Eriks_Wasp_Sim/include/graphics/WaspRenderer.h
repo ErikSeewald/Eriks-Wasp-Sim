@@ -20,9 +20,14 @@ namespace WaspRenderer
     /**
     * Visualizes the given list of wasps. Assumes glut, glew, etc. are preinitialized.
     *
-    * @param wasp the std::list of wasps to visualize
+    * @param wasps the std::list of wasps to visualize
     */
     void drawWasps(std::list<Wasp*>* wasps);
+
+    /**
+    * Visualizes the wasp selected by the user, provided it exists.
+    */
+    void drawSelectedWasp();
 
     /**
     * Initializes the WaspRenderer.

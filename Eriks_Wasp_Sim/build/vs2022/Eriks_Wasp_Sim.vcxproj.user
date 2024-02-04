@@ -10,7 +10,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <RemoteDebuggerWorkingDirectory>$(ProjectDir)</RemoteDebuggerWorkingDirectory>
-    <DebuggerFlavor>WindowsRemoteDebugger</DebuggerFlavor>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <RemoteDebuggerWorkingDirectory>$(ProjectDir)</RemoteDebuggerWorkingDirectory>

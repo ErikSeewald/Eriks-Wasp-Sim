@@ -1,14 +1,15 @@
 #include "WaspRenderer.h"
 #include <GL/glew.h>
-#include <DirectXMath.h>
 #include <iostream>
 #include <cstdlib>
 #include "SimVisualizer.h"
+#include <glm/glm.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
-using DirectX::XMFLOAT3;
+#include "UI.h"
+
 using WaspRenderer::Vertex;
 
 //MESH
@@ -24,21 +25,32 @@ const std::string modelFileFallback = baseDirFallback + "Wasp.obj";
 /**
 * Visualizes the given list of wasps. Assumes glut, glew, etc. are preinitialized.
 *
-* @param wasp the std::list of wasps to visualize
+* @param wasps the std::list of wasps to visualize
 */
 void WaspRenderer::drawWasps(std::list<Wasp*>* wasps)
 {
+    //this method has a fair bit of duplication with drawSelectedWasp. I decided against extracting
+    //shared code into separate methods as I want to avoid the overhead of 100 000 extra function calls
+    //for 100 000 wasps.
+    //TODO: Check if compiler would do inlining
+
+    Wasp* selectedWasp = UI::getUIState()->selectedWasp;
+
     glColor3f(1.0f, 0.5f, 0.0f);
     glBindVertexArray(VAO);
     for (Wasp* wasp : *wasps)
     {
-        XMFLOAT3 position = wasp->getPosition();
-        XMFLOAT3 viewingVector = wasp->getViewingVector();
+        if (wasp == selectedWasp)
+        {
+            continue; //Draw selected wasp in a different function
+        }
+
+        glm::vec3 position = wasp->getPosition();
+        glm::vec3 viewingVector = wasp->getViewingVector();
 
         glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
 
-        glColor3f(1.0f, 0.5f, 0.0f);
         // Rotate around y-axis to match viewing vector
         float angle = atan2(viewingVector.x, viewingVector.z);
         glRotatef(SimVisualizer::radToDeg(angle), 0.0f, 1.0f, 0.0f);
@@ -48,6 +60,39 @@ void WaspRenderer::drawWasps(std::list<Wasp*>* wasps)
         glPopMatrix();
     }
     glBindVertexArray(0);
+}
+
+/**
+* Visualizes the wasp selected by the user, provided it exists.
+*/
+void WaspRenderer::drawSelectedWasp() 
+{
+    //GET SELECTED WASP
+    Wasp* wasp = UI::getUIState()->selectedWasp;
+    if (wasp == NULL)
+    {
+        return;
+    }
+
+    //COLOR AND TRANSFORM
+    glPushMatrix();
+    glColor3f(1.0f, 0.0f, 0.0f);
+
+    glm::vec3 position = wasp->getPosition();
+    glm::vec3 viewingVector = wasp->getViewingVector();
+  
+    glTranslatef(position.x, position.y, position.z);
+
+    // Rotate around y-axis to match viewing vector
+    float angle = atan2(viewingVector.x, viewingVector.z);
+    glRotatef(SimVisualizer::radToDeg(angle), 0.0f, 1.0f, 0.0f);
+
+    //DRAW VERTEX ARRAY
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, vertexIndices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
+    glPopMatrix();
 }
 
 /**

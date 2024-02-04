@@ -2,8 +2,6 @@
 
 #include "SimVisualizer.h"
 #include "Camera.h"
-#include <DirectXMath.h>
-using DirectX::XMFLOAT3;
 
 /**
 * @namespace KeyboardHandler

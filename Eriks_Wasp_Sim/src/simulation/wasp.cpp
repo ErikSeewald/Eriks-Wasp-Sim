@@ -4,12 +4,10 @@
 #include "Simulation.h"
 #include "SimVisualizer.h"
 
-using namespace DirectX;
-
 Wasp::Wasp()
 {
-	position = XMFLOAT3(0, 0, 0);
-	viewingVector = XMFLOAT3(0, 0, 1);
+	position = glm::vec3(0, 0, 0);
+	viewingVector = glm::vec3(0, 0, 1);
 
 	turnSpeed = 0;
 	ascendSpeed = 0;
@@ -48,7 +46,7 @@ void Wasp::updateViewingVector()
 	// ROTATE AROUND Y AXIS
 	float theta = turnSpeed * deltaTime->count();
 
-	DirectX::XMFLOAT3 tempVV = viewingVector;
+	glm::vec3 tempVV = viewingVector;
 	viewingVector.x = tempVV.x * cos(theta) + tempVV.z * sin(theta);
 	viewingVector.z = -tempVV.x * sin(theta) + tempVV.z * cos(theta);
 
@@ -86,22 +84,22 @@ void Wasp::updateViewingVector()
 	}
 }
 
-XMFLOAT3 Wasp::getPosition() 
+glm::vec3 Wasp::getPosition() 
 {
 	return position;
 }
 
-void Wasp::setPosition(XMFLOAT3 position)
+void Wasp::setPosition(glm::vec3 position)
 {
 	this->position = position;
 }
 
-DirectX::XMFLOAT3 Wasp::getViewingVector()
+glm::vec3 Wasp::getViewingVector()
 {
 	return viewingVector;
 }
 
-void Wasp::setViewingVector(DirectX::XMFLOAT3 viewingVector)
+void Wasp::setViewingVector(glm::vec3 viewingVector)
 {
 	this->viewingVector = viewingVector;
 }

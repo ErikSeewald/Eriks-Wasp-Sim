@@ -1,10 +1,8 @@
 #include "Simulation.h"
 #include <thread>
-#include <DirectXMath.h>
-#include <iostream>
+#include <glm/glm.hpp>
 
 using namespace std::chrono;
-using DirectX::XMFLOAT3;
 
 //WASPS
 std::list<Wasp*> wasps;
@@ -52,14 +50,14 @@ void Simulation::_loopInit()
     previousTime = steady_clock::now();
 
     //SETUP WASPS
-    for (int x = 0; x < 25; x++)
+    for (int x = 0; x < 5; x++)
     {
-        for (int y = 0; y < 10; y++)
+        for (int y = 0; y < 2; y++)
         {
-            for (int z = 0; z < 25; z++)
+            for (int z = 0; z < 5; z++)
             {
                 Wasp* wasp = new Wasp();
-                wasp->setPosition(XMFLOAT3(x * 2, y * 2, z * 2));
+                wasp->setPosition(glm::vec3(x * 2, y * 2, z * 2));
                 wasps.push_back(wasp);
             }
         }

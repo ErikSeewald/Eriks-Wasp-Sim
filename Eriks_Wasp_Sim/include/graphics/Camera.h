@@ -1,6 +1,6 @@
 #pragma once
 
-#include <DirectXMath.h>
+#include <glm/glm.hpp>
 
 /**
 * @struct Camera
@@ -8,8 +8,8 @@
 */
 struct Camera 
 {
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT3 direction;
+	glm::vec3 position;
+	glm::vec3 direction;
 
 	float pitch = -30.0f;
 	float yaw = -130.0f;

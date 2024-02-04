@@ -114,7 +114,7 @@
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\..\dependencies\;..\..\dependencies\glew-2.1.0\include;..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\glm;..\..\dependencies\;..\..\dependencies\glew-2.1.0\include;..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -215,6 +215,9 @@
     <ClInclude Include="..\..\include\eriks_wasp_sim.h" />
     <ClInclude Include="..\..\include\graphics\SimVisualizer.h" />
     <ClInclude Include="..\..\include\graphics\WaspRenderer.h" />
+    <ClInclude Include="..\..\include\input\MouseHandler.h" />
+    <ClInclude Include="..\..\include\input\MouseRayCast.h" />
+    <ClInclude Include="..\..\include\input\UI.h" />
     <ClInclude Include="..\..\include\simulation\Simulation.h" />
     <ClInclude Include="..\..\include\simulation\Updatable.h" />
     <ClInclude Include="..\..\include\simulation\Wasp.h" />
@@ -224,6 +227,9 @@
     <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp" />
     <ClCompile Include="..\..\src\graphics\WaspRenderer.cpp" />
     <ClCompile Include="..\..\src\input\KeyboardHandler.cpp" />
+    <ClCompile Include="..\..\src\input\MouseHandler.cpp" />
+    <ClCompile Include="..\..\src\input\MouseRayCast.cpp" />
+    <ClCompile Include="..\..\src\input\UI.cpp" />
     <ClCompile Include="..\..\src\simulation\Simulation.cpp" />
     <ClCompile Include="..\..\src\simulation\Wasp.cpp" />
   </ItemGroup>

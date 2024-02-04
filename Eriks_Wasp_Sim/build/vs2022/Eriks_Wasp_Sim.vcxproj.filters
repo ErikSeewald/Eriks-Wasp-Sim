@@ -51,6 +51,15 @@
     <ClInclude Include="..\..\include\graphics\WaspRenderer.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\input\MouseHandler.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\UI.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\MouseRayCast.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
@@ -70,6 +79,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\WaspRenderer.cpp">
       <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\MouseHandler.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\UI.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\MouseRayCast.cpp">
+      <Filter>Source Files\input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

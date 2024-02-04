@@ -1,7 +1,7 @@
 #pragma once
-#include <DirectXMath.h>
 #include <chrono>
 #include "Updatable.h"
+#include <glm/glm.hpp>
 
 /**
 * @class Wasp
@@ -18,17 +18,17 @@ class Wasp : Updatable
 		*/
 		void update();
 
-		DirectX::XMFLOAT3 getPosition();
+		glm::vec3 getPosition();
 
-		void setPosition(DirectX::XMFLOAT3 position);
+		void setPosition(glm::vec3 position);
 
-		DirectX::XMFLOAT3 getViewingVector();
+		glm::vec3 getViewingVector();
 
-		void setViewingVector(DirectX::XMFLOAT3 viewingVector);
+		void setViewingVector(glm::vec3 viewingVector);
 
 	private:
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT3 viewingVector;
+		glm::vec3 position;
+		glm::vec3 viewingVector;
 
 		float turnSpeed; // speed of rotating around the y axis
 		float ascendSpeed; // speed of movement along the y axis

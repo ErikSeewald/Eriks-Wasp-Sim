@@ -7,7 +7,7 @@ class Updatable
     public:
 
         /**
-        /* Updates the state of the object.
+        * Updates the state of the object.
         */
         virtual void update() = 0;
 };
