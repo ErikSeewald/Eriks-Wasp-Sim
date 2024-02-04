@@ -29,11 +29,6 @@ const std::string modelFileFallback = baseDirFallback + "Wasp.obj";
 */
 void WaspRenderer::drawWasps(std::list<Wasp*>* wasps)
 {
-    //this method has a fair bit of duplication with drawSelectedWasp. I decided against extracting
-    //shared code into separate methods as I want to avoid the overhead of 100 000 extra function calls
-    //for 100 000 wasps.
-    //TODO: Check if compiler would do inlining
-
     Wasp* selectedWasp = UI::getUIState()->selectedWasp;
 
     glColor3f(1.0f, 0.5f, 0.0f);
@@ -42,22 +37,11 @@ void WaspRenderer::drawWasps(std::list<Wasp*>* wasps)
     {
         if (wasp == selectedWasp)
         {
-            continue; //Draw selected wasp in a different function
+            //Draw selected wasp in a different function
+            continue;
         }
 
-        glm::vec3 position = wasp->getPosition();
-        glm::vec3 viewingVector = wasp->getViewingVector();
-
-        glPushMatrix();
-        glTranslatef(position.x, position.y, position.z);
-
-        // Rotate around y-axis to match viewing vector
-        float angle = atan2(viewingVector.x, viewingVector.z);
-        glRotatef(SimVisualizer::radToDeg(angle), 0.0f, 1.0f, 0.0f);
-
-        glDrawElements(GL_TRIANGLES, vertexIndices.size(), GL_UNSIGNED_INT, 0);
-
-        glPopMatrix();
+        _drawWaspPrebound(wasp);    
     }
     glBindVertexArray(0);
 }
@@ -74,23 +58,32 @@ void WaspRenderer::drawSelectedWasp()
         return;
     }
 
-    //COLOR AND TRANSFORM
-    glPushMatrix();
     glColor3f(1.0f, 0.0f, 0.0f);
+    glBindVertexArray(VAO);
+    _drawWaspPrebound(wasp);
+    glBindVertexArray(0);
+}
 
+/**
+* Draws the given wasp with the assumption that the correct vertex array has already been bound and the
+* color has been set. This allows for the function to only contain code unique to each wasp being drawn in
+* drawWasps()'s loop and thereby increases performance.
+*
+* @param wasp the wasp to draw
+*/
+void WaspRenderer::_drawWaspPrebound(Wasp* wasp)
+{
     glm::vec3 position = wasp->getPosition();
     glm::vec3 viewingVector = wasp->getViewingVector();
-  
+
+    glPushMatrix();
     glTranslatef(position.x, position.y, position.z);
 
     // Rotate around y-axis to match viewing vector
     float angle = atan2(viewingVector.x, viewingVector.z);
     glRotatef(SimVisualizer::radToDeg(angle), 0.0f, 1.0f, 0.0f);
 
-    //DRAW VERTEX ARRAY
-    glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, vertexIndices.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
 
     glPopMatrix();
 }
