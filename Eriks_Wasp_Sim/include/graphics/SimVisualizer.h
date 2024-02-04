@@ -4,9 +4,9 @@
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include "Wasp.h"
-#include <DirectXMath.h>
+#include <glm/glm.hpp>
 
-using DirectX::XMFLOAT3;
+#include "Camera.h"
 
 /**
 * @namespace SimVisualizer
@@ -14,7 +14,7 @@ using DirectX::XMFLOAT3;
 */
 namespace SimVisualizer
 {
-    const XMFLOAT3 zeroVector(0.0f, 0.0f, 0.0f);
+    const glm::vec3 zeroVector(0.0f, 0.0f, 0.0f);
 
     /**
     * Initializes freeglut with all necessary parameters.
@@ -47,13 +47,15 @@ namespace SimVisualizer
     */
     void updateCameraVectors();
 
+    Camera getCamera();
+
     /**
     * Draws a 3D line between the given start and end points.
     * 
-    * @param start - the XMFLOAT3 start of the line
-    * @param end - the XMFLOAT3 end of the line
+    * @param start - the vec3 start of the line
+    * @param end - the vec3 end of the line
     */
-    void drawBasicLine(XMFLOAT3 start, XMFLOAT3 end);
+    void drawBasicLine(glm::vec3 start, glm::vec3 end);
 
     /**
     * Debug helper method. Draws a grid around the center of the coordinate system.

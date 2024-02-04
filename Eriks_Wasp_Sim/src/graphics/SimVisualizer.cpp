@@ -1,6 +1,6 @@
 #include "SimVisualizer.h"
 #include "KeyboardHandler.h"
-#include "Camera.h"
+#include "MouseHandler.h"
 #include <list>
 #include "Simulation.h"
 #include "WaspRenderer.h"
@@ -33,8 +33,10 @@ void SimVisualizer::initGlut(int argc, char** argv)
     glutSpecialFunc(KeyboardHandler::specialKeyDown);
     glutSpecialUpFunc(KeyboardHandler::specialKeyUp);
 
-    camera.position = XMFLOAT3(3.0f, 3.0f, 3.0f);
-    camera.direction = XMFLOAT3(-1.0f, 0.0f, -1.0f);
+    glutMouseFunc(MouseHandler::mouseClick);
+
+    camera.position = glm::vec3(3.0f, 3.0f, 3.0f);
+    camera.direction = glm::vec3(-1.0f, 0.0f, -1.0f);
     updateCameraVectors();
 
     glewExperimental = GL_TRUE;
@@ -92,7 +94,8 @@ void SimVisualizer::render()
     drawGrid();
 
     WaspRenderer::drawWasps(Simulation::getWasps());
-    
+    WaspRenderer::drawSelectedWasp();
+ 
     glutSwapBuffers();
 }
 
@@ -124,14 +127,19 @@ void SimVisualizer::updateCameraVectors()
     camera.direction.z = sin(radianYaw) * cos(radianPitch);
 }
 
+Camera SimVisualizer::getCamera()
+{
+    return camera;
+}
+
 
 /**
 * Draws a 3D line between the given start and end points.
 *
-* @param start - the XMFLOAT3 start of the line
-* @param end - the XMFLOAT3 end of the line
+* @param start - the vec3 start of the line
+* @param end - the vec3 end of the line
 */
-void SimVisualizer::drawBasicLine(XMFLOAT3 start, XMFLOAT3 end)
+void SimVisualizer::drawBasicLine(glm::vec3 start, glm::vec3 end)
 {
     glBegin(GL_LINES);
     glVertex3f(start.x, start.y, start.z);
@@ -148,15 +156,15 @@ void SimVisualizer::drawGrid() {
 
     //X Axis
     glColor3f(1.0f, 0.0f, 0.0f);
-    drawBasicLine(SimVisualizer::zeroVector, XMFLOAT3(10.0f, 0.0f, 0.0f));
+    drawBasicLine(SimVisualizer::zeroVector, glm::vec3(10.0f, 0.0f, 0.0f));
 
     //Y Axis
     glColor3f(0.0f, 1.0f, 0.0f);
-    drawBasicLine(SimVisualizer::zeroVector, XMFLOAT3(0.0f, 10.0f, 0.0f));
+    drawBasicLine(SimVisualizer::zeroVector, glm::vec3(0.0f, 10.0f, 0.0f));
 
     //Z Axis
     glColor3f(0.0f, 0.0f, 1.0f);
-    drawBasicLine(SimVisualizer::zeroVector, XMFLOAT3(00.0f, 0.0f, 10.0f));
+    drawBasicLine(SimVisualizer::zeroVector, glm::vec3(00.0f, 0.0f, 10.0f));
 
     //GRID
     glColor3f(0.3f, 0.3f, 0.3f);
@@ -164,34 +172,34 @@ void SimVisualizer::drawGrid() {
     //X - Y Plane
     for (float i = 1.0f; i <= 10.0f; i += 1.0f)
     {
-        drawBasicLine(XMFLOAT3(0.0f, i, 0.0f), XMFLOAT3(10.0f, i, 0.0f));
+        drawBasicLine(glm::vec3(0.0f, i, 0.0f), glm::vec3(10.0f, i, 0.0f));
     }
 
     for (float i = 1.0f; i <= 10.0f; i += 1.0f)
     {
-        drawBasicLine(XMFLOAT3(i, 0.0f, 0.0f), XMFLOAT3(i, 10.0f, 0.0f));
+        drawBasicLine(glm::vec3(i, 0.0f, 0.0f), glm::vec3(i, 10.0f, 0.0f));
     }
 
     //Z - Y Plane
     for (float i = 1.0f; i <= 10.0f; i += 1.0f)
     {
-        drawBasicLine(XMFLOAT3(0.0f, i, 0.0f), XMFLOAT3(0.0f, i, 10.0f));
+        drawBasicLine(glm::vec3(0.0f, i, 0.0f), glm::vec3(0.0f, i, 10.0f));
     }
 
     for (float i = 1.0f; i <= 10.0f; i += 1.0f)
     {
-        drawBasicLine(XMFLOAT3(0.0f, 0.0f, i), XMFLOAT3(0.0f, 10.0f, i));
+        drawBasicLine(glm::vec3(0.0f, 0.0f, i), glm::vec3(0.0f, 10.0f, i));
     }
 
     //X - Z Plane
     for (float i = 1.0f; i <= 10.0f; i += 1.0f)
     {
-        drawBasicLine(XMFLOAT3(i, 0.0f, 0.0f), XMFLOAT3(i, 0.0f, 10.f));
+        drawBasicLine(glm::vec3(i, 0.0f, 0.0f), glm::vec3(i, 0.0f, 10.f));
     }
 
     for (float i = 1.0f; i <= 10.0f; i += 1.0f)
     {
-        drawBasicLine(XMFLOAT3(0.0f, 0.0f, i), XMFLOAT3(10.0f, 0.0f, i));
+        drawBasicLine(glm::vec3(0.0f, 0.0f, i), glm::vec3(10.0f, 0.0f, i));
     }
 
     glPopMatrix();
