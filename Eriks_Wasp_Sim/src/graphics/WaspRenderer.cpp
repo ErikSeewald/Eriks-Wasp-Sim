@@ -17,8 +17,8 @@ GLuint VBO, VAO, EBO;
 std::vector<unsigned int> vertexIndices;
 
 //FILE
-const std::string baseDir = "../../../../../Models/wasp/";
-const std::string baseDirFallback = "../../../Models/wasp/";
+const std::string baseDir = "../../../../../Assets/Models/wasp/";
+const std::string baseDirFallback = "../../../Assets/Models/wasp/";
 const std::string modelFile = baseDir + "Wasp.obj";
 const std::string modelFileFallback = baseDirFallback + "Wasp.obj";
 

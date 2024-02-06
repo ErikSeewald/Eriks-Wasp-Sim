@@ -14,7 +14,7 @@ steady_clock::time_point previousTime;
 /**
 * Starts and runs the simulation loop.
 */
-void Simulation::loop() {
+void Simulation::startLoop() {
 
     _loopInit();
 
