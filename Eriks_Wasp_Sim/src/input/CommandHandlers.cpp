@@ -2,7 +2,7 @@
 #include "Console.h"
 
 #include <iostream>
-#include <nlohmann/json.hpp>
+#include "json.hpp"
 using nlohmann::json;
 
 void CommandHandlers::commandHelp()

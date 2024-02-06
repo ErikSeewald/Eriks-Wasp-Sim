@@ -98,27 +98,27 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
