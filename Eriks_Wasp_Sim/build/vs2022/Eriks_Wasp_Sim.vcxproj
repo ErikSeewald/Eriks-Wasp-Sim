@@ -98,27 +98,27 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\dependencies\;..\..\dependencies\glew-2.1.0\include;..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <IncludePath>..\..\dependencies\;..\..\dependencies\glew-2.1.0\include;..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\..\dependencies\;..\..\dependencies\glew-2.1.0\include;..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <IncludePath>..\..\dependencies\;..\..\dependencies\glew-2.1.0\include;..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\..\dependencies\glm;..\..\dependencies\;..\..\dependencies\glew-2.1.0\include;..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\..\dependencies\;..\..\dependencies\glew-2.1.0\include;..\..\dependencies\freeglut\include;..\..\include;..\..\include\input;..\..\include\graphics;..\..\include\simulation;..\..\include\graphics;..\..\include\simulation;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\dependencies\nlohmann;..\..\include\graphics;..\..\include\simulation;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -215,6 +215,9 @@
     <ClInclude Include="..\..\include\eriks_wasp_sim.h" />
     <ClInclude Include="..\..\include\graphics\SimVisualizer.h" />
     <ClInclude Include="..\..\include\graphics\WaspRenderer.h" />
+    <ClInclude Include="..\..\include\input\CommandHandlers.h" />
+    <ClInclude Include="..\..\include\input\Console.h" />
+    <ClInclude Include="..\..\include\input\JsonHandler.h" />
     <ClInclude Include="..\..\include\input\MouseHandler.h" />
     <ClInclude Include="..\..\include\input\MouseRayCast.h" />
     <ClInclude Include="..\..\include\input\UI.h" />
@@ -226,6 +229,9 @@
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp" />
     <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp" />
     <ClCompile Include="..\..\src\graphics\WaspRenderer.cpp" />
+    <ClCompile Include="..\..\src\input\CommandHandlers.cpp" />
+    <ClCompile Include="..\..\src\input\Console.cpp" />
+    <ClCompile Include="..\..\src\input\JsonHandler.cpp" />
     <ClCompile Include="..\..\src\input\KeyboardHandler.cpp" />
     <ClCompile Include="..\..\src\input\MouseHandler.cpp" />
     <ClCompile Include="..\..\src\input\MouseRayCast.cpp" />

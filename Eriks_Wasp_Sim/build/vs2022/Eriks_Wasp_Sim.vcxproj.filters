@@ -60,6 +60,15 @@
     <ClInclude Include="..\..\include\input\MouseRayCast.h">
       <Filter>Header Files\input</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\input\Console.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\JsonHandler.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\CommandHandlers.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
@@ -87,6 +96,15 @@
       <Filter>Source Files\input</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\input\MouseRayCast.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\Console.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\JsonHandler.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\CommandHandlers.cpp">
       <Filter>Source Files\input</Filter>
     </ClCompile>
   </ItemGroup>

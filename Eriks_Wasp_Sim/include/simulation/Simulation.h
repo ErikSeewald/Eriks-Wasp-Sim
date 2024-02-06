@@ -13,7 +13,7 @@ namespace Simulation
 	/**
 	* Starts and runs the simulation loop.
 	*/
-	void loop();
+	void startLoop();
 
 	/**
 	* Initializes everything needed for loop() to run

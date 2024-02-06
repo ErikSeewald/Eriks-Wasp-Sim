@@ -1,10 +1,10 @@
-#include "MouseHandler.h"
+#include "MouseRayCast.h"
 
+#include "MouseHandler.h"
 #include <glm/gtc/matrix_inverse.hpp>
 #include <limits>
 #include "Simulation.h"
 #include "SimVisualizer.h"
-#include "MouseRayCast.h"
 
 /**
 * Selects the closest wasp in the scene at the given 2D screen coordinates.
@@ -30,7 +30,7 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
             // Do not check wasps that are behind the camera
             continue;
         }
-
+        
         // If the cross product between camToWasp and the clickRay is small enough, then camToWasp is
         // close enough to the clickRay that we count it as hitting the wasp
         glm::vec3 crossProduct = glm::cross(camToWasp, clickRay);
