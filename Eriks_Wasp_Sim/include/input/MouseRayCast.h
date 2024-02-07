@@ -1,5 +1,7 @@
-#include <glm/glm.hpp>
+#pragma once
+
 #include "Wasp.h"
+#include <glm/glm.hpp>
 
 /**
 * @namespace MouseRayCast

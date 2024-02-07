@@ -1,3 +1,5 @@
+#pragma once
+
 /**
 * @namespace MouseHandler
 * @brief A namespace for all methods to handle mouse input from the user.

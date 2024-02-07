@@ -31,6 +31,12 @@
     <Filter Include="Source Files\input">
       <UniqueIdentifier>{3eff1493-9ab0-40ea-9217-7f98725521ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{03043cf7-9f6b-407c-951e-5d6574fad742}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{9b9a441e-872d-42e0-8da4-69a3fce209f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h">
@@ -63,11 +69,14 @@
     <ClInclude Include="..\..\include\input\Console.h">
       <Filter>Header Files\input</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\input\JsonHandler.h">
-      <Filter>Header Files\input</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\input\CommandHandlers.h">
       <Filter>Header Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\util\JsonHandler.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\util\StringUtil.h">
+      <Filter>Header Files\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,11 +110,14 @@
     <ClCompile Include="..\..\src\input\Console.cpp">
       <Filter>Source Files\input</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\input\JsonHandler.cpp">
-      <Filter>Source Files\input</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\input\CommandHandlers.cpp">
       <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\JsonHandler.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\StringUtil.cpp">
+      <Filter>Source Files\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,7 @@
 #include "Console.h"
 #include "JsonHandler.h"
 #include "CommandHandlers.h"
-#include <string>
-#include <sstream>
-#include "Simulation.h"
-#include <glm/glm.hpp>
+#include "StringUtil.h"
 
 //PRINTS
 const std::string initPrint = "Welcome to Eriks Wasp Sim! \nType 'help' to see a list of available commands. \n";
@@ -84,9 +81,9 @@ void Console::startLoop()
 */
 void Console::processCommand(const std::string& command, CommandHandlerMap& commandHandlers)
 {
-    std::string trimmedCommand = trimLeadingWhitespace(command);
+    std::string trimmedCommand = StringUtil::trimLeadingWhitespace(command);
 
-    std::string firstWord = getFirstWord(trimmedCommand);
+    std::string firstWord = StringUtil::getFirstWord(trimmedCommand);
     CommandHandlerMap::iterator iterator = commandHandlers.find(firstWord);
     if (iterator != commandHandlers.end())
     {
@@ -97,38 +94,6 @@ void Console::processCommand(const std::string& command, CommandHandlerMap& comm
     {
         printInvalidSyntaxError();
     }
-}
-
-/**
-* Returns the first word in the given string or an empty string if no word is found.
-* A word is defined as a string of characters separated by whitespace.
-* 
-* @param str the string to get the first word from
-* @return The first word in the given string or an empty string
-*/
-std::string Console::getFirstWord(const std::string& str)
-{
-    std::istringstream iss(str + " "); //add " ". Otherwise it wont recognize strings that are made up of one word
-    std::string word;
-    iss >> word; //extracts chars from iss and stores them in word until a whitespace char is encountered
-    return word;
-}
-
-std::string Console::trimLeadingWhitespace(const std::string& str)
-{
-    for (int i = 0; i < str.length(); i++)
-    {
-        if (!std::isspace(str[i]))
-        {
-            return str.substr(i);
-        }
-    }
-    return std::string();
-}
-
-bool Console::isBlank(const std::string& str)
-{
-    return trimLeadingWhitespace(str).empty();
 }
 
 /**

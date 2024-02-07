@@ -1,9 +1,6 @@
 #include "WaspRenderer.h"
-#include <GL/glew.h>
 #include <iostream>
-#include <cstdlib>
 #include "SimVisualizer.h"
-#include <glm/glm.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"

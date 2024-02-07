@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SimVisualizer.h"
 #include "Camera.h"
 
 /**

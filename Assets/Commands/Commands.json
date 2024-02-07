@@ -16,7 +16,7 @@
 	{
 		"name": "position",
 		"description": "Explains the syntax for the use of <position> in other commands.",
-		"syntax": "(<x>,<y>,<z>) | selected | here    \n(i.e. either coordinates, the position of the currently selected object or the current camera position)",
+		"syntax": "<x>,<y>,<z> | selected | here    \n(i.e. either coordinates, the position of the currently selected wasp or the current camera position)",
 		"subcommands": []
 	},
 
@@ -50,7 +50,7 @@
 			{
 				"name": "setpos",
 				"description": "Sets the selected wasp to the given position.",
-				"syntax": "wasp setpos [<position>]",
+				"syntax": "wasp setpos <position>",
 				"subcommands": []
 			}
 		]
@@ -60,7 +60,7 @@
 	{
 		"name": "spawn",
 		"description": "Spawns entities.",
-		"syntax": "spawn <entity> [<position>] [<amount>]",
+		"syntax": "spawn <entity> <position> [<amount>]",
 		"subcommands": []
 	}
 ]

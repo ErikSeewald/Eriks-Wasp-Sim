@@ -3,6 +3,7 @@
 #include "Wasp.h"
 #include <list>
 #include <chrono>
+#include <glm/glm.hpp>
 
 /**
 * @namespace Simulation
@@ -26,6 +27,8 @@ namespace Simulation
 	* @return list of all active wasps in the simulation.
 	*/
 	std::list<Wasp*>* getWasps();
+
+	bool spawnWasps(glm::vec3 position, int amount);
 	
 	/**
 	* Returns the simulations's last delta time

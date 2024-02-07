@@ -1,4 +1,5 @@
 #pragma once
+
 #include <chrono>
 #include "Updatable.h"
 #include <glm/glm.hpp>
@@ -26,6 +27,10 @@ class Wasp : Updatable
 
 		void setViewingVector(glm::vec3 viewingVector);
 
+		bool isAlive();
+
+		void kill();
+
 	private:
 		glm::vec3 position;
 		glm::vec3 viewingVector;
@@ -34,6 +39,8 @@ class Wasp : Updatable
 		float ascendSpeed; // speed of movement along the y axis
 
 		std::chrono::duration<double>* deltaTime;
+
+		bool _isAlive;
 
 		/**
 		* Updates the Wasp's position based on its current state
