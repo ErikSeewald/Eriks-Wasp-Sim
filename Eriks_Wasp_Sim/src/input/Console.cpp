@@ -9,7 +9,8 @@
 //PRINTS
 const std::string initPrint = "Welcome to Eriks Wasp Sim! \nType 'help' to see a list of available commands. \n";
 const std::string postCommandPrint = "\n\n$ ";
-const std::string invalidCommandPrint = "Command not found";
+const std::string invalidSyntaxPrint = "Invalid syntax!";
+const std::string syntaxNotFoundPrint = "No syntax for this command found";
 
 //COMMANDS JSON
 const std::string baseDir = "../../../../../Assets/Commands/";
@@ -18,11 +19,14 @@ const std::string commandsFile = baseDir + "Commands.json";
 const std::string commandsFileFallback = baseDirFallback + "Commands.json";
 
 //COMMAND HANDLERS
-using CommandHandler = std::function<void()>;
-using CommandHandlerMap = std::unordered_map<std::string, CommandHandler>;
-CommandHandlerMap commandHandlers =
+CommandHandlerMap mainCommandHandlers =
 {
-        {"help", CommandHandlers::commandHelp}
+        {"help", CommandHandlers::commandHelp},
+        {"syntax", CommandHandlers::commandSyntax},
+        {"position", CommandHandlers::commandPosition},
+        {"entity", CommandHandlers::commandEntity},
+        {"wasp", CommandHandlers::commandWasp},
+        {"spawn", CommandHandlers::commandSpawn}
 };
 
 json commands;
@@ -65,27 +69,33 @@ void Console::startLoop()
     while (true) 
     {
         std::getline(std::cin, command);
-        processCommand(command);
+        processCommand(command, mainCommandHandlers);
         std::cout << postCommandPrint;
     }
 }
 
 /**
-* Tries to process the given command by finding a fitting command handler.
+* Tries to process the given subcommand by finding a fitting command handler in the CommandHandlerMap
+* of the subcommands parent command.
 * Prints an error message if no fitting command handler is found.
-* 
-* @param command the command to process
+*
+* @param subcommand the subcommand to process
+* @param commandHandlers the CommandHandlerMap for the parent command
 */
-void Console::processCommand(const std::string& command)
+void Console::processCommand(const std::string& command, CommandHandlerMap& commandHandlers)
 {
-    CommandHandlerMap::iterator iterator = commandHandlers.find(_getFirstWord(command));
+    std::string trimmedCommand = trimLeadingWhitespace(command);
+
+    std::string firstWord = getFirstWord(trimmedCommand);
+    CommandHandlerMap::iterator iterator = commandHandlers.find(firstWord);
     if (iterator != commandHandlers.end())
     {
-        iterator->second(); // Execute the command handler function
+        // Execute the command handler function and pass the subcommand after firstWord to it
+        iterator->second(trimmedCommand.substr(firstWord.length()));
     }
     else
     {
-        std::cout << invalidCommandPrint;
+        printInvalidSyntaxError();
     }
 }
 
@@ -96,10 +106,95 @@ void Console::processCommand(const std::string& command)
 * @param str the string to get the first word from
 * @return The first word in the given string or an empty string
 */
-std::string Console::_getFirstWord(const std::string& str)
+std::string Console::getFirstWord(const std::string& str)
 {
-    std::istringstream iss(str);
+    std::istringstream iss(str + " "); //add " ". Otherwise it wont recognize strings that are made up of one word
     std::string word;
     iss >> word; //extracts chars from iss and stores them in word until a whitespace char is encountered
     return word;
+}
+
+std::string Console::trimLeadingWhitespace(const std::string& str)
+{
+    for (int i = 0; i < str.length(); i++)
+    {
+        if (!std::isspace(str[i]))
+        {
+            return str.substr(i);
+        }
+    }
+    return std::string();
+}
+
+bool Console::isBlank(const std::string& str)
+{
+    return trimLeadingWhitespace(str).empty();
+}
+
+/**
+* Prints the name and description of the given command.
+* Leads to a runtime error if the given json is invalid.
+*
+* @param command the command to print
+*/
+void Console::printCommandDescription(const json& command)
+{
+    // extract json values like this because '<<' puts quotation marks around normal json values
+    std::string name = command["name"].get<std::string>();
+    std::string description = command["description"].get<std::string>();
+
+    std::cout << "\n " << name;
+
+    int tabCount = 4 - (name.length() / 4);
+    for (int i = 0; i < tabCount; i++)
+    {
+        std::cout << "\t";
+    }
+
+    std::cout << description << std::endl;
+}
+
+/**
+* Prints the syntax of the given command.
+* Leads to a runtime error if the given json is invalid.
+*
+* @param command the command to print the syntax of
+*/
+void Console::printCommandSyntax(const json& command)
+{
+    static const std::string syntaxKey = "syntax";
+    if (!JsonHandler::hasKey(command, syntaxKey))
+    {
+        std::cout << syntaxNotFoundPrint << std::endl;
+        return;
+    }
+
+    std::string syntax = command[syntaxKey].get<std::string>();
+    std::cout << syntax << std::endl;
+}
+
+/**
+* Prints all subcommands of the parent command, provided it can be found.
+*
+* @param parentCommandName the 'name' value of the parent command
+*/
+void Console::printSubCommands(const json& parentCommandName)
+{
+   static const std::string subcommandsKey = "subcommands";
+
+    const json& command = JsonHandler::findByName(commands, parentCommandName);
+    if (!JsonHandler::hasKey(command, subcommandsKey))
+    {
+        return;
+    }
+
+    for (const json& subcommand : command[subcommandsKey])
+    {
+        Console::printCommandDescription(subcommand);
+    }
+}
+
+void Console::printInvalidSyntaxError()
+{
+    std::cout << invalidSyntaxPrint;
 }

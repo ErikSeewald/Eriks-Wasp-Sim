@@ -2,6 +2,9 @@
 #include "json.hpp"
 using nlohmann::json;
 
+using CommandHandler = std::function<void (const std::string&)>;
+using CommandHandlerMap = std::unordered_map<std::string, CommandHandler>;
+
 /**
 * @namespace Console
 * @brief A namespace for all methods dealing with console input
@@ -14,12 +17,14 @@ namespace Console
 	void startLoop();
 
 	/**
-	* Tries to process the given command by finding a fitting command handler.
+	* Tries to process the given subcommand by finding a fitting command handler in the CommandHandlerMap
+	* of the subcommands parent command.
 	* Prints an error message if no fitting command handler is found.
 	*
-	* @param command the command to process
+	* @param subcommand the subcommand to process
+	* @param commandHandlers the CommandHandlerMap for the parent command
 	*/
-	void processCommand(const std::string& command);
+	void processCommand(const std::string& subcommand, CommandHandlerMap& commandHandlers);
 
 	const json& getCommands();
 
@@ -32,5 +37,34 @@ namespace Console
 	* @param str the string to get the first word from
 	* @return The first word in the given string or an empty string
 	*/
-	std::string _getFirstWord(const std::string& str);
+	std::string getFirstWord(const std::string& str);
+
+	std::string trimLeadingWhitespace(const std::string& str);
+
+	bool isBlank(const std::string& str);
+
+	/**
+	* Prints the name and description of the given command.
+	* Leads to a runtime error if the given json is invalid.
+	* 
+	* @param command the command to print
+	*/
+	void printCommandDescription(const json& command);
+
+	/**
+	* Prints the syntax of the given command.
+	* Leads to a runtime error if the given json is invalid.
+	*
+	* @param command the command to print the syntax of
+	*/
+	void printCommandSyntax(const json& command);
+
+	/**
+	* Prints all subcommands of the parent command, provided it can be found.
+	* 
+	* @param parentCommandName the 'name' value of the parent command
+	*/
+	void printSubCommands(const json& parentCommandName);
+
+	void printInvalidSyntaxError();
 }
