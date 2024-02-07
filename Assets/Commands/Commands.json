@@ -1,6 +1,66 @@
 [
 	{
 		"name": "help",
-		"description": "Prints a list of available commands and their descriptions"
+		"description": "Prints a list of available commands and their descriptions",
+		"syntax": "help",
+		"subcommands": []
+	},
+
+	{
+		"name": "syntax",
+		"description": "Prints an explanation of a command's syntax.",
+		"syntax": "syntax [command] {subcommand}*",
+		"subcommands": []
+	},
+
+	{
+		"name": "position",
+		"description": "Explains the syntax for the use of <position> in other commands.",
+		"syntax": "(<x>,<y>,<z>) | selected | here    \n(i.e. either coordinates, the position of the currently selected object or the current camera position)",
+		"subcommands": []
+	},
+
+	{
+		"name": "entity",
+		"description": "Explains the syntax for the use of <entity> in other commands.",
+		"syntax": "wasp    \n(just wasps for now)",
+		"subcommands": []
+	},
+
+	{
+		"name": "wasp",
+		"description": "Allows editing the currently selected wasp. Type 'wasp help' for more information.",
+		"syntax": "wasp {subcommand}*",
+		"subcommands": 
+		[
+			{
+				"name": "help",
+				"description": "Prints a list of available wasp commands and their descriptions.",
+				"syntax": "wasp help",
+				"subcommands": []
+			},
+
+			{
+				"name": "kill",
+				"description": "Kills the currently selected wasp.",
+				"syntax": "wasp kill",
+				"subcommands": []
+			},
+
+			{
+				"name": "setpos",
+				"description": "Sets the selected wasp to the given position.",
+				"syntax": "wasp setpos [<position>]",
+				"subcommands": []
+			}
+		]
+			
+	},
+
+	{
+		"name": "spawn",
+		"description": "Spawns entities.",
+		"syntax": "spawn <entity> [<position>] [<amount>]",
+		"subcommands": []
 	}
 ]
