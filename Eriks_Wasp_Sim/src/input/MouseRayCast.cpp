@@ -1,8 +1,5 @@
 #include "MouseRayCast.h"
 
-#include "MouseHandler.h"
-#include <glm/gtc/matrix_inverse.hpp>
-#include <limits>
 #include "Simulation.h"
 #include "SimVisualizer.h"
 

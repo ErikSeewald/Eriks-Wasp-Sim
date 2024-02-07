@@ -1,11 +1,9 @@
 #include "SimVisualizer.h"
 #include "KeyboardHandler.h"
 #include "MouseHandler.h"
-#include <list>
 #include "Simulation.h"
 #include "WaspRenderer.h"
 #include <iostream>
-#include <cstdlib>
 
 Camera camera;
 

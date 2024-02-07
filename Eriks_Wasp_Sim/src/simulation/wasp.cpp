@@ -1,8 +1,6 @@
 #include "Wasp.h"
 #include <random>
-#include <cmath>
 #include "Simulation.h"
-#include "SimVisualizer.h"
 
 Wasp::Wasp()
 {
@@ -11,6 +9,8 @@ Wasp::Wasp()
 
 	turnSpeed = 0;
 	ascendSpeed = 0;
+
+	_isAlive = true;
 
 	deltaTime = Simulation::getDeltaTime();
 }
@@ -102,4 +102,14 @@ glm::vec3 Wasp::getViewingVector()
 void Wasp::setViewingVector(glm::vec3 viewingVector)
 {
 	this->viewingVector = viewingVector;
+}
+
+bool Wasp::isAlive()
+{
+	return _isAlive;
+}
+
+void Wasp::kill()
+{
+	_isAlive = false;
 }

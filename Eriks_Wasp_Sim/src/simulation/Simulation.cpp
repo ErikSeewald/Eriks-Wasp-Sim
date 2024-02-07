@@ -1,6 +1,6 @@
 #include "Simulation.h"
+#include "UI.h"
 #include <thread>
-#include <glm/glm.hpp>
 
 using namespace std::chrono;
 
@@ -22,10 +22,21 @@ void Simulation::startLoop() {
 
     while (true) 
     {
-
+        //WASPS
         for (Wasp* wasp : wasps)
         {
             wasp->update();
+        }
+        wasps.remove_if([](Wasp* w) { return !w->isAlive(); });
+
+        //UI
+        UI::UI_STATE* uiState = UI::getUIState();
+
+        // deselect selectedWasp if it has died
+        Wasp* selectedWasp = uiState->selectedWasp;
+        if (selectedWasp != NULL && !selectedWasp->isAlive())
+        {
+            uiState->selectedWasp = NULL;
         }
 
         //DELTA TIME
@@ -72,6 +83,18 @@ void Simulation::_loopInit()
 std::list<Wasp*>* Simulation::getWasps()
 {
     return &wasps;
+}
+
+bool Simulation::spawnWasps(glm::vec3 position, int amount)
+{
+    for (int i = 0; i < amount; i++)
+    {
+        Wasp* wasp = new Wasp();
+        wasp->setPosition(position);
+        wasps.push_back(wasp);
+    }
+    
+    return amount >= 1;
 }
 
 /**

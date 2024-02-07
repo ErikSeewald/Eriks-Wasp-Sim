@@ -2,8 +2,6 @@
 
 #include <GL/glew.h>
 #include <GL/glut.h>
-#include <GL/gl.h>
-#include "Wasp.h"
 #include <glm/glm.hpp>
 
 #include "Camera.h"

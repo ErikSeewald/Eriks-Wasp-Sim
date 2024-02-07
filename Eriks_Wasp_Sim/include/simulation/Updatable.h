@@ -1,3 +1,5 @@
+#pragma once
+
 /**
 * @class Updatable
 * @brief An abstract class meant to serve as an interface for updatable classes within the simulation.
