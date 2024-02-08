@@ -26,7 +26,6 @@ void Simulation::startLoop() {
         for (Wasp* wasp : wasps)
         {
             wasp->update();
-            wasp->kill();
         }
         //TODO: Fix memory leak here
         wasps.remove_if([](Wasp* w) { return !w->isAlive(); });
