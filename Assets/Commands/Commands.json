@@ -60,7 +60,7 @@
 	{
 		"name": "spawn",
 		"description": "Spawns entities.",
-		"syntax": "spawn <entity> <position> [<amount>]",
+		"syntax": "spawn <entity> <position> <amount>",
 		"subcommands": []
 	}
 ]

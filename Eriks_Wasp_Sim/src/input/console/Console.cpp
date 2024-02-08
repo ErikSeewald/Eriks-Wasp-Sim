@@ -2,12 +2,11 @@
 #include "JsonHandler.h"
 #include "CommandHandlers.h"
 #include "StringUtil.h"
+#include "CommandUtil.h"
 
 //PRINTS
 const std::string initPrint = "Welcome to Eriks Wasp Sim! \nType 'help' to see a list of available commands. \n";
 const std::string postCommandPrint = "\n\n$ ";
-const std::string invalidSyntaxPrint = "Invalid syntax!";
-const std::string syntaxNotFoundPrint = "No syntax for this command found";
 
 //COMMANDS JSON
 const std::string baseDir = "../../../../../Assets/Commands/";
@@ -92,74 +91,6 @@ void Console::processCommand(const std::string& command, CommandHandlerMap& comm
     }
     else
     {
-        printInvalidSyntaxError();
+        CommandUtil::printInvalidSyntaxError();
     }
-}
-
-/**
-* Prints the name and description of the given command.
-* Leads to a runtime error if the given json is invalid.
-*
-* @param command the command to print
-*/
-void Console::printCommandDescription(const json& command)
-{
-    // extract json values like this because '<<' puts quotation marks around normal json values
-    std::string name = command["name"].get<std::string>();
-    std::string description = command["description"].get<std::string>();
-
-    std::cout << "\n " << name;
-
-    int tabCount = 4 - (name.length() / 4);
-    for (int i = 0; i < tabCount; i++)
-    {
-        std::cout << "\t";
-    }
-
-    std::cout << description << std::endl;
-}
-
-/**
-* Prints the syntax of the given command.
-* Leads to a runtime error if the given json is invalid.
-*
-* @param command the command to print the syntax of
-*/
-void Console::printCommandSyntax(const json& command)
-{
-    static const std::string syntaxKey = "syntax";
-    if (!JsonHandler::hasKey(command, syntaxKey))
-    {
-        std::cout << syntaxNotFoundPrint << std::endl;
-        return;
-    }
-
-    std::string syntax = command[syntaxKey].get<std::string>();
-    std::cout << syntax << std::endl;
-}
-
-/**
-* Prints all subcommands of the parent command, provided it can be found.
-*
-* @param parentCommandName the 'name' value of the parent command
-*/
-void Console::printSubCommands(const json& parentCommandName)
-{
-   static const std::string subcommandsKey = "subcommands";
-
-    const json& command = JsonHandler::findByName(commands, parentCommandName);
-    if (!JsonHandler::hasKey(command, subcommandsKey))
-    {
-        return;
-    }
-
-    for (const json& subcommand : command[subcommandsKey])
-    {
-        Console::printCommandDescription(subcommand);
-    }
-}
-
-void Console::printInvalidSyntaxError()
-{
-    std::cout << invalidSyntaxPrint;
 }

@@ -37,6 +37,12 @@
     <Filter Include="Source Files\util">
       <UniqueIdentifier>{9b9a441e-872d-42e0-8da4-69a3fce209f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\input\console">
+      <UniqueIdentifier>{7bd9114d-959e-4419-b799-43e3698300b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\input\console">
+      <UniqueIdentifier>{bfa82394-aba9-4508-9ce3-3a1f093dbec3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h">
@@ -66,17 +72,20 @@
     <ClInclude Include="..\..\include\input\MouseRayCast.h">
       <Filter>Header Files\input</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\input\Console.h">
-      <Filter>Header Files\input</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\input\CommandHandlers.h">
-      <Filter>Header Files\input</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\util\JsonHandler.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\util\StringUtil.h">
       <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\console\Console.h">
+      <Filter>Header Files\input\console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\console\CommandHandlers.h">
+      <Filter>Header Files\input\console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\console\CommandUtil.h">
+      <Filter>Header Files\input\console</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -107,17 +116,20 @@
     <ClCompile Include="..\..\src\input\MouseRayCast.cpp">
       <Filter>Source Files\input</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\input\Console.cpp">
-      <Filter>Source Files\input</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\input\CommandHandlers.cpp">
-      <Filter>Source Files\input</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\util\JsonHandler.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\util\StringUtil.cpp">
       <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\console\CommandHandlers.cpp">
+      <Filter>Source Files\input\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\console\Console.cpp">
+      <Filter>Source Files\input\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\console\CommandUtil.cpp">
+      <Filter>Source Files\input\console</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
