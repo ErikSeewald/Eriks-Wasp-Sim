@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <glm/glm.hpp>
 
 /**
 * @namespace CommandHandlers
@@ -10,17 +9,6 @@
 namespace CommandHandlers
 {
 	void commandHelp(const std::string& subcommand);
-
-	enum SpawnEntity
-	{
-		WASP, INVALID
-	};
-
-	SpawnEntity _convertToSpawnEntity(const std::string& subcommand);
-
-	glm::vec3 _convertToPosition(const std::string& subcommand);
-
-	int _convertToAmount(const std::string& subcommand);
 
 	//SYNTAX
 	void commandSyntax(const std::string& subcommand);

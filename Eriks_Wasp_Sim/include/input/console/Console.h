@@ -31,29 +31,4 @@ namespace Console
 	const json& getCommands();
 
 	void _init();
-
-	/**
-	* Prints the name and description of the given command.
-	* Leads to a runtime error if the given json is invalid.
-	* 
-	* @param command the command to print
-	*/
-	void printCommandDescription(const json& command);
-
-	/**
-	* Prints the syntax of the given command.
-	* Leads to a runtime error if the given json is invalid.
-	*
-	* @param command the command to print the syntax of
-	*/
-	void printCommandSyntax(const json& command);
-
-	/**
-	* Prints all subcommands of the parent command, provided it can be found.
-	* 
-	* @param parentCommandName the 'name' value of the parent command
-	*/
-	void printSubCommands(const json& parentCommandName);
-
-	void printInvalidSyntaxError();
 }
