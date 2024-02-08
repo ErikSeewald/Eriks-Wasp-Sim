@@ -32,6 +32,8 @@ void WaspRenderer::drawWasps(std::list<Wasp*>* wasps)
     glBindVertexArray(VAO);
     for (Wasp* wasp : *wasps)
     {
+        //TODO: Fix concurrency issue here:
+        // Issue when wasps are deleted in Simulation while still looped over in here
         if (wasp == selectedWasp)
         {
             //Draw selected wasp in a different function
