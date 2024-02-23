@@ -31,4 +31,6 @@ namespace Console
 	const json& getCommands();
 
 	void _init();
+
+	void sendDebugMessage(const std::string& message);
 }

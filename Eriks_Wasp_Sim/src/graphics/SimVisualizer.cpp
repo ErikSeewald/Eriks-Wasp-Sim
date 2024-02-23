@@ -1,7 +1,6 @@
 #include "SimVisualizer.h"
 #include "KeyboardHandler.h"
 #include "MouseHandler.h"
-#include "Simulation.h"
 #include "WaspRenderer.h"
 #include <iostream>
 
@@ -91,7 +90,7 @@ void SimVisualizer::render()
 
     drawGrid();
 
-    WaspRenderer::drawWasps(Simulation::getWasps());
+    WaspRenderer::drawWasps(WaspSlots::getWaspSlots());
     WaspRenderer::drawSelectedWasp();
  
     glutSwapBuffers();

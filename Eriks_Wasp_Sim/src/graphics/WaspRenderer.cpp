@@ -20,27 +20,28 @@ const std::string modelFile = baseDir + "Wasp.obj";
 const std::string modelFileFallback = baseDirFallback + "Wasp.obj";
 
 /**
-* Visualizes the given list of wasps. Assumes glut, glew, etc. are preinitialized.
+* Visualizes the given WaspSlot linked list. Assumes glut, glew, etc. are preinitialized.
 *
-* @param wasps the std::list of wasps to visualize
+* @param wasps the linked list of WaspSlots
 */
-void WaspRenderer::drawWasps(std::list<Wasp*>* wasps)
+void WaspRenderer::drawWasps(WaspSlot* waspSlot)
 {
     Wasp* selectedWasp = UI::getUIState()->selectedWasp;
+    Wasp* wasp;
 
     glColor3f(1.0f, 0.5f, 0.0f);
     glBindVertexArray(VAO);
-    for (Wasp* wasp : *wasps)
+    while (waspSlot != nullptr)
     {
-        //TODO: Fix concurrency issue here:
-        // Issue when wasps are deleted in Simulation while still looped over in here
+        wasp = waspSlot->wasp;
+        waspSlot = waspSlot->next;
+
         if (wasp == selectedWasp)
         {
-            //Draw selected wasp in a different function
             continue;
         }
 
-        _drawWaspPrebound(wasp);    
+        _drawWaspPrebound(wasp);
     }
     glBindVertexArray(0);
 }

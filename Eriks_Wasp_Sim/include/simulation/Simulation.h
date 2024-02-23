@@ -16,17 +16,16 @@ namespace Simulation
 	*/
 	void startLoop();
 
+	void memoryCleanup();
+
+	void updateWasps();
+
+	void updateDeltaTime();
+
 	/**
 	* Initializes everything needed for loop() to run
 	*/
 	void _loopInit();
-
-	/**
-	* Returns a list of all active wasps in the simulation.
-	* 
-	* @return list of all active wasps in the simulation.
-	*/
-	std::list<Wasp*>* getWasps();
 
 	bool spawnWasps(glm::vec3 position, int amount);
 	
