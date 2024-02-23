@@ -94,3 +94,10 @@ void Console::processCommand(const std::string& command, CommandHandlerMap& comm
         CommandUtil::printInvalidSyntaxError();
     }
 }
+
+void Console::sendDebugMessage(const std::string& message)
+{
+    std::cout << "\r" << std::string(80, ' ') << "\r"; // clear current line
+    std::cout << message << std::endl;
+    std::cout << postCommandPrint; // back to normal state
+}

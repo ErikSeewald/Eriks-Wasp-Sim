@@ -87,6 +87,9 @@
     <ClInclude Include="..\..\include\input\console\CommandUtil.h">
       <Filter>Header Files\input\console</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\simulation\WaspSlots.h">
+      <Filter>Header Files\simulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\input\console\CommandUtil.cpp">
       <Filter>Source Files\input\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\WaspSlots.cpp">
+      <Filter>Source Files\simulation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

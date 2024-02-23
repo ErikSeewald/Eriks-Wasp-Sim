@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Wasp.h"
+#include "WaspSlots.h"
 #include <list>
+
+using WaspSlots::WaspSlot;
 
  /**
  * @namespace WaspRenderer
@@ -20,11 +23,11 @@ namespace WaspRenderer
     };
 
     /**
-    * Visualizes the given list of wasps. Assumes glut, glew, etc. are preinitialized.
+    * Visualizes the given WaspSlot linked list. Assumes glut, glew, etc. are preinitialized.
     *
-    * @param wasps the std::list of wasps to visualize
+    * @param wasps the linked list of WaspSlots
     */
-    void drawWasps(std::list<Wasp*>* wasps);
+    void drawWasps(WaspSlot* waspSlot);
 
     /**
     * Visualizes the wasp selected by the user, provided it exists.
