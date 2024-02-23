@@ -16,11 +16,11 @@ namespace Simulation
 	*/
 	void startLoop();
 
-	void memoryCleanup();
-
 	void updateWasps();
 
 	void updateDeltaTime();
+
+	void memoryCleanup();
 
 	/**
 	* Initializes everything needed for loop() to run

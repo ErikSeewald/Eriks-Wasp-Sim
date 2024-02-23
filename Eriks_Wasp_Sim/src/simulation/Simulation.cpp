@@ -10,10 +10,6 @@ using WaspSlots::WaspSlot;
 std::chrono::duration<double> deltaTime;
 steady_clock::time_point previousTime;
 
-//MEMORY
-std::chrono::duration<double> timeSinceLastCleanup;
-const double secondsBetweenCleanups = 3;
-
 /**
 * Starts and runs the simulation loop.
 */
@@ -35,16 +31,6 @@ void Simulation::startLoop() {
         {
             std::this_thread::sleep_for(milliseconds(static_cast<int>(sleepTimeSeconds * 1000)));
         }
-    }
-}
-
-void Simulation::memoryCleanup()
-{
-    timeSinceLastCleanup = timeSinceLastCleanup + deltaTime;
-    if (timeSinceLastCleanup.count() > secondsBetweenCleanups)
-    {
-        WaspSlots::cleanupMemory();
-        timeSinceLastCleanup = std::chrono::duration<double>(0);
     }
 }
 
@@ -88,6 +74,11 @@ void Simulation::updateDeltaTime()
     steady_clock::time_point currentTime = steady_clock::now();
     deltaTime = duration_cast<duration<double>>(currentTime - previousTime);
     previousTime = currentTime;
+}
+
+void Simulation::memoryCleanup()
+{
+    WaspSlots::cleanupMemory();
 }
 
 /**
