@@ -42,16 +42,26 @@ void CommandHandlers::commandSyntax(const std::string& subcommand)
     CommandUtil::printCommandSyntax(command);
 }
 
-void CommandHandlers::commandPosition(const std::string&)
+void CommandHandlers::commandElement(const std::string& subcommand)
 {
-    static const std::string positionSyntaxCommand = " position";
-    commandSyntax(positionSyntaxCommand);
-}
+    std::string element = StringUtil::getFirstWord(subcommand);
 
-void CommandHandlers::commandEntity(const std::string&)
-{
-    static const std::string entitySyntaxCommand = " entity";
-    commandSyntax(entitySyntaxCommand);
+    if (element.empty() || !StringUtil::isBlank(subcommand.substr(element.size() + 1)))
+    {
+        CommandUtil::printInvalidSyntaxError();
+        return;
+    }
+
+    json elementsCommand = JsonHandler::findByName(Console::getCommands(), "element");
+    json specificElement = JsonHandler::findByName(elementsCommand["elements"], element);
+
+    if (specificElement.empty())
+    {
+        CommandUtil::printInvalidSyntaxError();
+        return;
+    }
+
+    CommandUtil::printCommandDescription(specificElement);
 }
 
 
