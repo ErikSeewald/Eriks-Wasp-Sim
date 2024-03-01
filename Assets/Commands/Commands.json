@@ -15,7 +15,7 @@
 
 	{
 		"name": "element",
-		"description": "Prints an explanation of a command element (i.e. <position> etc. )",
+		"description": "Prints an explanation of a command element (i.e. <position> etc.)",
 		"syntax": "element <element>",
 		"elements": 
 		[
@@ -77,7 +77,7 @@
 	{
 		"name": "kill",
 		"description": "Kills entities.",
-		"syntax": "kill <entity> <amount> <kill-strategy>",
+		"syntax": "kill <entity> (<amount> | all | selected) [<kill-strategy>]",
 		"subcommands": []
 	}
 ]

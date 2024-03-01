@@ -28,6 +28,13 @@ namespace Simulation
 	void _loopInit();
 
 	bool spawnWasps(glm::vec3 position, int amount);
+
+	enum KillStrategy
+	{
+		RANDOM, ALL, INVALID
+	};
+
+	int killWasps(int amountToKill, KillStrategy strategy);
 	
 	/**
 	* Returns the simulations's last delta time

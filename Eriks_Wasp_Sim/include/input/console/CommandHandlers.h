@@ -26,4 +26,7 @@ namespace CommandHandlers
 
 	//SPAWN
 	void commandSpawn(const std::string& subcommand);
+
+	//KILL
+	void commandKill(const std::string& subcommand);
 }

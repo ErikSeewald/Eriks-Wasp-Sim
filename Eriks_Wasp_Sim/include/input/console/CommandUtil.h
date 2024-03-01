@@ -1,3 +1,5 @@
+#include "Simulation.h"
+
 #include "json.hpp"
 using nlohmann::json;
 
@@ -16,12 +18,14 @@ namespace CommandUtil
 		glm::vec3(std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity());
 	static const std::string noWaspSelectedPrint = "No wasp selected";
 
-	enum SpawnEntity
+	enum CommandEntity
 	{
 		WASP, INVALID
 	};
 
-	SpawnEntity convertToSpawnEntity(const std::string& subcommand);
+	CommandEntity convertToEntity(const std::string& subcommand);
+
+	Simulation::KillStrategy convertToKillStrategy(const std::string& subcommand);
 
 	glm::vec3 convertToPosition(const std::string& subcommand);
 

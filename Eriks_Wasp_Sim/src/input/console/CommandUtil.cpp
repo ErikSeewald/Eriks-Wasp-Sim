@@ -11,14 +11,25 @@ const std::string invalidSyntaxPrint = "Invalid syntax!";
 const std::string syntaxNotFoundPrint = "No syntax for this command found";
 const json invalidJson = json();
 
-using CommandUtil::SpawnEntity;
-SpawnEntity CommandUtil::convertToSpawnEntity(const std::string& subcommand)
+using CommandUtil::CommandEntity;
+CommandEntity CommandUtil::convertToEntity(const std::string& subcommand)
 {
     if (subcommand == "wasp")
     {
-        return SpawnEntity::WASP;
+        return CommandEntity::WASP;
     }
-    return SpawnEntity::INVALID;
+    return CommandEntity::INVALID;
+}
+
+using Simulation::KillStrategy;
+KillStrategy CommandUtil::convertToKillStrategy(const std::string& subcommand)
+{
+    if (subcommand == "random")
+    {
+        return KillStrategy::RANDOM;
+    }
+
+    return KillStrategy::INVALID;
 }
 
 glm::vec3 CommandUtil::convertToPosition(const std::string& subcommand)
@@ -70,6 +81,10 @@ int CommandUtil::convertToAmount(const std::string& subcommand)
         return std::stoi(subcommand);
     }
     catch (std::invalid_argument& e)
+    {
+        return -1;
+    }
+    catch (std::out_of_range& e)
     {
         return -1;
     }
@@ -130,7 +145,7 @@ void CommandUtil::printCommandDescription(const json& command)
 
     std::cout << "\n " << name;
 
-    int tabCount = 4 - (name.length() / 4);
+    int tabCount = 4 - (name.length() / 3.2);
     for (int i = 0; i < tabCount; i++)
     {
         std::cout << "\t";
