@@ -21,7 +21,8 @@ CommandHandlerMap mainCommandHandlers =
         {"syntax", CommandHandlers::commandSyntax},
         {"element", CommandHandlers::commandElement},
         {"wasp", CommandHandlers::commandWasp},
-        {"spawn", CommandHandlers::commandSpawn}
+        {"spawn", CommandHandlers::commandSpawn},
+        {"kill", CommandHandlers::commandKill}
 };
 
 json commands;

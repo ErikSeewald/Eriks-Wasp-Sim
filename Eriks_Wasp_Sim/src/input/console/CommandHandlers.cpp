@@ -1,13 +1,16 @@
 #include "CommandHandlers.h"
 #include "Console.h"
 #include "JsonHandler.h"
-#include "Simulation.h"
 #include "StringUtil.h"
 #include "json.hpp"
 #include "CommandUtil.h"
 #include "UI.h"
+#include "WaspSlots.h"
 
 using nlohmann::json;
+using CommandUtil::CommandEntity;
+using Simulation::KillStrategy;
+using WaspSlots::WaspSlot;
 
 void CommandHandlers::commandHelp(const std::string& subcommand)
 {   
@@ -149,14 +152,13 @@ void CommandHandlers::commandWaspSetPos(const std::string& subcommand)
 //-------------------------------------
 //----------------SPAWN----------------
 //-------------------------------------
-using CommandUtil::SpawnEntity;
 void CommandHandlers::commandSpawn(const std::string& subcommand)
 {
     std::string firstWord = StringUtil::getFirstWord(subcommand);
 
     //ENTITY
-    SpawnEntity entity = CommandUtil::convertToSpawnEntity(firstWord);
-    if (entity == SpawnEntity::INVALID)
+    CommandEntity entity = CommandUtil::convertToEntity(firstWord);
+    if (entity == CommandEntity::INVALID)
     {
         CommandUtil::printInvalidSyntaxError();
         return;
@@ -185,15 +187,88 @@ void CommandHandlers::commandSpawn(const std::string& subcommand)
     //EXECUTE
     switch (entity)
     {
-        case SpawnEntity::WASP: 
+        case CommandEntity::WASP: 
             bool success = Simulation::spawnWasps(spawnPos, amount);
             if (success)
             {
-                std::cout << "Wasp: Spawned " << amount << " at " << spawnPos.x << "," << spawnPos.y << "," << spawnPos.z << ",";
+                std::cout << "Entity wasp: Spawned " << amount << " at " << spawnPos.x << "," << spawnPos.y << "," << spawnPos.z << ",";
             }
             else
             {
                 CommandUtil::printInvalidSyntaxError();
             }
+            break;
+    }
+}
+
+//-------------------------------------
+//----------------KILL----------------
+//-------------------------------------
+void CommandHandlers::commandKill(const std::string& subcommand)
+{
+    KillStrategy strategy{};
+    std::string firstWord = StringUtil::getFirstWord(subcommand);
+
+    //ENTITY
+    CommandEntity entity = CommandUtil::convertToEntity(firstWord);
+    if (entity == CommandEntity::INVALID)
+    {
+        CommandUtil::printInvalidSyntaxError();
+        return;
+    }
+
+    //AMOUNT
+    std::string curCommandString = StringUtil::cutFirstWord(subcommand);
+    firstWord = StringUtil::getFirstWord(curCommandString);
+
+    int amount = 0;
+    if (firstWord == "all")
+    {
+        strategy = KillStrategy::ALL;
+    }
+
+    else if (firstWord == "selected")
+    {
+        commandWaspKill("");
+        return;
+    }
+
+    else
+    {
+        amount = CommandUtil::convertToAmount(firstWord);
+        if (amount < 1)
+        {
+            CommandUtil::printInvalidSyntaxError();
+            return;
+        }
+
+        //KILL STRATEGY
+        curCommandString = StringUtil::cutFirstWord(curCommandString);
+        firstWord = StringUtil::getFirstWord(curCommandString);
+
+        if (firstWord.empty())
+        {
+            strategy = KillStrategy::RANDOM;
+        }
+
+        else
+        {
+            strategy = CommandUtil::convertToKillStrategy(firstWord);
+
+            if (strategy == KillStrategy::INVALID || !StringUtil::isBlank(StringUtil::cutFirstWord(curCommandString)))
+            {
+                CommandUtil::printInvalidSyntaxError();
+                return;
+            }
+        }
+    }
+
+    //EXECUTE
+    switch (entity)
+    {
+        case CommandEntity::WASP:
+            int killedAmount = Simulation::killWasps(amount, strategy);
+            std::cout << "Entity wasp: Killed " << killedAmount;
+            break;
     }
 }

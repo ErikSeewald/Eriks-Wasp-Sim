@@ -10,6 +10,9 @@ using WaspSlots::WaspSlot;
 std::chrono::duration<double> deltaTime;
 steady_clock::time_point previousTime;
 
+std::chrono::duration<double> timeUntilCleanup;
+const std::chrono::duration<double> secondsBetweenCleanups(0.2);
+
 /**
 * Starts and runs the simulation loop.
 */
@@ -76,9 +79,19 @@ void Simulation::updateDeltaTime()
     previousTime = currentTime;
 }
 
+#include <iostream>
 void Simulation::memoryCleanup()
 {
-    WaspSlots::cleanupMemory();
+    timeUntilCleanup = timeUntilCleanup - deltaTime;
+    if (timeUntilCleanup.count() <= 0)
+    {   
+        // Only do cleanup if we do not have massive lag
+        if (deltaTime < secondsBetweenCleanups)
+        {
+            WaspSlots::cleanupMemory();
+        }
+        timeUntilCleanup = secondsBetweenCleanups;
+    }
 }
 
 /**
@@ -114,6 +127,26 @@ bool Simulation::spawnWasps(glm::vec3 position, int amount)
     }
     
     return amount >= 1;
+}
+
+using Simulation::KillStrategy;
+int Simulation::killWasps(int amountToKill, KillStrategy strategy)
+{
+    timeUntilCleanup = secondsBetweenCleanups;
+    if (strategy == KillStrategy::ALL)
+    {
+        amountToKill = -1;
+    }
+
+    int killedAmount = 0;
+    WaspSlot* waspSlot = WaspSlots::getWaspSlots();
+    while (waspSlot != nullptr && killedAmount != amountToKill)
+    {
+        waspSlot->wasp->kill();
+        killedAmount++;
+        waspSlot = waspSlot->next;
+    }
+    return killedAmount;
 }
 
 /**
