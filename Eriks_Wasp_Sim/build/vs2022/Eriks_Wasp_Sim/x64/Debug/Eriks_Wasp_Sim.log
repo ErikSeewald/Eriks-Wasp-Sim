@@ -1,0 +1,5 @@
+﻿  CommandHandlers.cpp
+  Console.cpp
+C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\input\console\Console.cpp(40,38): warning C4101: 'e': unreferenced local variable
+  Generating Code...
+  Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe

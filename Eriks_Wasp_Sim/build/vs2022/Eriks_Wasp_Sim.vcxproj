@@ -114,7 +114,7 @@
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\util;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\util;..\..\include\input;..\..\include;..\..\dependencies\freeglut\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
     <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

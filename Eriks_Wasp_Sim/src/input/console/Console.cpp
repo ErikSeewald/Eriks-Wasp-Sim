@@ -19,8 +19,7 @@ CommandHandlerMap mainCommandHandlers =
 {
         {"help", CommandHandlers::commandHelp},
         {"syntax", CommandHandlers::commandSyntax},
-        {"position", CommandHandlers::commandPosition},
-        {"entity", CommandHandlers::commandEntity},
+        {"element", CommandHandlers::commandElement},
         {"wasp", CommandHandlers::commandWasp},
         {"spawn", CommandHandlers::commandSpawn}
 };

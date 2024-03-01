@@ -14,16 +14,26 @@
 	},
 
 	{
-		"name": "position",
-		"description": "Explains the syntax for the use of <position> in other commands.",
-		"syntax": "<x>,<y>,<z> | selected | here    \n(i.e. either coordinates, the position of the currently selected wasp or the current camera position)",
-		"subcommands": []
-	},
+		"name": "element",
+		"description": "Prints an explanation of a command element (i.e. <position> etc. )",
+		"syntax": "element <element>",
+		"elements": 
+		[
+			{
+				"name": "position",
+				"description": "Position can be declared in one of the following ways: \n\n <x>,<y>,<z> | selected | here    \n (i.e. either coordinates, the position of the currently selected wasp or the current camera position)"
+			},
 
-	{
-		"name": "entity",
-		"description": "Explains the syntax for the use of <entity> in other commands.",
-		"syntax": "wasp    \n(just wasps for now)",
+			{
+				"name": "entity",
+				"description": "An entity can be one of the following: \n\n wasp    \n (just wasps for now)"
+			},
+
+			{
+				"name": "kill-strat",
+				"description": "An kill strategy can be one of the following: \n\n random - Chooses the specific entities to kill randomly    \n (just random for now)"
+			} 
+		],
 		"subcommands": []
 	},
 
@@ -61,6 +71,13 @@
 		"name": "spawn",
 		"description": "Spawns entities.",
 		"syntax": "spawn <entity> <position> <amount>",
+		"subcommands": []
+	},
+
+	{
+		"name": "kill",
+		"description": "Kills entities.",
+		"syntax": "kill <entity> <amount> <kill-strategy>",
 		"subcommands": []
 	}
 ]

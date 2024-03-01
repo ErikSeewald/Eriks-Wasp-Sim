@@ -13,9 +13,7 @@ namespace CommandHandlers
 	//SYNTAX
 	void commandSyntax(const std::string& subcommand);
 
-	void commandPosition(const std::string& subcommand);
-
-	void commandEntity(const std::string& subcommand);
+	void commandElement(const std::string& subcommand);
 
 	//WASP
 	void commandWasp(const std::string& subcommand);

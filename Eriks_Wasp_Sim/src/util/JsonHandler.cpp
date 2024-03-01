@@ -58,7 +58,7 @@ bool JsonHandler::hasKey(const json& findIn, const std::string& key)
 * @param name the name of the value to find
 * @return the value or a default json object if no value was found
 */
-const json& JsonHandler::findByName(const json& findIn, const json& name)
+const json& JsonHandler::findByName(const json& findIn, const std::string& name)
 {
     try
     {
