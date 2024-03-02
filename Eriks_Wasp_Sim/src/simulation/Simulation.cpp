@@ -1,6 +1,7 @@
 #include "Simulation.h"
 #include "UI.h"
 #include "WaspSlots.h"
+#include "MemoryManager.h"
 #include <thread>
 
 using namespace std::chrono;
@@ -9,9 +10,6 @@ using WaspSlots::WaspSlot;
 //DELTA TIME
 std::chrono::duration<double> deltaTime;
 steady_clock::time_point previousTime;
-
-std::chrono::duration<double> timeUntilCleanup;
-const std::chrono::duration<double> secondsBetweenCleanups(0.2);
 
 /**
 * Starts and runs the simulation loop.
@@ -25,8 +23,6 @@ void Simulation::startLoop() {
         updateWasps();
 
         updateDeltaTime();
-
-        memoryCleanup();
 
         static const double secondsBetweenUpdates = 1.0 / 60.0;
         double sleepTimeSeconds = secondsBetweenUpdates - deltaTime.count();
@@ -65,10 +61,10 @@ void Simulation::updateWasps()
     //SELECTED WASP
     UI::UI_STATE* uiState = UI::getUIState();
     Wasp* selectedWasp = uiState->selectedWasp;
-    if (selectedWasp != NULL && !selectedWasp->isAlive())
+    if (selectedWasp != nullptr && !selectedWasp->isAlive())
     {
         // deselect selectedWasp if it has died
-        uiState->selectedWasp = NULL;
+        uiState->selectedWasp = nullptr;
     }
 }
 
@@ -77,21 +73,6 @@ void Simulation::updateDeltaTime()
     steady_clock::time_point currentTime = steady_clock::now();
     deltaTime = duration_cast<duration<double>>(currentTime - previousTime);
     previousTime = currentTime;
-}
-
-#include <iostream>
-void Simulation::memoryCleanup()
-{
-    timeUntilCleanup = timeUntilCleanup - deltaTime;
-    if (timeUntilCleanup.count() <= 0)
-    {   
-        // Only do cleanup if we do not have massive lag
-        if (deltaTime < secondsBetweenCleanups)
-        {
-            WaspSlots::cleanupMemory();
-        }
-        timeUntilCleanup = secondsBetweenCleanups;
-    }
 }
 
 /**
@@ -132,7 +113,6 @@ bool Simulation::spawnWasps(glm::vec3 position, int amount)
 using Simulation::KillStrategy;
 int Simulation::killWasps(int amountToKill, KillStrategy strategy)
 {
-    timeUntilCleanup = secondsBetweenCleanups;
     if (strategy == KillStrategy::ALL)
     {
         amountToKill = -1;
@@ -146,6 +126,8 @@ int Simulation::killWasps(int amountToKill, KillStrategy strategy)
         killedAmount++;
         waspSlot = waspSlot->next;
     }
+
+    MemoryManager::scheduleCleanup();
     return killedAmount;
 }
 

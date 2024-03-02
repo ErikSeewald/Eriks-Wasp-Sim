@@ -20,8 +20,6 @@ namespace Simulation
 
 	void updateDeltaTime();
 
-	void memoryCleanup();
-
 	/**
 	* Initializes everything needed for loop() to run
 	*/
