@@ -25,6 +25,8 @@ namespace CommandUtil
 
 	CommandEntity convertToEntity(const std::string& subcommand);
 
+	Simulation::SpawnStrategy convertToSpawnStrategy(const std::string& subcommand);
+
 	Simulation::KillStrategy convertToKillStrategy(const std::string& subcommand);
 
 	glm::vec3 convertToPosition(const std::string& subcommand);

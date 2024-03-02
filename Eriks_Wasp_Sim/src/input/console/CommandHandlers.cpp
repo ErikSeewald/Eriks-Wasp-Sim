@@ -10,6 +10,7 @@
 using nlohmann::json;
 using CommandUtil::CommandEntity;
 using Simulation::KillStrategy;
+using Simulation::SpawnStrategy;
 using WaspSlots::WaspSlot;
 
 void CommandHandlers::commandHelp(const std::string& subcommand)
@@ -178,17 +179,38 @@ void CommandHandlers::commandSpawn(const std::string& subcommand)
     curCommandString = StringUtil::cutFirstWord(curCommandString);
     firstWord = StringUtil::getFirstWord(curCommandString);
     int amount = CommandUtil::convertToAmount(firstWord); 
-    if (amount < 1 || !StringUtil::isBlank(StringUtil::cutFirstWord(curCommandString)))
+    if (amount < 1)
     {
         CommandUtil::printInvalidSyntaxError();
         return;
+    }
+
+    //STRATEGY
+    SpawnStrategy strategy{};
+    curCommandString = StringUtil::cutFirstWord(curCommandString);
+    firstWord = StringUtil::getFirstWord(curCommandString);
+
+    if (firstWord.empty())
+    {
+        strategy = SpawnStrategy::POINT;
+    }
+
+    else
+    {
+        strategy = CommandUtil::convertToSpawnStrategy(firstWord);
+
+        if (strategy == SpawnStrategy::INVALID || !StringUtil::isBlank(StringUtil::cutFirstWord(curCommandString)))
+        {
+            CommandUtil::printInvalidSyntaxError();
+            return;
+        }
     }
 
     //EXECUTE
     switch (entity)
     {
         case CommandEntity::WASP: 
-            bool success = Simulation::spawnWasps(spawnPos, amount);
+            bool success = Simulation::spawnWasps(spawnPos, amount, strategy);
             if (success)
             {
                 std::cout << "Entity wasp: Spawned " << amount << " at " << spawnPos.x << "," << spawnPos.y << "," << spawnPos.z << ",";

@@ -84,27 +84,38 @@ void Simulation::_loopInit()
     previousTime = steady_clock::now();
 
     //SETUP WASPS
-    for (int x = 0; x < 5; x++)
-    {
-        for (int y = 0; y < 5; y++)
-        {
-            for (int z = 0; z < 5; z++)
-            {
-                Wasp* wasp = new Wasp();
-                wasp->setPosition(glm::vec3(x * 2, y * 2, z * 2));
-                WaspSlots::allocateWaspSlot(wasp);
-            }
-        }
-    }
+    static const int initWaspCount = 250;
+    spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM);
 }
 
-bool Simulation::spawnWasps(glm::vec3 position, int amount)
+using Simulation::SpawnStrategy;
+bool Simulation::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy)
 {
-    for (int i = 0; i < amount; i++)
+    if (strategy == SpawnStrategy::RANDOM)
     {
-        Wasp* wasp = new Wasp();
-        wasp->setPosition(position);
-        WaspSlots::allocateWaspSlot(wasp);
+        double spawnRadius = std::pow(3*amount / 4* 3.14159, 1 / 3.);
+
+        for (int i = 0; i < amount; i++)
+        {
+            Wasp* wasp = new Wasp();
+
+            double x = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
+            double y = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
+            double z = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
+            wasp->setPosition(glm::vec3(position.x + x, position.y + y, position.z + z));
+
+            WaspSlots::allocateWaspSlot(wasp);
+        }
+    }
+
+    else
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            Wasp* wasp = new Wasp();
+            wasp->setPosition(position);
+            WaspSlots::allocateWaspSlot(wasp);
+        }
     }
     
     return amount >= 1;

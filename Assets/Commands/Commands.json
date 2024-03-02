@@ -30,9 +30,14 @@
 			},
 
 			{
+				"name": "spawn-strat",
+				"description": "\t A spawn strategy can be one of the following: \n\n point - Spawn all entities at the exact point given \n random - Spawn the entities at a random position around the given point"
+			},
+
+			{
 				"name": "kill-strat",
-				"description": "An kill strategy can be one of the following: \n\n random - Chooses the specific entities to kill randomly    \n (just random for now)"
-			} 
+				"description": "\t A kill strategy can be one of the following: \n\n random - Chooses the specific entities to kill randomly    \n (just random for now)"
+			}
 		],
 		"subcommands": []
 	},
@@ -70,14 +75,14 @@
 	{
 		"name": "spawn",
 		"description": "Spawns entities.",
-		"syntax": "spawn <entity> <position> <amount>",
+		"syntax": "spawn <entity> <position> <amount> [<spawn-strat>]",
 		"subcommands": []
 	},
 
 	{
 		"name": "kill",
 		"description": "Kills entities.",
-		"syntax": "kill <entity> (<amount> | all | selected) [<kill-strategy>]",
+		"syntax": "kill <entity> (<amount> | all | selected) [<kill-strat>]",
 		"subcommands": []
 	}
 ]
