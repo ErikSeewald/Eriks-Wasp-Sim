@@ -1,5 +1,2 @@
-﻿  CommandUtil.cpp
-C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\input\console\CommandUtil.cpp(83,35): warning C4101: 'e': unreferenced local variable
-C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\input\console\CommandUtil.cpp(87,31): warning C4101: 'e': unreferenced local variable
-C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\input\console\CommandUtil.cpp(148,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+﻿  MemoryManager.cpp
   Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe

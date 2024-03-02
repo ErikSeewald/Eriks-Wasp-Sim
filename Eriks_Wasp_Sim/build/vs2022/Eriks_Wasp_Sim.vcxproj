@@ -226,6 +226,7 @@
     <ClInclude Include="..\..\include\simulation\Wasp.h" />
     <ClInclude Include="..\..\include\simulation\WaspSlots.h" />
     <ClInclude Include="..\..\include\util\JsonHandler.h" />
+    <ClInclude Include="..\..\include\util\MemoryManager.h" />
     <ClInclude Include="..\..\include\util\StringUtil.h" />
   </ItemGroup>
   <ItemGroup>
@@ -243,6 +244,7 @@
     <ClCompile Include="..\..\src\simulation\Wasp.cpp" />
     <ClCompile Include="..\..\src\simulation\WaspSlots.cpp" />
     <ClCompile Include="..\..\src\util\JsonHandler.cpp" />
+    <ClCompile Include="..\..\src\util\MemoryManager.cpp" />
     <ClCompile Include="..\..\src\util\StringUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
