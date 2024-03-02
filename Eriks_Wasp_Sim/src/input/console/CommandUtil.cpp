@@ -21,6 +21,22 @@ CommandEntity CommandUtil::convertToEntity(const std::string& subcommand)
     return CommandEntity::INVALID;
 }
 
+using Simulation::SpawnStrategy;
+SpawnStrategy CommandUtil::convertToSpawnStrategy(const std::string& subcommand)
+{
+    if (subcommand == "point")
+    {
+        return SpawnStrategy::POINT;
+    }
+
+    else if (subcommand == "random")
+    {
+        return SpawnStrategy::RANDOM;
+    }
+
+    return SpawnStrategy::INVALID;
+}
+
 using Simulation::KillStrategy;
 KillStrategy CommandUtil::convertToKillStrategy(const std::string& subcommand)
 {

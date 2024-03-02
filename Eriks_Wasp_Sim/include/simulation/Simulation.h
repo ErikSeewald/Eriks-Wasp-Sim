@@ -25,9 +25,14 @@ namespace Simulation
 	*/
 	void _loopInit();
 
-	bool spawnWasps(glm::vec3 position, int amount);
+	enum class SpawnStrategy
+	{
+		POINT, RANDOM, INVALID
+	};
 
-	enum KillStrategy
+	bool spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy);
+
+	enum class KillStrategy
 	{
 		RANDOM, ALL, INVALID
 	};
