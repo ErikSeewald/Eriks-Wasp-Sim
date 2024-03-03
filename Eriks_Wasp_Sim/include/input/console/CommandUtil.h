@@ -59,4 +59,6 @@ namespace CommandUtil
 	void printSubCommands(const json& parentCommandName);
 
 	void printInvalidSyntaxError();
+
+	void printError(const std::string& message);
 }

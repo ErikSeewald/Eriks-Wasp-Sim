@@ -1,4 +1,8 @@
 #include "Wasp.h"
+#include "Simulation.h"
+
+using Simulation::SpawnStrategy;
+using Simulation::KillStrategy;
 
 /**
 * @namespace WaspSlots
@@ -33,6 +37,12 @@ namespace WaspSlots
 	void removeWaspSlot(WaspSlot* waspSlot);
 
 	WaspSlot* getWaspSlots();
+
+	bool spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy);
+
+	int killWasps(int amountToKill, KillStrategy strategy);
+
+	bool spaceAvailable(int wasAddAmount);
 
 	/**
 	* Deletes and cleans up all wasp slots that have been marked as deletable

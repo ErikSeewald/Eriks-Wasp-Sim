@@ -14,5 +14,7 @@ namespace MemoryManager
 	*/
 	void scheduleCleanup();
 
+	bool isCleanupScheduled();
+
 	void _memCleanup();
 }

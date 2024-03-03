@@ -7,20 +7,24 @@
 const std::chrono::duration<double> secondsBetweenLoops(0.1);
 const int loopsBetweenCleanups = 20;
 int loopsUntilNextCleanup = -1;
+bool cleanupScheduled = false;
 
 void MemoryManager::startLoop()
 {
     while (true)
     {
-        if (loopsUntilNextCleanup > 0)
+        if (cleanupScheduled)
         {
-            loopsUntilNextCleanup--;
-        }
+            if (loopsUntilNextCleanup > 0)
+            {
+                loopsUntilNextCleanup--;
+            }
 
-        else if (loopsUntilNextCleanup == 0)
-        {
-            _memCleanup();
-            loopsUntilNextCleanup = -1;
+            else if (loopsUntilNextCleanup == 0)
+            {
+                _memCleanup();
+                loopsUntilNextCleanup = -1;
+            }
         }
 
         std::this_thread::sleep_for(secondsBetweenLoops);
@@ -35,9 +39,16 @@ void MemoryManager::startLoop()
 void MemoryManager::scheduleCleanup()
 {
     loopsUntilNextCleanup = loopsBetweenCleanups;
+    cleanupScheduled = true;
+}
+
+bool MemoryManager::isCleanupScheduled()
+{
+    return cleanupScheduled;
 }
 
 void MemoryManager::_memCleanup()
 {
     WaspSlots::cleanupMemory();
+    cleanupScheduled = false;
 }

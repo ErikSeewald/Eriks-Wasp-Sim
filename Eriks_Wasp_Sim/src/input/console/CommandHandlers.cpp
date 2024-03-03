@@ -6,6 +6,7 @@
 #include "CommandUtil.h"
 #include "UI.h"
 #include "WaspSlots.h"
+#include "MemoryManager.h"
 
 using nlohmann::json;
 using CommandUtil::CommandEntity;
@@ -114,7 +115,7 @@ void CommandHandlers::commandWaspKill(const std::string& subcommand)
     }
     else
     {
-        std::cout << CommandUtil::noWaspSelectedPrint;
+        CommandUtil::printError(CommandUtil::noWaspSelectedPrint);
     }
 }
 
@@ -145,7 +146,7 @@ void CommandHandlers::commandWaspSetPos(const std::string& subcommand)
     }
     else
     {
-        std::cout << CommandUtil::noWaspSelectedPrint;
+        CommandUtil::printError(CommandUtil::noWaspSelectedPrint);
     }
 }
 
@@ -209,14 +210,19 @@ void CommandHandlers::commandSpawn(const std::string& subcommand)
     //EXECUTE
     switch (entity)
     {
-        case CommandEntity::WASP: 
-            bool success = Simulation::spawnWasps(spawnPos, amount, strategy);
+        case CommandEntity::WASP:
+            bool success = WaspSlots::spawnWasps(spawnPos, amount, strategy);
             if (success)
             {
                 std::cout << "Entity wasp: Spawned " << amount << " at " << spawnPos.x << "," << spawnPos.y << "," << spawnPos.z << ",";
             }
             else
             {
+                if (!WaspSlots::spaceAvailable(amount))
+                {
+                    CommandUtil::printError("Cannot surprass the maximum amount of wasps");
+                    return;
+                }
                 CommandUtil::printInvalidSyntaxError();
             }
             break;
@@ -228,6 +234,14 @@ void CommandHandlers::commandSpawn(const std::string& subcommand)
 //-------------------------------------
 void CommandHandlers::commandKill(const std::string& subcommand)
 {
+    // The kill command schedules a new cleanup. If the user was allowed to continue spamming kill constantly
+    // it would cause the cleanup to never occur. Avoid that.
+    if (MemoryManager::isCleanupScheduled())
+    {
+        CommandUtil::printError("Cannot invoke 'kill' while memory is still being cleaned. \nTry again in a few seconds.");
+        return;
+    }
+
     KillStrategy strategy{};
     std::string firstWord = StringUtil::getFirstWord(subcommand);
 
@@ -289,7 +303,7 @@ void CommandHandlers::commandKill(const std::string& subcommand)
     switch (entity)
     {
         case CommandEntity::WASP:
-            int killedAmount = Simulation::killWasps(amount, strategy);
+            int killedAmount = WaspSlots::killWasps(amount, strategy);
             std::cout << "Entity wasp: Killed " << killedAmount;
             break;
     }
