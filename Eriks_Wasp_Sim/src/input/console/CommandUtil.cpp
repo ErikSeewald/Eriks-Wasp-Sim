@@ -67,7 +67,7 @@ glm::vec3 CommandUtil::convertToPosition(const std::string& subcommand)
         }
         else
         {
-            std::cout << noWaspSelectedPrint << std::endl;
+            printError(noWaspSelectedPrint);
             return infVec;
         }
     }
@@ -212,5 +212,10 @@ void CommandUtil::printSubCommands(const json& parentCommandName)
 
 void CommandUtil::printInvalidSyntaxError()
 {
-    std::cout << invalidSyntaxPrint;
+    std::cout << invalidSyntaxPrint << std::endl;
+}
+
+void CommandUtil::printError(const std::string& message)
+{
+    std::cout << "ERROR: " << message << std::endl;
 }

@@ -1,11 +1,11 @@
 #include "Simulation.h"
 #include "UI.h"
 #include "WaspSlots.h"
-#include "MemoryManager.h"
 #include <thread>
 
 using namespace std::chrono;
 using WaspSlots::WaspSlot;
+using Simulation::SpawnStrategy;
 
 //DELTA TIME
 std::chrono::duration<double> deltaTime;
@@ -85,61 +85,7 @@ void Simulation::_loopInit()
 
     //SETUP WASPS
     static const int initWaspCount = 250;
-    spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM);
-}
-
-using Simulation::SpawnStrategy;
-bool Simulation::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy)
-{
-    if (strategy == SpawnStrategy::RANDOM)
-    {
-        double spawnRadius = std::pow(3*amount / 4* 3.14159, 1 / 3.);
-
-        for (int i = 0; i < amount; i++)
-        {
-            Wasp* wasp = new Wasp();
-
-            double x = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
-            double y = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
-            double z = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
-            wasp->setPosition(glm::vec3(position.x + x, position.y + y, position.z + z));
-
-            WaspSlots::allocateWaspSlot(wasp);
-        }
-    }
-
-    else
-    {
-        for (int i = 0; i < amount; i++)
-        {
-            Wasp* wasp = new Wasp();
-            wasp->setPosition(position);
-            WaspSlots::allocateWaspSlot(wasp);
-        }
-    }
-    
-    return amount >= 1;
-}
-
-using Simulation::KillStrategy;
-int Simulation::killWasps(int amountToKill, KillStrategy strategy)
-{
-    if (strategy == KillStrategy::ALL)
-    {
-        amountToKill = -1;
-    }
-
-    int killedAmount = 0;
-    WaspSlot* waspSlot = WaspSlots::getWaspSlots();
-    while (waspSlot != nullptr && killedAmount != amountToKill)
-    {
-        waspSlot->wasp->kill();
-        killedAmount++;
-        waspSlot = waspSlot->next;
-    }
-
-    MemoryManager::scheduleCleanup();
-    return killedAmount;
+    WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM);
 }
 
 /**

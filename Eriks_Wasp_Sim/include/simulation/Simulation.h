@@ -30,14 +30,10 @@ namespace Simulation
 		POINT, RANDOM, INVALID
 	};
 
-	bool spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy);
-
 	enum class KillStrategy
 	{
 		RANDOM, ALL, INVALID
 	};
-
-	int killWasps(int amountToKill, KillStrategy strategy);
 	
 	/**
 	* Returns the simulations's last delta time
