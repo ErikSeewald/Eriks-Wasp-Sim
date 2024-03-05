@@ -140,5 +140,6 @@ bool Wasp::isAlive() const
 
 void Wasp::kill()
 {
+	hp = 0;
 	_isAlive = false;
 }
