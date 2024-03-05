@@ -1,12 +1,2 @@
-﻿  Wasp.cpp
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(39,24): warning C4244: 'initializing': conversion from '_Rep' to 'float', possible loss of data
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(39,24): warning C4244:         with
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(39,24): warning C4244:         [
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(39,24): warning C4244:             _Rep=double
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(39,24): warning C4244:         ]
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(64,14): warning C4244: 'initializing': conversion from '_Rep' to 'float', possible loss of data
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(64,14): warning C4244:         with
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(64,14): warning C4244:         [
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(64,14): warning C4244:             _Rep=double
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(64,14): warning C4244:         ]
+﻿  UI.cpp
   Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe

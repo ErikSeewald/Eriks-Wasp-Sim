@@ -64,7 +64,7 @@
 
 			{
 				"name": "setpos",
-				"description": "Sets the selected wasp to the given position.",
+				"description": "Sets the selected wasp's position",
 				"syntax": "wasp setpos <position>",
 				"subcommands": []
 			}
