@@ -43,6 +43,9 @@
     <Filter Include="Header Files\input\console">
       <UniqueIdentifier>{bfa82394-aba9-4508-9ce3-3a1f093dbec3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\graphics\imgui lib">
+      <UniqueIdentifier>{794cda46-4e9e-4c96-8c43-65dd3f0c789b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h">
@@ -64,9 +67,6 @@
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\input\MouseHandler.h">
-      <Filter>Header Files\input</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\input\UI.h">
       <Filter>Header Files\input</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\input\MouseRayCast.h">
@@ -93,6 +93,9 @@
     <ClInclude Include="..\..\include\util\MemoryManager.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\graphics\UI.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
@@ -114,9 +117,6 @@
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\input\MouseHandler.cpp">
-      <Filter>Source Files\input</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\input\UI.cpp">
       <Filter>Source Files\input</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\input\MouseRayCast.cpp">
@@ -142,6 +142,27 @@
     </ClCompile>
     <ClCompile Include="..\..\src\util\MemoryManager.cpp">
       <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_draw.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_tables.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_widgets.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\backends\imgui_impl_glut.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\backends\imgui_impl_opengl3.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\UI.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

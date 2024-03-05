@@ -4,6 +4,9 @@
 
 Wasp::Wasp()
 {
+	MAX_HP = 100;
+	hp = MAX_HP;
+
 	position = glm::vec3(0, 0, 0);
 	viewingVector = glm::vec3(0, 0, 1);
 
@@ -26,6 +29,8 @@ void Wasp::update()
 	updateViewingVector();
 }
 
+
+// POSITION
 /**
 * Updates the Wasp's position based on its current state
 */
@@ -38,6 +43,18 @@ void Wasp::updatePosition()
 	position.z += viewingVector.z * speedMultiplier;
 }
 
+glm::vec3 Wasp::getPosition() const
+{
+	return position;
+}
+
+void Wasp::setPosition(glm::vec3 position)
+{
+	this->position = position;
+}
+
+
+// MOVEMENT
 /**
 * Updates the Wasp's viewingVector based on its current state
 */
@@ -84,17 +101,7 @@ void Wasp::updateViewingVector()
 	}
 }
 
-glm::vec3 Wasp::getPosition() 
-{
-	return position;
-}
-
-void Wasp::setPosition(glm::vec3 position)
-{
-	this->position = position;
-}
-
-glm::vec3 Wasp::getViewingVector()
+glm::vec3 Wasp::getViewingVector() const
 {
 	return viewingVector;
 }
@@ -104,7 +111,29 @@ void Wasp::setViewingVector(glm::vec3 viewingVector)
 	this->viewingVector = viewingVector;
 }
 
-bool Wasp::isAlive()
+float Wasp::getTurnSpeed() const
+{
+	return turnSpeed;
+}
+
+float Wasp::getAscendSpeed() const
+{
+	return ascendSpeed;
+}
+
+
+//HEALTH
+int Wasp::getHP() const
+{
+	return hp;
+}
+
+int Wasp::getMaxHP() const
+{
+	return MAX_HP;
+}
+
+bool Wasp::isAlive() const
 {
 	return _isAlive;
 }

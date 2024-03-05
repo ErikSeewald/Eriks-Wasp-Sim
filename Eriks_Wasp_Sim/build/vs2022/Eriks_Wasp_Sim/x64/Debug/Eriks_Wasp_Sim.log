@@ -1,5 +1,4 @@
-﻿  CommandUtil.cpp
-C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\input\console\CommandUtil.cpp(99,35): warning C4101: 'e': unreferenced local variable
-C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\input\console\CommandUtil.cpp(103,31): warning C4101: 'e': unreferenced local variable
-C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\input\console\CommandUtil.cpp(164,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe
+﻿  UI.cpp
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\UI.cpp(70,22): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\UI.cpp(71,25): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe

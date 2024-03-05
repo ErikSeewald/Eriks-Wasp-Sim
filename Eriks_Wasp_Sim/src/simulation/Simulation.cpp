@@ -20,7 +20,10 @@ void Simulation::startLoop() {
 
     while (true) 
     {
-        updateWasps();
+        if (!UI::getUIState()->isPaused)
+        {
+            updateWasps();
+        }
 
         updateDeltaTime();
 
