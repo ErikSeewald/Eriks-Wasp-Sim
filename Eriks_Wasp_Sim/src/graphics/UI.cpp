@@ -67,8 +67,8 @@ void UI::_drawSelectedWaspUI()
             ImGui::Text(isAlive ? "true" : "false");
 
             // HP BAR
-            float hp = wasp->getHP();
-            float maxHP = wasp->getMaxHP();
+            int hp = wasp->getHP();
+            int maxHP = wasp->getMaxHP();
             ImGui::Text("HP: %d/%d", hp, maxHP);
 
             float healthPercentage = (float) hp / maxHP;
