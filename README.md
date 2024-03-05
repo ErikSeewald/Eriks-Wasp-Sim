@@ -14,3 +14,4 @@ If you want to compile the source code, you will have to download the following 
 - [freeglut](https://www.transmissionzero.co.uk/software/freeglut-devel/): Download the MinGW Package and then put the "freeglut" directory into "/Eriks_Wasp_Sim/dependencies"
 - [glm v1.0.0](https://github.com/g-truc/glm/releases): Download the glm folder and put it into "/Eriks_Wasp_Sim/dependencies"
 - [nlohmann-json v3.11.3](https://github.com/nlohmann/json/releases): Download the json.hpp file and put it into "/Eriks_Wasp_Sim/dependencies"
+- [imgui-1.90.4](https://github.com/ocornut/imgui/releases/tag/v1.90.4): Download the imgui folder and put it into "/Eriks_Wasp_Sim/dependencies"
