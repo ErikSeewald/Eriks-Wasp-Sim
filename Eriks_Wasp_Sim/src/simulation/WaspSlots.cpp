@@ -9,7 +9,8 @@ using Simulation::KillStrategy;
 //WASPS
 WaspSlot* waspSlotsStart;
 WaspSlot* waspSlotsEnd;
-int waspCount = 0;
+int aliveCount = 0;
+long deadCount = 0;
 const int MAX_WASP_COUNT = 100000;
 
 // List to remember which wasp slots to delete in cleanupMemory(). 
@@ -42,7 +43,7 @@ void WaspSlots::allocateWaspSlot(Wasp* wasp)
         waspSlotsEnd = waspSlot;
     }
 
-    waspCount++;
+    aliveCount++;
 }
 
 /**
@@ -90,7 +91,8 @@ void WaspSlots::removeWaspSlot(WaspSlot* waspSlot)
     }
 
     waspSlotsToDelete.push_back(waspSlot);
-    waspCount--;
+    aliveCount--;
+    deadCount++;
 }
 
 WaspSlot* WaspSlots::getWaspSlots()
@@ -158,7 +160,7 @@ int WaspSlots::killWasps(int amountToKill, KillStrategy strategy)
 
 bool WaspSlots::spaceAvailable(int waspAddAmount)
 {
-    return waspCount + waspAddAmount <= MAX_WASP_COUNT;
+    return aliveCount + waspAddAmount <= MAX_WASP_COUNT;
 
 }
 
@@ -174,4 +176,14 @@ void WaspSlots::cleanupMemory()
         delete waspSlot;
     }
     waspSlotsToDelete.clear();
+}
+
+int WaspSlots::getAliveCount()
+{
+    return aliveCount;
+}
+
+long WaspSlots::getDeadCount()
+{
+    return deadCount;
 }

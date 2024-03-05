@@ -25,5 +25,7 @@ namespace UI
 
 	void _drawSelectedWaspUI();
 
+	void _drawHiveUI();
+
 	void _drawVectorTable(const glm::vec3& vector, const std::string& tableName);
 };
