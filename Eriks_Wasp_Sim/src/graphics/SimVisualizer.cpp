@@ -2,7 +2,11 @@
 #include "KeyboardHandler.h"
 #include "MouseHandler.h"
 #include "WaspRenderer.h"
+#include "UI.h"
 #include <iostream>
+#include "imgui.h"
+#include "backends/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glut.h"
 
 Camera camera;
 
@@ -14,16 +18,28 @@ void SimVisualizer::initGlut(int argc, char** argv)
     glutInit(&argc, argv);
 
     glutInitWindowSize(1280, 720);
-
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
     glutCreateWindow("Eriks Wasp Sim");
-
-    glEnable(GL_DEPTH_TEST);
-
     glutDisplayFunc(SimVisualizer::render);
     glutReshapeFunc(SimVisualizer::reshape);
 
+    //GLEW
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK)
+    {
+        std::cerr << "Error: glewInit failed" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    // IMGUI
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    ImGui_ImplGLUT_Init();
+    ImGui_ImplGLUT_InstallFuncs();
+    ImGui_ImplOpenGL3_Init("#version 130");
+
+    //EVENT HANDLERS
     glutKeyboardFunc(KeyboardHandler::keyboardDown);
     glutKeyboardUpFunc(KeyboardHandler::keyboardUp);
 
@@ -32,20 +48,15 @@ void SimVisualizer::initGlut(int argc, char** argv)
 
     glutMouseFunc(MouseHandler::mouseClick);
 
+    //CAMERA
     camera.position = glm::vec3(3.0f, 3.0f, 3.0f);
     camera.direction = glm::vec3(-1.0f, 0.0f, -1.0f);
     updateCameraVectors();
 
-    glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK)
-    {
-        std::cerr << "Error: glewInit failed" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
+    //WASP RENDERER
     WaspRenderer::init();
  
-    glutTimerFunc(0, timer, 0); 
+    glutTimerFunc(0, timer, 0);
     glutMainLoop();
 }
 
@@ -86,13 +97,19 @@ void SimVisualizer::render()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // CAMERA
+    reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+    glEnable(GL_DEPTH_TEST);
     updateGlutCamera();
 
+    // SCENE
     drawGrid();
-
     WaspRenderer::drawWasps(WaspSlots::getWaspSlots());
     WaspRenderer::drawSelectedWasp();
  
+    // UI
+    UI::drawUI();
+
     glutSwapBuffers();
 }
 
@@ -223,4 +240,3 @@ float SimVisualizer::radToDeg(float radians)
     static const float c = 180.0f / 3.14159265359f;
     return radians * c;
 }
-

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Wasp.h"
+#include <string>
 
 /**
 * @namespace UI
@@ -15,7 +16,14 @@ namespace UI
 	struct UI_STATE
 	{
 		Wasp* selectedWasp;
+		bool isPaused;
 	};
 
 	UI_STATE* getUIState();
+
+	void drawUI();
+
+	void _drawSelectedWaspUI();
+
+	void _drawVectorTable(const glm::vec3& vector, const std::string& tableName);
 };

@@ -1,6 +1,6 @@
 #include "KeyboardHandler.h"
 #include "SimVisualizer.h"
-
+#include "UI.h"
 
 bool keyStates[256];
 bool specialKeyStates[256];
@@ -73,6 +73,12 @@ void KeyboardHandler::updateCamera(Camera* camera)
 */
 void KeyboardHandler::keyboardDown(unsigned char key, int x, int y)
 {
+    // PAUSE/UNPAUSE
+    if (key == 'p')
+    {
+        UI::getUIState()->isPaused = !UI::getUIState()->isPaused;
+    }
+
     keyStates[key] = true;
 }
 
