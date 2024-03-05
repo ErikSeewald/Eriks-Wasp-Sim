@@ -48,4 +48,8 @@ namespace WaspSlots
 	* Deletes and cleans up all wasp slots that have been marked as deletable
 	*/
 	void cleanupMemory();
+
+	int getAliveCount();
+
+	long getDeadCount();
 }
