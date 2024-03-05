@@ -27,5 +27,7 @@ namespace UI
 
 	void _drawHiveUI();
 
+	void _drawCameraUI();
+
 	void _drawVectorTable(const glm::vec3& vector, const std::string& tableName);
 };
