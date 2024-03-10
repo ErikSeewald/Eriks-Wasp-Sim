@@ -88,7 +88,7 @@ void Simulation::_loopInit()
 
     //SETUP WASPS
     static const int initWaspCount = 250;
-    WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM);
+    WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM, 10);
 }
 
 /**

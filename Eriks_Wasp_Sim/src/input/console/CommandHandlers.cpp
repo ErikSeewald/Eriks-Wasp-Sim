@@ -179,7 +179,7 @@ void CommandHandlers::commandSpawn(const std::string& subcommand)
     //AMOUNT
     curCommandString = StringUtil::cutFirstWord(curCommandString);
     firstWord = StringUtil::getFirstWord(curCommandString);
-    int amount = CommandUtil::convertToAmount(firstWord); 
+    int amount = CommandUtil::convertToNumber(firstWord); 
     if (amount < 1)
     {
         CommandUtil::printInvalidSyntaxError();
@@ -188,6 +188,7 @@ void CommandHandlers::commandSpawn(const std::string& subcommand)
 
     //STRATEGY
     SpawnStrategy strategy{};
+    float spawnRadius = 0;
     curCommandString = StringUtil::cutFirstWord(curCommandString);
     firstWord = StringUtil::getFirstWord(curCommandString);
 
@@ -200,7 +201,20 @@ void CommandHandlers::commandSpawn(const std::string& subcommand)
     {
         strategy = CommandUtil::convertToSpawnStrategy(firstWord);
 
-        if (strategy == SpawnStrategy::INVALID || !StringUtil::isBlank(StringUtil::cutFirstWord(curCommandString)))
+        if (strategy == SpawnStrategy::RANDOM)
+        {
+            curCommandString = StringUtil::cutFirstWord(curCommandString);
+            firstWord = StringUtil::getFirstWord(curCommandString);
+            spawnRadius = CommandUtil::convertToNumber(firstWord);
+
+            if (spawnRadius <= 0)
+            {
+                CommandUtil::printInvalidSyntaxError();
+                return;
+            }
+        }
+
+        else if (strategy == SpawnStrategy::INVALID || !StringUtil::isBlank(StringUtil::cutFirstWord(curCommandString)))
         {
             CommandUtil::printInvalidSyntaxError();
             return;
@@ -211,7 +225,7 @@ void CommandHandlers::commandSpawn(const std::string& subcommand)
     switch (entity)
     {
         case CommandEntity::WASP:
-            bool success = WaspSlots::spawnWasps(spawnPos, amount, strategy);
+            bool success = WaspSlots::spawnWasps(spawnPos, amount, strategy, spawnRadius);
             if (success)
             {
                 std::cout << "Entity wasp: Spawned " << amount << " at " << spawnPos.x << "," << spawnPos.y << "," << spawnPos.z << ",";
@@ -271,7 +285,7 @@ void CommandHandlers::commandKill(const std::string& subcommand)
 
     else
     {
-        amount = CommandUtil::convertToAmount(firstWord);
+        amount = CommandUtil::convertToNumber(firstWord);
         if (amount < 1)
         {
             CommandUtil::printInvalidSyntaxError();

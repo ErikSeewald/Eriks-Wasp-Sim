@@ -31,7 +31,7 @@
 
 			{
 				"name": "spawn-strat",
-				"description": "\t A spawn strategy can be one of the following: \n\n point - Spawn all entities at the exact point given \n random - Spawn the entities at a random position around the given point"
+				"description": "\t A spawn strategy can be one of the following: \n\n point - Spawns all entities at the exact point given \n random <radius> - Spawns the entities randomly within the given radius around the given point"
 			},
 
 			{

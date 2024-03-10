@@ -90,7 +90,7 @@ glm::vec3 CommandUtil::convertToPosition(const std::string& subcommand)
     }
 }
 
-int CommandUtil::convertToAmount(const std::string& subcommand)
+int CommandUtil::convertToNumber(const std::string& subcommand)
 {
     try
     {

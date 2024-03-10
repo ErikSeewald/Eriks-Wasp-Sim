@@ -62,6 +62,21 @@ void UI::_drawSelectedWaspUI()
 
             ImGui::Text("Turn speed: %.3f", wasp->getTurnSpeed());
             ImGui::Text("Ascend speed: %.3f", wasp->getAscendSpeed());
+
+            if (ImGui::CollapsingHeader("Current goal", ImGuiTreeNodeFlags_None))
+            {
+                if (uiState.selectedWasp->getCurrentGoal() != nullptr)
+                {
+                    _drawVectorTable(*uiState.selectedWasp->getCurrentGoal(), "WaspGoalTable");
+                    ImGui::Checkbox("Display current goal", &uiState.drawSelectedWaspGoal);
+                }
+                
+                else
+                {
+                    ImGui::Text("No current goal");
+                }
+            }
+            
         }
 
         // HEALTH
