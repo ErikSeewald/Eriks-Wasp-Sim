@@ -16,6 +16,7 @@ namespace UI
 	struct UI_STATE
 	{
 		Wasp* selectedWasp;
+		bool drawSelectedWaspGoal;
 		bool isPaused;
 	};
 

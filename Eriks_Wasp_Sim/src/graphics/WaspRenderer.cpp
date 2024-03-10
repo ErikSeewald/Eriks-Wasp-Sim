@@ -51,8 +51,10 @@ void WaspRenderer::drawWasps(WaspSlot* waspSlot)
 */
 void WaspRenderer::drawSelectedWasp() 
 {
+    UI::UI_STATE* uiState = UI::getUIState();
+
     //GET SELECTED WASP
-    Wasp* wasp = UI::getUIState()->selectedWasp;
+    Wasp* wasp = uiState->selectedWasp;
     if (wasp == NULL)
     {
         return;
@@ -62,6 +64,19 @@ void WaspRenderer::drawSelectedWasp()
     glBindVertexArray(VAO);
     _drawWaspPrebound(wasp);
     glBindVertexArray(0);
+
+    //GOAL
+    if (uiState->drawSelectedWaspGoal && wasp->getCurrentGoal() != nullptr)
+    {
+        glm::vec3 goal = *wasp->getCurrentGoal();
+        glm::vec3 position = wasp->getPosition();
+
+        glColor3f(0.0f, 1.0f, 1.0f);
+        glBegin(GL_LINES);
+        glVertex3f(position.x, position.y, position.z);
+        glVertex3f(goal.x, goal.y, goal.z);
+        glEnd();
+    }
 }
 
 /**

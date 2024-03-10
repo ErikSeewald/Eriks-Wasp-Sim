@@ -96,6 +96,12 @@
     <ClInclude Include="..\..\include\graphics\UI.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\util\RNG.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\util\VectorMath.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
@@ -163,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\UI.cpp">
       <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\RNG.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\VectorMath.cpp">
+      <Filter>Source Files\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

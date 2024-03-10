@@ -33,6 +33,10 @@ class Wasp : Updatable
 
 		void setViewingVector(glm::vec3 viewingVector);
 
+		void setCurrentGoal(glm::vec3* goal);
+
+		glm::vec3* getCurrentGoal();
+
 		// HEALTH
 		int getHP() const;
 
@@ -45,6 +49,8 @@ class Wasp : Updatable
 	private:
 		std::chrono::duration<double>* deltaTime;
 
+		void updateSpeeds();
+
 		// POSITION
 		glm::vec3 position;
 
@@ -55,14 +61,21 @@ class Wasp : Updatable
 
 		// MOVEMENT
 		glm::vec3 viewingVector;
+		float flyingSpeed;
 
 		/**
 		* Updates the Wasp's viewingVector based on its current state
 		*/
 		void updateViewingVector();
 
+		void lookAroundRandomly();
+
 		float turnSpeed; // speed of rotating around the y axis
 		float ascendSpeed; // speed of movement along the y axis
+
+		glm::vec3* currentGoal;
+
+		void turnTowardsGoal();
 
 		// HEALTH
 		int MAX_HP;

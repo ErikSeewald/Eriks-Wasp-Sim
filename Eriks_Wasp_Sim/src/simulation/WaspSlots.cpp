@@ -100,7 +100,7 @@ WaspSlot* WaspSlots::getWaspSlots()
     return waspSlotsStart;
 }
 
-bool WaspSlots::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy)
+bool WaspSlots::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy, float spawnRadius)
 {
     if (!spaceAvailable(amount))
     {
@@ -109,8 +109,6 @@ bool WaspSlots::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strateg
 
     if (strategy == SpawnStrategy::RANDOM)
     {
-        double spawnRadius = std::pow(3 * amount / 4 * 3.14159, 1 / 3.);
-
         for (int i = 0; i < amount; i++)
         {
             Wasp* wasp = new Wasp();

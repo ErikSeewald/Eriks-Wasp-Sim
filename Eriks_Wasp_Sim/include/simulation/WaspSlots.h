@@ -38,7 +38,7 @@ namespace WaspSlots
 
 	WaspSlot* getWaspSlots();
 
-	bool spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy);
+	bool spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy, float SpawnRadius);
 
 	int killWasps(int amountToKill, KillStrategy strategy);
 

@@ -1,6 +1,7 @@
 #include "Wasp.h"
-#include <random>
 #include "Simulation.h"
+#include "RNG.h"
+#include "VectorMath.h"
 
 Wasp::Wasp()
 {
@@ -16,6 +17,11 @@ Wasp::Wasp()
 	_isAlive = true;
 
 	deltaTime = Simulation::getDeltaTime();
+
+	currentGoal = nullptr;
+
+	flyingSpeed = 0.8;
+
 }
 
 /**
@@ -25,10 +31,23 @@ void Wasp::update()
 {
 	deltaTime = Simulation::getDeltaTime();
 
+	updateSpeeds();
 	updatePosition();
 	updateViewingVector();
 }
 
+void Wasp::updateSpeeds()
+{
+	if (currentGoal != nullptr)
+	{
+		turnTowardsGoal();
+	}
+
+	else
+	{
+		lookAroundRandomly();
+	}
+}
 
 // POSITION
 /**
@@ -36,11 +55,17 @@ void Wasp::update()
 */
 void Wasp::updatePosition()
 {
-	float speedMultiplier = 0.8f * deltaTime->count(); // speed of 5 units per second
+	float speedMultiplier = flyingSpeed * deltaTime->count();
 
 	position.x += viewingVector.x * speedMultiplier;
 	position.y += viewingVector.y * speedMultiplier;
 	position.z += viewingVector.z * speedMultiplier;
+
+	//Reached goal
+	if (currentGoal != nullptr && glm::length(*currentGoal - position) < 0.5)
+	{
+		currentGoal = nullptr;
+	}
 }
 
 glm::vec3 Wasp::getPosition() const
@@ -69,8 +94,10 @@ void Wasp::updateViewingVector()
 
 	// FLY UP OR DOWN
 	viewingVector.y = ascendSpeed;
+}
 
-	// CHANGE GOAL VIEWING VECTOR
+void Wasp::lookAroundRandomly()
+{
 	static const double directionSwitchSeconds = 3;
 	static double secondsUntilDirectionSwitch = 0;
 
@@ -80,25 +107,56 @@ void Wasp::updateViewingVector()
 	{
 		secondsUntilDirectionSwitch = directionSwitchSeconds;
 
-		switch (std::rand() % 5)
+		switch (RNG::randMod(5))
 		{
-			case 0:	
+			case 0:
 				turnSpeed = 0;
 				break;
-			case 1: 
-				turnSpeed = ((float)std::rand() / RAND_MAX) * 2.0f - 1.0f;
+			case 1:
+				turnSpeed = RNG::randBetween(-1, 1);
 				break;
-			case 2: 
-				ascendSpeed = ((float)std::rand() / RAND_MAX) * 2.0f - 1.0f;
+			case 2:
+				ascendSpeed = RNG::randBetween(-1, 1);
 				break;
-			case 3: 
-				turnSpeed = ((float)std::rand() / RAND_MAX) * 2.0f - 1.0f;
-				ascendSpeed = ((float)std::rand() / RAND_MAX) * 2.0f - 1.0f;
+			case 3:
+				turnSpeed = RNG::randBetween(-1, 1);
+				ascendSpeed = RNG::randBetween(-1, 1);
 				break;
-			default: 
+			default:
 				break;
 		}
 	}
+}
+
+void Wasp::turnTowardsGoal()
+{
+	float heightDifference = currentGoal->y - position.y;
+
+	if (heightDifference > -0.3 && heightDifference < 0.3)
+	{
+		ascendSpeed = 0;
+	}
+
+	else
+	{
+		ascendSpeed = heightDifference > 0 ? 1 : -1;
+	}
+
+	float angle = VectorMath::angleXZ(viewingVector, *currentGoal - position);
+
+	float speed = angle / 2;
+	turnSpeed = angle > 0 ? -speed : speed;
+	
+}
+
+void Wasp::setCurrentGoal(glm::vec3* goal)
+{
+	currentGoal = goal;
+}
+
+glm::vec3* Wasp::getCurrentGoal()
+{
+	return currentGoal;
 }
 
 glm::vec3 Wasp::getViewingVector() const

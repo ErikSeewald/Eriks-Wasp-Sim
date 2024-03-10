@@ -19,4 +19,6 @@ C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\
 C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\WaspSlots.cpp;C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\Eriks_Wasp_Sim\x64\Debug\WaspSlots.obj
 C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\util\JsonHandler.cpp;C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\Eriks_Wasp_Sim\x64\Debug\JsonHandler.obj
 C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\util\MemoryManager.cpp;C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\Eriks_Wasp_Sim\x64\Debug\MemoryManager.obj
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\util\RNG.cpp;C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\Eriks_Wasp_Sim\x64\Debug\RNG.obj
 C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\util\StringUtil.cpp;C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\Eriks_Wasp_Sim\x64\Debug\StringUtil.obj
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\util\VectorMath.cpp;C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\Eriks_Wasp_Sim\x64\Debug\VectorMath.obj

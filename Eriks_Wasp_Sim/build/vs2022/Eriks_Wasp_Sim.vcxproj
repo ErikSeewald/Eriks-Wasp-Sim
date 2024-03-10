@@ -227,7 +227,9 @@
     <ClInclude Include="..\..\include\simulation\WaspSlots.h" />
     <ClInclude Include="..\..\include\util\JsonHandler.h" />
     <ClInclude Include="..\..\include\util\MemoryManager.h" />
+    <ClInclude Include="..\..\include\util\RNG.h" />
     <ClInclude Include="..\..\include\util\StringUtil.h" />
+    <ClInclude Include="..\..\include\util\VectorMath.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dependencies\imgui-1.90.4\backends\imgui_impl_glut.cpp" />
@@ -251,7 +253,9 @@
     <ClCompile Include="..\..\src\simulation\WaspSlots.cpp" />
     <ClCompile Include="..\..\src\util\JsonHandler.cpp" />
     <ClCompile Include="..\..\src\util\MemoryManager.cpp" />
+    <ClCompile Include="..\..\src\util\RNG.cpp" />
     <ClCompile Include="..\..\src\util\StringUtil.cpp" />
+    <ClCompile Include="..\..\src\util\VectorMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\include\graphics\Camera.h" />
