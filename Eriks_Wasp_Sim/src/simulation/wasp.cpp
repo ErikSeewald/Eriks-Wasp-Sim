@@ -5,22 +5,27 @@
 
 Wasp::Wasp()
 {
-	MAX_HP = 100;
-	hp = MAX_HP;
+	deltaTime = Simulation::getDeltaTime();
 
+	// POSITION
 	position = glm::vec3(0, 0, 0);
-	viewingVector = glm::vec3(0, 0, 1);
 
+	// MOVEMENT
+	currentGoal = nullptr;
+
+	viewingVector = glm::vec3(0, 0, 1);
+	flyingSpeed = 0.8;
 	turnSpeed = 0;
 	ascendSpeed = 0;
 
+	// HEALTH
+	MAX_HP = 100;
+	hp = MAX_HP;
 	_isAlive = true;
 
-	deltaTime = Simulation::getDeltaTime();
-
-	currentGoal = nullptr;
-
-	flyingSpeed = 0.8;
+	// HUNGER
+	MAX_HUNGER_SATURATION = 100;
+	hungerSaturation = MAX_HUNGER_SATURATION;
 
 }
 
@@ -29,11 +34,21 @@ Wasp::Wasp()
 */
 void Wasp::update()
 {
+	if (!_isAlive)
+	{
+		return;
+	}
+
 	deltaTime = Simulation::getDeltaTime();
 
 	updateSpeeds();
 	updatePosition();
 	updateViewingVector();
+
+	if (hp <= 0)
+	{
+		_isAlive = false;
+	}
 }
 
 void Wasp::updateSpeeds()
@@ -186,6 +201,16 @@ int Wasp::getHP() const
 	return hp;
 }
 
+void Wasp::setHP(int newHP)
+{
+	if (!_isAlive || newHP < 0 || newHP > MAX_HP)
+	{
+		return;
+	}
+
+	hp = newHP;
+}
+
 int Wasp::getMaxHP() const
 {
 	return MAX_HP;
@@ -200,4 +225,25 @@ void Wasp::kill()
 {
 	hp = 0;
 	_isAlive = false;
+}
+
+// HUNGER
+int Wasp::getHungerSaturation() const
+{
+	return hungerSaturation;
+}
+
+void Wasp::setHungerSaturation(int newSaturation)
+{
+	if (newSaturation < 0 || newSaturation > MAX_HUNGER_SATURATION)
+	{
+		return;
+	}
+
+	hungerSaturation = newSaturation;
+}
+
+int Wasp::getMaxHungerSaturation() const
+{
+	return MAX_HUNGER_SATURATION;
 }

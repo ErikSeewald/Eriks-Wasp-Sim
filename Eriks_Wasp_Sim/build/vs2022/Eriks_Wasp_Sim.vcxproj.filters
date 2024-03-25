@@ -81,7 +81,7 @@
     <ClInclude Include="..\..\include\input\console\Console.h">
       <Filter>Header Files\input\console</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\input\console\CommandHandlers.h">
+    <ClInclude Include="..\..\include\input\console\OtherCommandHandlers.h">
       <Filter>Header Files\input\console</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\input\console\CommandUtil.h">
@@ -101,6 +101,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\util\VectorMath.h">
       <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\console\WaspCommandHandlers.h">
+      <Filter>Header Files\input\console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\console\MetaCommandHandlers.h">
+      <Filter>Header Files\input\console</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -134,7 +140,7 @@
     <ClCompile Include="..\..\src\util\StringUtil.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\input\console\CommandHandlers.cpp">
+    <ClCompile Include="..\..\src\input\console\OtherCommandHandlers.cpp">
       <Filter>Source Files\input\console</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\input\console\Console.cpp">
@@ -175,6 +181,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\util\VectorMath.cpp">
       <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\console\WaspCommandHandlers.cpp">
+      <Filter>Source Files\input\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\console\MetaCommandHandlers.cpp">
+      <Filter>Source Files\input\console</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

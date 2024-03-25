@@ -67,6 +67,20 @@
 				"description": "Sets the selected wasp's position",
 				"syntax": "wasp setpos <position>",
 				"subcommands": []
+			},
+
+			{
+				"name": "sethp",
+				"description": "Sets the health points of the selected wasp",
+				"syntax": "wasp sethp <amount>",
+				"subcommands": []
+			},
+
+			{
+				"name": "sethunger",
+				"description": "Sets the hunger saturation of the selected wasp",
+				"syntax": "wasp sethunger <amount>",
+				"subcommands": []
 			}
 		]
 			

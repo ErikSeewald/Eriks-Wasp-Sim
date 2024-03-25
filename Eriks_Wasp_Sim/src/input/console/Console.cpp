@@ -1,6 +1,8 @@
 #include "Console.h"
 #include "JsonHandler.h"
-#include "CommandHandlers.h"
+#include "OtherCommandHandlers.h"
+#include "WaspCommandHandlers.h"
+#include "MetaCommandHandlers.h"
 #include "StringUtil.h"
 #include "CommandUtil.h"
 
@@ -17,12 +19,12 @@ const std::string commandsFileFallback = baseDirFallback + "Commands.json";
 //COMMAND HANDLERS
 CommandHandlerMap mainCommandHandlers =
 {
-        {"help", CommandHandlers::commandHelp},
-        {"syntax", CommandHandlers::commandSyntax},
-        {"element", CommandHandlers::commandElement},
-        {"wasp", CommandHandlers::commandWasp},
-        {"spawn", CommandHandlers::commandSpawn},
-        {"kill", CommandHandlers::commandKill}
+        {"help", MetaCommandHandlers::commandHelp},
+        {"syntax", MetaCommandHandlers::commandSyntax},
+        {"element", MetaCommandHandlers::commandElement},
+        {"wasp", WaspCommandHandlers::commandWasp},
+        {"spawn", OtherCommandHandlers::commandSpawn},
+        {"kill", OtherCommandHandlers::commandKill}
 };
 
 json commands;

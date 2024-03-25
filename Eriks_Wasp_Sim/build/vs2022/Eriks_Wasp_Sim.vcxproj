@@ -210,9 +210,11 @@
     <ClInclude Include="..\..\include\graphics\SimVisualizer.h" />
     <ClInclude Include="..\..\include\graphics\UI.h" />
     <ClInclude Include="..\..\include\graphics\WaspRenderer.h" />
-    <ClInclude Include="..\..\include\input\console\CommandHandlers.h" />
+    <ClInclude Include="..\..\include\input\console\MetaCommandHandlers.h" />
+    <ClInclude Include="..\..\include\input\console\OtherCommandHandlers.h" />
     <ClInclude Include="..\..\include\input\console\CommandUtil.h" />
     <ClInclude Include="..\..\include\input\console\Console.h" />
+    <ClInclude Include="..\..\include\input\console\WaspCommandHandlers.h" />
     <ClInclude Include="..\..\include\input\MouseHandler.h" />
     <ClInclude Include="..\..\include\input\MouseRayCast.h" />
     <ClInclude Include="..\..\include\simulation\Simulation.h" />
@@ -236,9 +238,11 @@
     <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp" />
     <ClCompile Include="..\..\src\graphics\UI.cpp" />
     <ClCompile Include="..\..\src\graphics\WaspRenderer.cpp" />
-    <ClCompile Include="..\..\src\input\console\CommandHandlers.cpp" />
+    <ClCompile Include="..\..\src\input\console\MetaCommandHandlers.cpp" />
+    <ClCompile Include="..\..\src\input\console\OtherCommandHandlers.cpp" />
     <ClCompile Include="..\..\src\input\console\CommandUtil.cpp" />
     <ClCompile Include="..\..\src\input\console\Console.cpp" />
+    <ClCompile Include="..\..\src\input\console\WaspCommandHandlers.cpp" />
     <ClCompile Include="..\..\src\input\KeyboardHandler.cpp" />
     <ClCompile Include="..\..\src\input\MouseHandler.cpp" />
     <ClCompile Include="..\..\src\input\MouseRayCast.cpp" />

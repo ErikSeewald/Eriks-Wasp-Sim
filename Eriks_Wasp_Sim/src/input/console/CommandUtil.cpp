@@ -215,7 +215,7 @@ void CommandUtil::printInvalidSyntaxError()
     std::cout << invalidSyntaxPrint << std::endl;
 }
 
-void CommandUtil::printError(const std::string& message)
+void CommandUtil::printError(std::string message)
 {
     std::cout << "ERROR: " << message << std::endl;
 }
