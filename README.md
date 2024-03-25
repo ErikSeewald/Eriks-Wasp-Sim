@@ -1,5 +1,5 @@
 # Eriks-Wasp-Sim
-This project holds all my work on the (yellowjacket) wasp colony simulator.
+This project holds all my work on the wasp colony simulator.
 
 ## Dependencies
 If you just want to run the program, clone the repo and use the [executable](Eriks_Wasp_Sim/build/vs2022/x64/Debug/Eriks_Wasp_Sim.exe) in the "/Eriks_Wasp_Sim/build/vs2022/x64/Debug/" directory.
