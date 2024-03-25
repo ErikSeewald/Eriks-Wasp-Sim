@@ -60,5 +60,5 @@ namespace CommandUtil
 
 	void printInvalidSyntaxError();
 
-	void printError(const std::string& message);
+	void printError(std::string message);
 }

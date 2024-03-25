@@ -1,11 +1,6 @@
 #include "UI.h"
 #include "SimVisualizer.h"
 #include "WaspSlots.h"
-
-#include "imgui.h"
-#include "backends/imgui_impl_opengl3.h"
-#include "backends/imgui_impl_glut.h"
-
 #include <sstream>
 #include <iomanip>
 
@@ -41,7 +36,7 @@ void UI::_drawSelectedWaspUI()
     }
 
     // Initial size and position
-    const static ImVec2 initSize(250, 320);
+    const static ImVec2 initSize(250, 400);
     const static ImVec2 initPos(20,20);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_FirstUseEver);
@@ -82,7 +77,6 @@ void UI::_drawSelectedWaspUI()
         // HEALTH
         if (ImGui::CollapsingHeader("Health", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            // Use conditional coloring for Alive status
             bool isAlive = wasp->isAlive();
             ImGui::Text("Alive: ");
             ImGui::SameLine();
@@ -93,13 +87,18 @@ void UI::_drawSelectedWaspUI()
             int maxHP = wasp->getMaxHP();
             ImGui::Text("HP: %d/%d", hp, maxHP);
 
-            float healthPercentage = (float) hp / maxHP;
-            std::ostringstream stream;
-            stream << std::fixed << std::setprecision(1) << healthPercentage * 100 << "%";
+            _drawPercentageBar(hp, maxHP, ImVec4(0.0f, 1.0f, 0.0f, 0.2f));
+        }
 
-            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.0f, 1.0f, 0.0f, 0.2f));
-            ImGui::ProgressBar(healthPercentage, ImVec2(-5, 16), stream.str().c_str()); 
-            ImGui::PopStyleColor(1);
+        // HUNGER
+        if (ImGui::CollapsingHeader("Hunger", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            // HUNGER BAR
+            int hungerSaturation = wasp->getHungerSaturation();
+            int maxSaturation = wasp->getMaxHungerSaturation();
+            ImGui::Text("Hunger saturation: %d/%d", hungerSaturation, maxSaturation);
+
+            _drawPercentageBar(hungerSaturation, maxSaturation, ImVec4(1.0f, 0.3f, 0.0f, 0.3f));
         }
     }
 
@@ -169,4 +168,15 @@ void UI::_drawVectorTable(const glm::vec3& vector, const std::string& tableName)
         ImGui::TableSetColumnIndex(1); ImGui::Text("%.3f", vector.z);
         ImGui::EndTable();
     }
+}
+
+void UI::_drawPercentageBar(int value, int maxValue, ImVec4 color)
+{
+    float percentage = (float) value / maxValue;
+    std::ostringstream stream;
+    stream << std::fixed << std::setprecision(1) << percentage * 100 << "%";
+
+    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
+    ImGui::ProgressBar(percentage, ImVec2(-5, 16), stream.str().c_str());
+    ImGui::PopStyleColor(1);
 }

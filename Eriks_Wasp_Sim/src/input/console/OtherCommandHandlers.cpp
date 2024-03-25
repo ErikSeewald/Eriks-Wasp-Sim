@@ -1,160 +1,20 @@
-#include "CommandHandlers.h"
+#include "OtherCommandHandlers.h"
+#include "WaspCommandHandlers.h"
 #include "Console.h"
-#include "JsonHandler.h"
 #include "StringUtil.h"
-#include "json.hpp"
 #include "CommandUtil.h"
-#include "UI.h"
 #include "WaspSlots.h"
 #include "MemoryManager.h"
 
-using nlohmann::json;
 using CommandUtil::CommandEntity;
 using Simulation::KillStrategy;
 using Simulation::SpawnStrategy;
 using WaspSlots::WaspSlot;
 
-void CommandHandlers::commandHelp(const std::string& subcommand)
-{   
-    if (!StringUtil::isBlank(subcommand))
-    {
-        CommandUtil::printInvalidSyntaxError();
-        return;
-    }
-
-    for (const json& commandJson : Console::getCommands())
-    {
-        CommandUtil::printCommandDescription(commandJson);
-    }
-}
-
-
-//-------------------------------------
-//----------------SYNTAX----------------
-//-------------------------------------
-void CommandHandlers::commandSyntax(const std::string& subcommand)
-{
-    std::string commandString = subcommand;
-
-    if (StringUtil::isBlank(subcommand))
-    {
-        // TURN 'syntax' INTO 'syntax syntax" so that it prints it's own syntax
-        static const std::string syntaxCommandName = " syntax";
-        commandString = syntaxCommandName;
-    }
-  
-    const json& command = CommandUtil::getCommandJson(commandString);
-    CommandUtil::printCommandSyntax(command);
-}
-
-void CommandHandlers::commandElement(const std::string& subcommand)
-{
-    std::string element = StringUtil::getFirstWord(subcommand);
-
-    if (element.empty() || !StringUtil::isBlank(subcommand.substr(element.size() + 1)))
-    {
-        CommandUtil::printInvalidSyntaxError();
-        return;
-    }
-
-    json elementsCommand = JsonHandler::findByName(Console::getCommands(), "element");
-    json specificElement = JsonHandler::findByName(elementsCommand["elements"], element);
-
-    if (specificElement.empty())
-    {
-        CommandUtil::printInvalidSyntaxError();
-        return;
-    }
-
-    CommandUtil::printCommandDescription(specificElement);
-}
-
-
-//-------------------------------------
-//----------------WASP----------------
-//-------------------------------------
-static const std::string waspCommandName = "wasp";
-CommandHandlerMap waspCommandHandlers =
-{
-        {"help", CommandHandlers::commandWaspHelp},
-        {"kill", CommandHandlers::commandWaspKill},
-        {"setpos", CommandHandlers::commandWaspSetPos}
-};
-
-void CommandHandlers::commandWasp(const std::string& subcommand)
-{
-    Console::processCommand(subcommand, waspCommandHandlers);
-}
-
-void CommandHandlers::commandWaspHelp(const std::string& subcommand)
-{
-    if (!StringUtil::isBlank(subcommand))
-    {
-        CommandUtil::printInvalidSyntaxError();
-        return;
-    }
-
-    CommandUtil::printSubCommands(waspCommandName);
-}
-
-void CommandHandlers::commandWaspKill(const std::string& subcommand)
-{
-    static const std::string successfulKillPrint = "Wasp killed successfully!";
-
-    if (!StringUtil::isBlank(subcommand))
-    {
-        CommandUtil::printInvalidSyntaxError();
-        return;
-    }
-
-    Wasp* selectedWasp = UI::getUIState()->selectedWasp;
-    if (selectedWasp != NULL)
-    {
-        selectedWasp->kill();
-        std::cout << successfulKillPrint;
-    }
-    else
-    {
-        CommandUtil::printError(CommandUtil::noWaspSelectedPrint);
-    }
-}
-
-void CommandHandlers::commandWaspSetPos(const std::string& subcommand)
-{
-    //POSITION STRING
-    std::string posString = StringUtil::getFirstWord(subcommand);
-    if (posString.empty() || !StringUtil::isBlank(StringUtil::cutFirstWord(subcommand)))
-    {
-        CommandUtil::printInvalidSyntaxError();
-        return;
-    }
-
-    //GET POSITION
-    glm::vec3 newPos = CommandUtil::convertToPosition(posString);
-    if (newPos == CommandUtil::infVec)
-    {
-        CommandUtil::printInvalidSyntaxError();
-        return;
-    }
-
-    //SET POSITION
-    Wasp* selectedWasp = UI::getUIState()->selectedWasp;
-    if (selectedWasp != NULL)
-    {
-        selectedWasp->setPosition(newPos);
-        std::cout << "Wasp's position set to " << newPos.x << "," << newPos.y << "," << newPos.z;
-    }
-    else
-    {
-        CommandUtil::printError(CommandUtil::noWaspSelectedPrint);
-    }
-}
-
-
 //-------------------------------------
 //----------------SPAWN----------------
 //-------------------------------------
-void CommandHandlers::commandSpawn(const std::string& subcommand)
+void OtherCommandHandlers::commandSpawn(const std::string& subcommand)
 {
     std::string firstWord = StringUtil::getFirstWord(subcommand);
 
@@ -246,7 +106,7 @@ void CommandHandlers::commandSpawn(const std::string& subcommand)
 //-------------------------------------
 //----------------KILL----------------
 //-------------------------------------
-void CommandHandlers::commandKill(const std::string& subcommand)
+void OtherCommandHandlers::commandKill(const std::string& subcommand)
 {
     // The kill command schedules a new cleanup. If the user was allowed to continue spamming kill constantly
     // it would cause the cleanup to never occur. Avoid that.
@@ -279,7 +139,7 @@ void CommandHandlers::commandKill(const std::string& subcommand)
 
     else if (firstWord == "selected")
     {
-        commandWaspKill("");
+        WaspCommandHandlers::commandWaspKill("");
         return;
     }
 

@@ -40,11 +40,20 @@ class Wasp : Updatable
 		// HEALTH
 		int getHP() const;
 
+		void setHP(int newHP);
+
 		int getMaxHP() const;
 
 		bool isAlive() const;
 
 		void kill();
+
+		// HUNGER
+		int getHungerSaturation() const;
+
+		void setHungerSaturation(int newSaturation);
+
+		int getMaxHungerSaturation() const;
 
 	private:
 		std::chrono::duration<double>* deltaTime;
@@ -81,4 +90,8 @@ class Wasp : Updatable
 		int MAX_HP;
 		int hp;
 		bool _isAlive;
+
+		// HUNGER
+		int MAX_HUNGER_SATURATION;
+		int hungerSaturation;
 };
