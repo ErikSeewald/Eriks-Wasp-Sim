@@ -46,13 +46,16 @@
     <Filter Include="Source Files\graphics\imgui lib">
       <UniqueIdentifier>{794cda46-4e9e-4c96-8c43-65dd3f0c789b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\simulation\Wasp">
+      <UniqueIdentifier>{481789a9-b2ef-4af3-9073-4e651ac35d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\simulation\Wasp">
+      <UniqueIdentifier>{0390ab42-923a-443e-b5df-70f9bd4d1ef8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simulation\Wasp.h">
-      <Filter>Header Files\simulation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\graphics\SimVisualizer.h">
       <Filter>Header Files\graphics</Filter>
@@ -87,9 +90,6 @@
     <ClInclude Include="..\..\include\input\console\CommandUtil.h">
       <Filter>Header Files\input\console</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\simulation\WaspSlots.h">
-      <Filter>Header Files\simulation</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\util\MemoryManager.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
@@ -108,13 +108,16 @@
     <ClInclude Include="..\..\include\input\console\MetaCommandHandlers.h">
       <Filter>Header Files\input\console</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Wasp\wasp.h">
+      <Filter>Header Files\simulation\Wasp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Wasp\WaspSlots.h">
+      <Filter>Header Files\simulation\Wasp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simulation\Wasp.cpp">
-      <Filter>Source Files\simulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp">
       <Filter>Source Files\graphics</Filter>
@@ -148,9 +151,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\input\console\CommandUtil.cpp">
       <Filter>Source Files\input\console</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simulation\WaspSlots.cpp">
-      <Filter>Source Files\simulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\util\MemoryManager.cpp">
       <Filter>Source Files\util</Filter>
@@ -187,6 +187,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\input\console\MetaCommandHandlers.cpp">
       <Filter>Source Files\input\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Wasp\wasp.cpp">
+      <Filter>Source Files\simulation\Wasp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Wasp\WaspSlots.cpp">
+      <Filter>Source Files\simulation\Wasp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Wasp\WaspGetSet.cpp">
+      <Filter>Source Files\simulation\Wasp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
