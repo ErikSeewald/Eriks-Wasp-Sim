@@ -26,7 +26,7 @@ Wasp::Wasp()
 	// HUNGER
 	MAX_HUNGER_SATURATION = 100;
 	hungerSaturation = MAX_HUNGER_SATURATION;
-
+	lastHungerDecrease = steady_clock::now();
 }
 
 /**
@@ -44,6 +44,9 @@ void Wasp::update()
 	updateSpeeds();
 	updatePosition();
 	updateViewingVector();
+
+	updateHunger();
+	updateHP();
 
 	if (hp <= 0)
 	{
@@ -227,6 +230,19 @@ void Wasp::kill()
 	_isAlive = false;
 }
 
+void Wasp::updateHP()
+{
+	if (hp <= 0)
+	{
+		return;
+	}
+
+	if (hungerSaturation <= 0 && RNG::randMod(20) == 0)
+	{
+		hp--;
+	}
+}
+
 // HUNGER
 int Wasp::getHungerSaturation() const
 {
@@ -246,4 +262,20 @@ void Wasp::setHungerSaturation(int newSaturation)
 int Wasp::getMaxHungerSaturation() const
 {
 	return MAX_HUNGER_SATURATION;
+}
+
+void Wasp::updateHunger()
+{
+	if (hungerSaturation <= 0)
+	{
+		return;
+	}
+
+	steady_clock::time_point now = steady_clock::now();
+	duration<double> timeElapsed = duration_cast<std::chrono::seconds>(now - lastHungerDecrease);
+	if (timeElapsed.count() >= secondsBetweenHungerDecreases)
+	{
+		hungerSaturation--;
+		lastHungerDecrease = now;
+	}
 }

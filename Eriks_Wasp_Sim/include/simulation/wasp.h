@@ -4,6 +4,8 @@
 #include "Updatable.h"
 #include <glm/glm.hpp>
 
+using namespace std::chrono;
+
 /**
 * @class Wasp
 * @brief A single wasp within the simulation.
@@ -71,6 +73,9 @@ class Wasp : Updatable
 		// MOVEMENT
 		glm::vec3 viewingVector;
 		float flyingSpeed;
+		float turnSpeed; // speed of rotating around the y axis
+		float ascendSpeed; // speed of movement along the y axis
+		glm::vec3* currentGoal;
 
 		/**
 		* Updates the Wasp's viewingVector based on its current state
@@ -79,11 +84,6 @@ class Wasp : Updatable
 
 		void lookAroundRandomly();
 
-		float turnSpeed; // speed of rotating around the y axis
-		float ascendSpeed; // speed of movement along the y axis
-
-		glm::vec3* currentGoal;
-
 		void turnTowardsGoal();
 
 		// HEALTH
@@ -91,7 +91,14 @@ class Wasp : Updatable
 		int hp;
 		bool _isAlive;
 
+		void updateHP();
+
 		// HUNGER
 		int MAX_HUNGER_SATURATION;
 		int hungerSaturation;
+
+		const double secondsBetweenHungerDecreases = 5.0;
+		steady_clock::time_point lastHungerDecrease;
+
+		void updateHunger();
 };

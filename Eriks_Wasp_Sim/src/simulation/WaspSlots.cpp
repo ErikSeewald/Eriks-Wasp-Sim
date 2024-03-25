@@ -159,7 +159,6 @@ int WaspSlots::killWasps(int amountToKill, KillStrategy strategy)
 bool WaspSlots::spaceAvailable(int waspAddAmount)
 {
     return aliveCount + waspAddAmount <= MAX_WASP_COUNT;
-
 }
 
 

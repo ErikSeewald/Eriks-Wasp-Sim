@@ -1,8 +1,14 @@
-﻿  MetaCommandHandlers.cpp
-  OtherCommandHandlers.cpp
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\input\console\OtherCommandHandlers.cpp(68,55): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  Console.cpp
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\input\console\Console.cpp(43,38): warning C4101: 'e': unreferenced local variable
-  WaspCommandHandlers.cpp
-  Generating Code...
+﻿  Wasp.cpp
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(17,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(76,24): warning C4244: 'initializing': conversion from '_Rep' to 'float', possible loss of data
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(76,24): warning C4244:         with
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(76,24): warning C4244:         [
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(76,24): warning C4244:             _Rep=double
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(76,24): warning C4244:         ]
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(107,14): warning C4244: 'initializing': conversion from '_Rep' to 'float', possible loss of data
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(107,14): warning C4244:         with
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(107,14): warning C4244:         [
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(107,14): warning C4244:             _Rep=double
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(107,14): warning C4244:         ]
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp.cpp(160,34): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe
