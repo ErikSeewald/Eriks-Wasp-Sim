@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Eriks_Wasp_Sim", "Eriks_Wasp_Sim.vcxproj", "{32D0C1ED-24DC-4801-84D0-CF89C18DF73A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wasp-Sim-Tests", "..\Wasp-Sim-Tests\Wasp-Sim-Tests.vcxproj", "{5E256A6A-4344-4FC5-B856-FF19B18ED22F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -27,6 +29,18 @@ Global
 		{32D0C1ED-24DC-4801-84D0-CF89C18DF73A}.Release|x64.Build.0 = Release|x64
 		{32D0C1ED-24DC-4801-84D0-CF89C18DF73A}.Release|x86.ActiveCfg = Release|Win32
 		{32D0C1ED-24DC-4801-84D0-CF89C18DF73A}.Release|x86.Build.0 = Release|Win32
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Debug|ARM.ActiveCfg = Debug|x64
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Debug|ARM.Build.0 = Debug|x64
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Debug|x64.ActiveCfg = Debug|x64
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Debug|x64.Build.0 = Debug|x64
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Debug|x86.ActiveCfg = Debug|Win32
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Debug|x86.Build.0 = Debug|Win32
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Release|ARM.ActiveCfg = Release|x64
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Release|ARM.Build.0 = Release|x64
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Release|x64.ActiveCfg = Release|x64
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Release|x64.Build.0 = Release|x64
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Release|x86.ActiveCfg = Release|Win32
+		{5E256A6A-4344-4FC5-B856-FF19B18ED22F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

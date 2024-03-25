@@ -35,39 +35,39 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -98,28 +98,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\util;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
-    <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <IncludePath>..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\util;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
-    <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\util;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
-    <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <IncludePath>..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\util;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
-    <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\util;..\..\include\input;..\..\include;..\..\dependencies\freeglut\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
-    <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies\freeglut\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\util;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
-    <LibraryPath>..\..\dependencies\freeglut\lib;..\..\dependencies\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
