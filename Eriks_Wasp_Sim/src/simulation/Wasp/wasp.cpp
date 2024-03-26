@@ -84,7 +84,7 @@ void Wasp::updatePosition()
 	//Reached goal
 	if (currentGoal != nullptr && glm::length(*currentGoal - position) < 0.5)
 	{
-		//currentGoal = nullptr;
+		currentGoal = nullptr;
 	}
 }
 
