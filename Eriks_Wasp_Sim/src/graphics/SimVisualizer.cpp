@@ -1,7 +1,10 @@
+#pragma once
+
 #include "SimVisualizer.h"
 #include "KeyboardHandler.h"
 #include "MouseHandler.h"
 #include "WaspRenderer.h"
+#include "FoodRenderer.h"
 #include "UI.h"
 #include <iostream>
 #include "imgui.h"
@@ -104,8 +107,13 @@ void SimVisualizer::render()
 
     // SCENE
     drawGrid();
+
+    FoodRenderer::drawFoodSlots(Food::getFoodSlots());
+
     WaspRenderer::drawWasps(WaspSlots::getWaspSlots());
     WaspRenderer::drawSelectedWasp();
+
+
  
     // UI
     UI::drawUI();
