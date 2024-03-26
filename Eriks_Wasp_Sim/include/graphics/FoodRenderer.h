@@ -13,7 +13,7 @@ namespace FoodRenderer
     /**
     * Visualizes the given FoodSlot linked list. Assumes glut, glew, etc. are preinitialized.
     */
-    void drawFoodSlots(EntitySlot* foodSlot);
+    void drawFood(EntitySlot* foodSlot);
 
     /**
     * Initializes the FoodpRenderer.

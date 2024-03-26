@@ -49,7 +49,7 @@ void Simulation::updateWasps()
     {
         wasp = (Wasp*) waspSlot->entity;
         nextSlot = waspSlot->next; // set nextSlot here incase 'waspSlot' gets removed
-
+    
         if (wasp->isAlive())
         {
             wasp->update();
