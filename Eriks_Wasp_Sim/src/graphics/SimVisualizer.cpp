@@ -108,12 +108,10 @@ void SimVisualizer::render()
     // SCENE
     drawGrid();
 
-    FoodRenderer::drawFoodSlots(Food::getFoodSlots());
+    FoodRenderer::drawFood(Food::getFoodSlots());
 
     WaspRenderer::drawWasps(WaspSlots::getWaspSlots());
     WaspRenderer::drawSelectedWasp();
-
-
  
     // UI
     UI::drawUI();

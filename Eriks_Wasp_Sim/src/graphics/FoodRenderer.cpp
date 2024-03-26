@@ -43,7 +43,7 @@ void debugCubeRemoveLater()
 /**
 * Visualizes the given FoodSlot linked list. Assumes glut, glew, etc. are preinitialized.
 */
-void FoodRenderer::drawFoodSlots(EntitySlot* foodSlot)
+void FoodRenderer::drawFood(EntitySlot* foodSlot)
 {
     FoodEntity* food{};
 
