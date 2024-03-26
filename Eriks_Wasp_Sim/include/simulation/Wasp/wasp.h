@@ -35,7 +35,7 @@ class Wasp : Updatable
 
 		void setViewingVector(glm::vec3 viewingVector);
 
-		void setCurrentGoal(glm::vec3* goal);
+		void setGoal(glm::vec3* goal);
 
 		glm::vec3* getCurrentGoal();
 

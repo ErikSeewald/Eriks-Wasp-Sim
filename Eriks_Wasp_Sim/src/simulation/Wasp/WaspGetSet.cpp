@@ -15,7 +15,7 @@ void Wasp::setPosition(glm::vec3 position)
 
 
 // MOVEMENT
-void Wasp::setCurrentGoal(glm::vec3* goal)
+void Wasp::setGoal(glm::vec3* goal)
 {
 	currentGoal = goal;
 }

@@ -21,8 +21,6 @@ const std::string modelFileFallback = baseDirFallback + "Wasp.obj";
 
 /**
 * Visualizes the given WaspSlot linked list. Assumes glut, glew, etc. are preinitialized.
-*
-* @param wasps the linked list of WaspSlots
 */
 void WaspRenderer::drawWasps(EntitySlot* waspSlot)
 {

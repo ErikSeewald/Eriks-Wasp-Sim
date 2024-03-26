@@ -95,7 +95,7 @@ void Simulation::_loopInit()
     //SETUP FOOD
     FoodEntity* food = new FoodEntity();
     food->hungerPoints = 20;
-    food->position = glm::vec3(5, 5, 5);
+    food->position = glm::vec3(4, 3, 2);
     Food::allocateFoodSlot(food);
 }
 
