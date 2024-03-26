@@ -1,6 +1,6 @@
 #include "MemoryManager.h"
 #include "Simulation.h"
-#include "WaspSlots.h"
+#include "EntitySlots.h"
 #include <thread>
 #include <chrono>
 
@@ -49,6 +49,6 @@ bool MemoryManager::isCleanupScheduled()
 
 void MemoryManager::_memCleanup()
 {
-    WaspSlots::cleanupMemory();
+    EntitySlots::cleanupMemory();
     cleanupScheduled = false;
 }

@@ -110,6 +110,7 @@ void WaspCommandHandlers::commandWaspSetHp(const std::string& subcommand)
         return;
     }
     selectedWasp->setHP(newHp);
+    std::cout << "Wasp's hp set to " << newHp;
 }
 
 void WaspCommandHandlers::commandWaspSetHunger(const std::string& subcommand)
@@ -139,4 +140,5 @@ void WaspCommandHandlers::commandWaspSetHunger(const std::string& subcommand)
         return;
     }
     selectedWasp->setHungerSaturation(newSaturation);
+    std::cout << "Wasp's hunger saturation set to " << newSaturation;
 }

@@ -4,7 +4,7 @@
 #include "WaspSlots.h"
 #include <list>
 
-using WaspSlots::WaspSlot;
+using EntitySlots::EntitySlot;
 
  /**
  * @namespace WaspRenderer
@@ -27,7 +27,7 @@ namespace WaspRenderer
     *
     * @param wasps the linked list of WaspSlots
     */
-    void drawWasps(WaspSlot* waspSlot);
+    void drawWasps(EntitySlot* waspSlot);
 
     /**
     * Visualizes the wasp selected by the user, provided it exists.

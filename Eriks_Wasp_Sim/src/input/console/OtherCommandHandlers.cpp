@@ -9,7 +9,6 @@
 using CommandUtil::CommandEntity;
 using Simulation::KillStrategy;
 using Simulation::SpawnStrategy;
-using WaspSlots::WaspSlot;
 
 //-------------------------------------
 //----------------SPAWN----------------

@@ -24,7 +24,7 @@ const std::string modelFileFallback = baseDirFallback + "Wasp.obj";
 *
 * @param wasps the linked list of WaspSlots
 */
-void WaspRenderer::drawWasps(WaspSlot* waspSlot)
+void WaspRenderer::drawWasps(EntitySlot* waspSlot)
 {
     Wasp* selectedWasp = UI::getUIState()->selectedWasp;
     Wasp* wasp;
@@ -33,7 +33,7 @@ void WaspRenderer::drawWasps(WaspSlot* waspSlot)
     glBindVertexArray(VAO);
     while (waspSlot != nullptr)
     {
-        wasp = waspSlot->wasp;
+        wasp = (Wasp*) waspSlot->entity;
         waspSlot = waspSlot->next;
 
         if (wasp == selectedWasp)

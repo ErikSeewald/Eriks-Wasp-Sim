@@ -1,6 +1,8 @@
 #include "Wasp.h"
 #include "Simulation.h"
+#include "EntitySlots.h"
 
+using EntitySlots::EntitySlot;
 using Simulation::SpawnStrategy;
 using Simulation::KillStrategy;
 
@@ -10,17 +12,6 @@ using Simulation::KillStrategy;
 */
 namespace WaspSlots
 {
-	/**
-	* @struct WaspSlot
-	* @brief Linked list struct with a pointer to its own wasp and pointers to the previous and next WaspSlot.
-	*/
-	struct WaspSlot
-	{
-		Wasp* wasp;
-		WaspSlot* next;
-		WaspSlot* prev;
-	};
-
 	/**
 	* Allocates space in the wasp slot linked list and creates a slot for the given wasp.
 	*
@@ -34,20 +25,15 @@ namespace WaspSlots
 	*
 	* @param waspSlot the slot to remove
 	*/
-	void removeWaspSlot(WaspSlot* waspSlot);
+	void removeWaspSlot(EntitySlot* waspSlot);
 
-	WaspSlot* getWaspSlots();
+	EntitySlot* getWaspSlots();
 
 	bool spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy, float SpawnRadius);
 
 	int killWasps(int amountToKill, KillStrategy strategy);
 
-	bool spaceAvailable(int wasAddAmount);
-
-	/**
-	* Deletes and cleans up all wasp slots that have been marked as deletable
-	*/
-	void cleanupMemory();
+	bool spaceAvailable(int waspAddAmount);
 
 	int getAliveCount();
 
