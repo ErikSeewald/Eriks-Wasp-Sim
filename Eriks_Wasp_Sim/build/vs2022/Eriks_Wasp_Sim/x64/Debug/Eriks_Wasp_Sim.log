@@ -1,16 +1,21 @@
-﻿  WaspGetSet.cpp
-  wasp.cpp
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(19,16): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(78,24): warning C4244: 'initializing': conversion from '_Rep' to 'float', possible loss of data
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(78,24): warning C4244:         with
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(78,24): warning C4244:         [
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(78,24): warning C4244:             _Rep=double
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(78,24): warning C4244:         ]
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(99,14): warning C4244: 'initializing': conversion from '_Rep' to 'float', possible loss of data
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(99,14): warning C4244:         with
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(99,14): warning C4244:         [
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(99,14): warning C4244:             _Rep=double
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(99,14): warning C4244:         ]
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\simulation\Wasp\wasp.cpp(152,34): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+﻿  SimVisualizer.cpp
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\SimVisualizer.cpp(137,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\SimVisualizer.cpp(138,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  UI.cpp
+  WaspRenderer.cpp
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\WaspRenderer.cpp(101,52): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\WaspRenderer.cpp(164,55): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\WaspRenderer.cpp(164,55): warning C4267:         with
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\WaspRenderer.cpp(164,55): warning C4267:         [
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\WaspRenderer.cpp(164,55): warning C4267:             _Ty=unsigned int
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\WaspRenderer.cpp(164,55): warning C4267:         ]
+  MouseRayCast.cpp
+  OtherCommandHandlers.cpp
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\input\console\OtherCommandHandlers.cpp(67,55): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  EntitySlots.cpp
+  food.cpp
+  Simulation.cpp
+  WaspSlots.cpp
+  MemoryManager.cpp
   Generating Code...
   Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe

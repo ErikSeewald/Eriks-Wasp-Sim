@@ -98,22 +98,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies\freeglut\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies\freeglut\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -217,6 +217,8 @@
     <ClInclude Include="..\..\include\input\console\WaspCommandHandlers.h" />
     <ClInclude Include="..\..\include\input\MouseHandler.h" />
     <ClInclude Include="..\..\include\input\MouseRayCast.h" />
+    <ClInclude Include="..\..\include\simulation\EntitySlots.h" />
+    <ClInclude Include="..\..\include\simulation\Resources\food.h" />
     <ClInclude Include="..\..\include\simulation\Simulation.h" />
     <ClInclude Include="..\..\include\simulation\Updatable.h" />
     <ClInclude Include="..\..\include\simulation\Wasp\wasp.h" />
@@ -246,6 +248,8 @@
     <ClCompile Include="..\..\src\input\KeyboardHandler.cpp" />
     <ClCompile Include="..\..\src\input\MouseHandler.cpp" />
     <ClCompile Include="..\..\src\input\MouseRayCast.cpp" />
+    <ClCompile Include="..\..\src\simulation\EntitySlots.cpp" />
+    <ClCompile Include="..\..\src\simulation\Resources\food.cpp" />
     <ClCompile Include="..\..\src\simulation\Simulation.cpp" />
     <ClCompile Include="..\..\src\simulation\Wasp\wasp.cpp" />
     <ClCompile Include="..\..\src\simulation\Wasp\WaspGetSet.cpp" />

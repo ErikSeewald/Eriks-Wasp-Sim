@@ -52,6 +52,12 @@
     <Filter Include="Source Files\simulation\Wasp">
       <UniqueIdentifier>{0390ab42-923a-443e-b5df-70f9bd4d1ef8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\simulation\Resources">
+      <UniqueIdentifier>{6ff00b9a-6b9a-426a-bee2-bd116f82ef51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\simulation\Resources">
+      <UniqueIdentifier>{b499de6e-6893-4234-b362-e4cd3d5aacfb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h">
@@ -113,6 +119,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\simulation\Wasp\WaspSlots.h">
       <Filter>Header Files\simulation\Wasp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Resources\food.h">
+      <Filter>Header Files\simulation\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\EntitySlots.h">
+      <Filter>Header Files\simulation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +208,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\simulation\Wasp\WaspGetSet.cpp">
       <Filter>Source Files\simulation\Wasp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Resources\food.cpp">
+      <Filter>Source Files\simulation\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\EntitySlots.cpp">
+      <Filter>Source Files\simulation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

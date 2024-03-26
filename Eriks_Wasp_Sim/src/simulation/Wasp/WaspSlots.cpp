@@ -1,21 +1,16 @@
 #include "WaspSlots.h"
 #include "MemoryManager.h"
-#include <list>
 
-using WaspSlots::WaspSlot;
+using EntitySlots::EntitySlot;
 using Simulation::SpawnStrategy;
 using Simulation::KillStrategy;
 
-//WASPS
-WaspSlot* waspSlotsStart;
-WaspSlot* waspSlotsEnd;
+EntitySlot* waspSlotsStart;
+EntitySlot* waspSlotsEnd;
 int aliveCount = 0;
 long deadCount = 0;
 const int MAX_WASP_COUNT = 100000;
 
-// List to remember which wasp slots to delete in cleanupMemory(). 
-// Deleting them immediately would cause concurrency issues.
-std::list<WaspSlot*> waspSlotsToDelete{};
 
 /**
 * Allocates space in the wasp slot linked list and creates a slot for the given wasp.
@@ -24,25 +19,7 @@ std::list<WaspSlot*> waspSlotsToDelete{};
 */
 void WaspSlots::allocateWaspSlot(Wasp* wasp)
 {
-    WaspSlot* waspSlot = new WaspSlot();
-    waspSlot->wasp = wasp;
-    waspSlot->prev = waspSlotsEnd;
-    waspSlot->next = nullptr;
-
-    // If allocating first element
-    if (waspSlotsStart == nullptr)
-    {
-        waspSlotsStart = waspSlot;
-        waspSlotsEnd = waspSlot;
-    }
-
-    // Otherwise allocate at waspSlotsEnd
-    else
-    {
-        waspSlotsEnd->next = waspSlot;
-        waspSlotsEnd = waspSlot;
-    }
-
+    EntitySlots::allocateSlot(wasp, &waspSlotsStart, &waspSlotsEnd);
     aliveCount++;
 }
 
@@ -52,52 +29,32 @@ void WaspSlots::allocateWaspSlot(Wasp* wasp)
 * 
 * @param waspSlot the slot to remove
 */
-void WaspSlots::removeWaspSlot(WaspSlot* waspSlot)
+void WaspSlots::removeWaspSlot(EntitySlot* waspSlot)
 {   
-    // REMOVING START SLOT
-    if (waspSlot == waspSlotsStart)
-    {
-        if (waspSlot->next == nullptr)
-        {
-            waspSlotsStart = nullptr;
-            waspSlotsEnd = nullptr;
-        }
-        
-        else
-        {
-            waspSlotsStart = waspSlot->next;
-            waspSlotsStart->prev = nullptr;
-        }
-    }
+    EntitySlots::removeSlot(waspSlot, &waspSlotsStart, &waspSlotsEnd);
 
-    else
-    {
-        WaspSlot* prev = waspSlot->prev;
-
-        // REMOVING END SLOT
-        if (waspSlot == waspSlotsEnd)
-        {
-            prev->next = nullptr;
-            waspSlotsEnd = prev;
-        }
-
-        // REMOVING OTHER SLOTS
-        else
-        {
-            WaspSlot* next = waspSlot->next;
-            prev->next = next;
-            next->prev = prev;
-        }
-    }
-
-    waspSlotsToDelete.push_back(waspSlot);
     aliveCount--;
     deadCount++;
 }
 
-WaspSlot* WaspSlots::getWaspSlots()
+EntitySlot* WaspSlots::getWaspSlots()
 {
     return waspSlotsStart;
+}
+
+bool WaspSlots::spaceAvailable(int waspAddAmount)
+{
+    return aliveCount + waspAddAmount <= MAX_WASP_COUNT;
+}
+
+int WaspSlots::getAliveCount()
+{
+    return aliveCount;
+}
+
+long WaspSlots::getDeadCount()
+{
+    return deadCount;
 }
 
 bool WaspSlots::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy, float spawnRadius)
@@ -144,43 +101,15 @@ int WaspSlots::killWasps(int amountToKill, KillStrategy strategy)
     }
 
     int killedAmount = 0;
-    WaspSlot* waspSlot = WaspSlots::getWaspSlots();
+    EntitySlot* waspSlot = WaspSlots::getWaspSlots();
     while (waspSlot != nullptr && killedAmount != amountToKill)
     {
-        waspSlot->wasp->kill();
+        Wasp* wasp = (Wasp*)waspSlot->entity;
+        wasp->kill();
         killedAmount++;
         waspSlot = waspSlot->next;
     }
 
     MemoryManager::scheduleCleanup();
     return killedAmount;
-}
-
-bool WaspSlots::spaceAvailable(int waspAddAmount)
-{
-    return aliveCount + waspAddAmount <= MAX_WASP_COUNT;
-}
-
-
-/**
-* Deletes and cleans up all wasp slots that have been marked as deletable
-*/
-void WaspSlots::cleanupMemory()
-{
-    for (WaspSlot* waspSlot : waspSlotsToDelete)
-    {
-        delete waspSlot->wasp;
-        delete waspSlot;
-    }
-    waspSlotsToDelete.clear();
-}
-
-int WaspSlots::getAliveCount()
-{
-    return aliveCount;
-}
-
-long WaspSlots::getDeadCount()
-{
-    return deadCount;
 }

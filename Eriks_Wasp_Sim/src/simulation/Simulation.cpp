@@ -1,11 +1,13 @@
 #include "Simulation.h"
 #include "UI.h"
 #include "WaspSlots.h"
+#include "Food.h"
 #include <thread>
 
 using namespace std::chrono;
-using WaspSlots::WaspSlot;
+using EntitySlots::EntitySlot;
 using Simulation::SpawnStrategy;
+using Food::FoodEntity;
 
 //DELTA TIME
 std::chrono::duration<double> deltaTime;
@@ -40,12 +42,12 @@ void Simulation::updateWasps()
 {
     //WASPS
     Wasp* wasp;
-    WaspSlot* nextSlot;
-    WaspSlot* waspSlot = WaspSlots::getWaspSlots();
+    EntitySlot* nextSlot;
+    EntitySlot* waspSlot = WaspSlots::getWaspSlots();
 
     while (waspSlot != nullptr)
     {
-        wasp = waspSlot->wasp;
+        wasp = (Wasp*) waspSlot->entity;
         nextSlot = waspSlot->next; // set nextSlot here incase 'waspSlot' gets removed
 
         if (wasp->isAlive())
@@ -89,6 +91,12 @@ void Simulation::_loopInit()
     //SETUP WASPS
     static const int initWaspCount = 250;
     WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM, 10);
+
+    //SETUP FOOD
+    FoodEntity* food = new FoodEntity();
+    food->hungerPoints = 20;
+    food->position = glm::vec3(5, 5, 5);
+    Food::allocateFoodSlot(food);
 }
 
 /**
