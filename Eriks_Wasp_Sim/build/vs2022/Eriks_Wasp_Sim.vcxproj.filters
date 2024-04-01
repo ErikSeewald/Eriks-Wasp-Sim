@@ -129,6 +129,9 @@
     <ClInclude Include="..\..\include\graphics\FoodRenderer.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\graphics\ModelHandler.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
@@ -219,6 +222,9 @@
       <Filter>Source Files\simulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\FoodRenderer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\ModelHandler.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>

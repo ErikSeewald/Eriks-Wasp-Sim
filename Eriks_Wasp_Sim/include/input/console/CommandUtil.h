@@ -20,7 +20,7 @@ namespace CommandUtil
 
 	enum CommandEntity
 	{
-		WASP, INVALID
+		WASP, FOOD, INVALID
 	};
 
 	CommandEntity convertToEntity(const std::string& subcommand);

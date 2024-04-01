@@ -13,16 +13,6 @@ using EntitySlots::EntitySlot;
 namespace WaspRenderer
 {
     /**
-    * @struct Vertex
-    * @brief Struct to hold position, normal and texture coordinate information of a mesh vertex
-    */
-    struct Vertex {
-        float position[3];
-        float normal[3];
-        float texcoord[2];
-    };
-
-    /**
     * Visualizes the given WaspSlot linked list. Assumes glut, glew, etc. are preinitialized.
     */
     void drawWasps(EntitySlot* waspSlot);
@@ -45,9 +35,4 @@ namespace WaspRenderer
     * Initializes the WaspRenderer.
     */
     void init();
-
-    /**
-    * Loads the wasp model and binds it to VBO, VAO and EBO.
-    */
-    void _loadModel();
 }

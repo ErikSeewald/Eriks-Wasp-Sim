@@ -75,7 +75,7 @@ bool WaspSlots::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strateg
             double z = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
             wasp->setPosition(glm::vec3(position.x + x, position.y + y, position.z + z));
 
-            WaspSlots::allocateWaspSlot(wasp);
+            allocateWaspSlot(wasp);
         }
     }
 
@@ -85,7 +85,7 @@ bool WaspSlots::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strateg
         {
             Wasp* wasp = new Wasp();
             wasp->setPosition(position);
-            WaspSlots::allocateWaspSlot(wasp);
+            allocateWaspSlot(wasp);
         }
     }
 
@@ -101,7 +101,7 @@ int WaspSlots::killWasps(int amountToKill, KillStrategy strategy)
     }
 
     int killedAmount = 0;
-    EntitySlot* waspSlot = WaspSlots::getWaspSlots();
+    EntitySlot* waspSlot = getWaspSlots();
     while (waspSlot != nullptr && killedAmount != amountToKill)
     {
         Wasp* wasp = (Wasp*)waspSlot->entity;

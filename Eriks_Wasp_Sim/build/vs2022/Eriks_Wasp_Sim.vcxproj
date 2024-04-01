@@ -208,6 +208,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h" />
     <ClInclude Include="..\..\include\graphics\FoodRenderer.h" />
+    <ClInclude Include="..\..\include\graphics\ModelHandler.h" />
     <ClInclude Include="..\..\include\graphics\SimVisualizer.h" />
     <ClInclude Include="..\..\include\graphics\UI.h" />
     <ClInclude Include="..\..\include\graphics\WaspRenderer.h" />
@@ -239,6 +240,7 @@
     <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_widgets.cpp" />
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp" />
     <ClCompile Include="..\..\src\graphics\FoodRenderer.cpp" />
+    <ClCompile Include="..\..\src\graphics\ModelHandler.cpp" />
     <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp" />
     <ClCompile Include="..\..\src\graphics\UI.cpp" />
     <ClCompile Include="..\..\src\graphics\WaspRenderer.cpp" />

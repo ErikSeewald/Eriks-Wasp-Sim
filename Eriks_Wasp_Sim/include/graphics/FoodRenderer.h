@@ -3,6 +3,7 @@
 #include "food.h"
 
 using EntitySlots::EntitySlot;
+using Food::FoodEntity;
 
  /**
  * @namespace FoodRenderer
@@ -16,7 +17,13 @@ namespace FoodRenderer
     void drawFood(EntitySlot* foodSlot);
 
     /**
-    * Initializes the FoodpRenderer.
+    * Draws the given food entity with the assumption that the correct vertex array has already been bound and the
+    * color has been set.
+    */
+    void _drawFoodPrebound(FoodEntity* food);
+
+    /**
+    * Initializes the FoodRenderer.
     */
     void init();
 }

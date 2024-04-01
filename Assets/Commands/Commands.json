@@ -26,7 +26,7 @@
 
 			{
 				"name": "entity",
-				"description": "An entity can be one of the following: \n\n wasp    \n (just wasps for now)"
+				"description": "An entity can be one of the following: \n\n wasp    \n food"
 			},
 
 			{

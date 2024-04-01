@@ -1,9 +1,12 @@
 #pragma once
 
 #include "EntitySlots.h"
+#include "Simulation.h"
 #include <glm/glm.hpp>
 
 using EntitySlots::EntitySlot;
+using Simulation::SpawnStrategy;
+using Simulation::KillStrategy;
 
 /**
 * @namespace Food
@@ -19,6 +22,7 @@ namespace Food
 	{
 		int hungerPoints;
 		glm::vec3 position;
+		bool eaten;
 	};
 
 	/**
@@ -33,4 +37,8 @@ namespace Food
 	EntitySlot* getFoodSlots();
 
 	bool spaceAvailable(int foodAddAmount);
+
+	bool spawnFood(glm::vec3 position, int amount, SpawnStrategy strategy, float spawnRadius);
+
+	int killFood(int amountToKill, KillStrategy strategy);
 }
