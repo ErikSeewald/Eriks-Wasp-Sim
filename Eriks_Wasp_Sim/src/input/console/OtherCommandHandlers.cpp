@@ -5,6 +5,7 @@
 #include "CommandUtil.h"
 #include "WaspSlots.h"
 #include "MemoryManager.h"
+#include "Food.h"
 
 using CommandUtil::CommandEntity;
 using Simulation::KillStrategy;
@@ -81,10 +82,11 @@ void OtherCommandHandlers::commandSpawn(const std::string& subcommand)
     }
 
     //EXECUTE
+    bool success;
     switch (entity)
     {
         case CommandEntity::WASP:
-            bool success = WaspSlots::spawnWasps(spawnPos, amount, strategy, spawnRadius);
+            success = WaspSlots::spawnWasps(spawnPos, amount, strategy, spawnRadius);
             if (success)
             {
                 std::cout << "Entity wasp: Spawned " << amount << " at " << spawnPos.x << "," << spawnPos.y << "," << spawnPos.z << ",";
@@ -99,6 +101,24 @@ void OtherCommandHandlers::commandSpawn(const std::string& subcommand)
                 CommandUtil::printInvalidSyntaxError();
             }
             break;
+
+        case CommandEntity::FOOD:
+            success = Food::spawnFood(spawnPos, amount, strategy, spawnRadius);
+            if (success)
+            {
+                std::cout << "Entity food: Spawned " << amount << " at " << spawnPos.x << "," << spawnPos.y << "," << spawnPos.z << ",";
+            }
+            else
+            {
+                if (!Food::spaceAvailable(amount))
+                {
+                    CommandUtil::printError("Cannot surprass the maximum amount of food");
+                    return;
+                }
+                CommandUtil::printInvalidSyntaxError();
+            }
+            break;
+
     }
 }
 
@@ -173,11 +193,17 @@ void OtherCommandHandlers::commandKill(const std::string& subcommand)
     }
 
     //EXECUTE
+    int killedAmount;
     switch (entity)
     {
         case CommandEntity::WASP:
-            int killedAmount = WaspSlots::killWasps(amount, strategy);
+            killedAmount = WaspSlots::killWasps(amount, strategy);
             std::cout << "Entity wasp: Killed " << killedAmount;
+            break;
+
+        case CommandEntity::FOOD:
+            killedAmount = Food::killFood(amount, strategy);
+            std::cout << "Entity food: Killed " << killedAmount;
             break;
     }
 }

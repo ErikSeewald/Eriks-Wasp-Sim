@@ -56,8 +56,9 @@ void SimVisualizer::initGlut(int argc, char** argv)
     camera.direction = glm::vec3(-1.0f, 0.0f, -1.0f);
     updateCameraVectors();
 
-    //WASP RENDERER
+    //RENDERERS
     WaspRenderer::init();
+    FoodRenderer::init();
  
     glutTimerFunc(0, timer, 0);
     glutMainLoop();

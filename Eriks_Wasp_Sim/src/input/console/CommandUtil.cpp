@@ -18,6 +18,12 @@ CommandEntity CommandUtil::convertToEntity(const std::string& subcommand)
     {
         return CommandEntity::WASP;
     }
+
+    else if (subcommand == "food")
+    {
+        return CommandEntity::FOOD;
+    }
+
     return CommandEntity::INVALID;
 }
 
