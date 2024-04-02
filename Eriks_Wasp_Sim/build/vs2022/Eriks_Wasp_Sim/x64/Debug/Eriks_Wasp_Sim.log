@@ -1,4 +1,8 @@
-﻿  FoodRenderer.cpp
-  WaspRenderer.cpp
-  Generating Code...
+﻿  ModelHandler.cpp
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\ModelHandler.cpp(57,55): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\ModelHandler.cpp(57,55): warning C4267:         with
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\ModelHandler.cpp(57,55): warning C4267:         [
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\ModelHandler.cpp(57,55): warning C4267:             _Ty=unsigned int
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\ModelHandler.cpp(57,55): warning C4267:         ]
+C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\ModelHandler.cpp(61,38): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe

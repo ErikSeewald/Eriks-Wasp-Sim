@@ -87,4 +87,6 @@ bool ModelHandler::loadModel(const std::string& baseDir, const std::string& file
     glEnableVertexAttribArray(2);
     
     glBindVertexArray(0);
+
+    return true;
 }
