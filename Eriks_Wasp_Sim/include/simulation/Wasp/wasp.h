@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include "Updatable.h"
+#include "food.h"
 #include <glm/glm.hpp>
 
 using namespace std::chrono;
@@ -75,7 +76,10 @@ class Wasp : Updatable
 		float flyingSpeed;
 		float turnSpeed; // speed of rotating around the y axis
 		float ascendSpeed; // speed of movement along the y axis
+
+		//GOAL
 		glm::vec3* currentGoal;
+		Food::FoodEntity* currentGoalFoodEntity;
 
 		/**
 		* Updates the Wasp's viewingVector based on its current state

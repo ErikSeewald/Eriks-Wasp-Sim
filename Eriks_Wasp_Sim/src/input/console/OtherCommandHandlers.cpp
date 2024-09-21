@@ -8,8 +8,8 @@
 #include "Food.h"
 
 using CommandUtil::CommandEntity;
-using Simulation::KillStrategy;
-using Simulation::SpawnStrategy;
+using Strategies::KillStrategy;
+using Strategies::SpawnStrategy;
 
 //-------------------------------------
 //----------------SPAWN----------------

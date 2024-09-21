@@ -3,8 +3,8 @@
 #include "EntitySlots.h"
 
 using EntitySlots::EntitySlot;
-using Simulation::SpawnStrategy;
-using Simulation::KillStrategy;
+using Strategies::SpawnStrategy;
+using Strategies::KillStrategy;
 
 /**
 * @namespace WaspSlots

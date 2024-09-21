@@ -50,6 +50,7 @@ bool Food::spawnFood(glm::vec3 position, int amount, SpawnStrategy strategy, flo
             double y = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
             double z = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
             food->position = glm::vec3(position.x + x, position.y + y, position.z + z);
+            food->hungerPoints = 10;
 
             allocateFoodSlot(food);
         }

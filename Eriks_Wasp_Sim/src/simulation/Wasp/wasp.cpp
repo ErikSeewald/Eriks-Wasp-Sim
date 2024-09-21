@@ -5,6 +5,8 @@
 
 // NOTE: Getters and setters are in WaspGetSet.cpp to avoid clutter
 
+static glm::vec3 tempos = glm::vec3(2, 2, 2);
+
 Wasp::Wasp()
 {
 	deltaTime = Simulation::getDeltaTime();
@@ -12,9 +14,11 @@ Wasp::Wasp()
 	// POSITION
 	position = glm::vec3(0, 0, 0);
 
-	// MOVEMENT
+	//GOAL
 	currentGoal = nullptr;
+	currentGoalFoodEntity = nullptr;
 
+	// MOVEMENT
 	viewingVector = glm::vec3(0, 0, 1);
 	flyingSpeed = 0.8;
 	turnSpeed = 0;
@@ -36,6 +40,11 @@ Wasp::Wasp()
 */
 void Wasp::update()
 {
+	if (hp <= 0)
+	{
+		_isAlive = false;
+	}
+
 	if (!_isAlive)
 	{
 		return;
@@ -50,9 +59,16 @@ void Wasp::update()
 	updateHunger();
 	updateHP();
 
-	if (hp <= 0)
+	//GOAL
+	bool randGoalUpdate = RNG::randMod(5) == 0;
+	if (randGoalUpdate || (currentGoalFoodEntity != nullptr && currentGoalFoodEntity->eaten))
 	{
-		_isAlive = false;
+		FoodEntity* food = Simulation::getFirstFoodInApproxRadius(position, 5);
+		currentGoalFoodEntity = food;
+		if (food != nullptr)
+		{
+			currentGoal = &food->position;
+		}
 	}
 }
 
@@ -82,9 +98,23 @@ void Wasp::updatePosition()
 	position.z += viewingVector.z * speedMultiplier;
 
 	//Reached goal
-	if (currentGoal != nullptr && glm::length(*currentGoal - position) < 0.5)
+	if (currentGoal != nullptr && glm::length(*currentGoal - position) < 1.5)
 	{
-		currentGoal = nullptr;
+		currentGoal = nullptr; 
+
+		// EAT THE FOOD
+		if (currentGoalFoodEntity != nullptr)
+		{
+			currentGoalFoodEntity->eaten = true;
+			hungerSaturation += currentGoalFoodEntity->hungerPoints;
+
+			if (hungerSaturation > 100)
+			{
+				hungerSaturation = 100;
+			}
+
+			currentGoalFoodEntity = nullptr;
+		}
 	}
 }
 

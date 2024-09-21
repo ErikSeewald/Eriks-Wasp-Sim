@@ -1,12 +1,12 @@
 #pragma once
 
 #include "EntitySlots.h"
-#include "Simulation.h"
+#include "Strategies.h"
 #include <glm/glm.hpp>
 
 using EntitySlots::EntitySlot;
-using Simulation::SpawnStrategy;
-using Simulation::KillStrategy;
+using Strategies::SpawnStrategy;
+using Strategies::KillStrategy;
 
 /**
 * @namespace Food

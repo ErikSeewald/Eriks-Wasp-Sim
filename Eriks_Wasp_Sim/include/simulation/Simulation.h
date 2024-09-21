@@ -1,9 +1,13 @@
 #pragma once
 
 #include "Wasp.h"
+#include "food.h"
 #include <list>
 #include <chrono>
 #include <glm/glm.hpp>
+#include <vector>
+
+using Food::FoodEntity;
 
 /**
 * @namespace Simulation
@@ -18,22 +22,14 @@ namespace Simulation
 
 	void updateWasps();
 
+	void updateFood();
+
 	void updateDeltaTime();
 
 	/**
 	* Initializes everything needed for loop() to run
 	*/
 	void _loopInit();
-
-	enum class SpawnStrategy
-	{
-		POINT, RANDOM, INVALID
-	};
-
-	enum class KillStrategy
-	{
-		RANDOM, ALL, INVALID
-	};
 	
 	/**
 	* Returns the simulations's last delta time
@@ -41,4 +37,6 @@ namespace Simulation
 	* @return the simulation's last delta time
 	*/
 	std::chrono::duration<double>* getDeltaTime();
+
+	FoodEntity* getFirstFoodInApproxRadius(glm::vec3 position, float radius);
 }
