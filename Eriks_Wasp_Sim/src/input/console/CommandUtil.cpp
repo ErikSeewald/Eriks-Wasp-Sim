@@ -27,7 +27,7 @@ CommandEntity CommandUtil::convertToEntity(const std::string& subcommand)
     return CommandEntity::INVALID;
 }
 
-using Simulation::SpawnStrategy;
+using Strategies::SpawnStrategy;
 SpawnStrategy CommandUtil::convertToSpawnStrategy(const std::string& subcommand)
 {
     if (subcommand == "point")
@@ -43,7 +43,7 @@ SpawnStrategy CommandUtil::convertToSpawnStrategy(const std::string& subcommand)
     return SpawnStrategy::INVALID;
 }
 
-using Simulation::KillStrategy;
+using Strategies::KillStrategy;
 KillStrategy CommandUtil::convertToKillStrategy(const std::string& subcommand)
 {
     if (subcommand == "random")

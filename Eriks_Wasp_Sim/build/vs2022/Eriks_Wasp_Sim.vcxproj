@@ -222,6 +222,7 @@
     <ClInclude Include="..\..\include\simulation\EntitySlots.h" />
     <ClInclude Include="..\..\include\simulation\Resources\food.h" />
     <ClInclude Include="..\..\include\simulation\Simulation.h" />
+    <ClInclude Include="..\..\include\simulation\Strategies.h" />
     <ClInclude Include="..\..\include\simulation\Updatable.h" />
     <ClInclude Include="..\..\include\simulation\Wasp\wasp.h" />
     <ClInclude Include="..\..\include\simulation\Wasp\WaspSlots.h" />

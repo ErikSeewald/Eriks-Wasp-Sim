@@ -5,8 +5,8 @@
 #include "MemoryManager.h"
 #include <thread>
 
-int main(int argc, char** argv) {
-
+int main(int argc, char** argv) 
+{
     std::thread simThread(Simulation::startLoop);
     std::thread consoleThread(Console::startLoop);
     std::thread memoryThread(MemoryManager::startLoop);

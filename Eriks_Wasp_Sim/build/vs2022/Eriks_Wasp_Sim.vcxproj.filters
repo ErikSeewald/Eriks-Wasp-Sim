@@ -132,6 +132,9 @@
     <ClInclude Include="..\..\include\graphics\ModelHandler.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Strategies.h">
+      <Filter>Header Files\simulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
