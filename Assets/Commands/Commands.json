@@ -17,8 +17,7 @@
 		"name": "element",
 		"description": "Prints an explanation of a command element (i.e. <position> etc.)",
 		"syntax": "element <element>",
-		"elements": 
-		[
+		"elements": [
 			{
 				"name": "position",
 				"description": "Position can be declared in one of the following ways: \n\n <x>,<y>,<z> | selected | here    \n (i.e. either coordinates, the position of the currently selected wasp or the current camera position)"
@@ -37,6 +36,16 @@
 			{
 				"name": "kill-strat",
 				"description": "\t A kill strategy can be one of the following: \n\n random - Chooses the specific entities to kill randomly    \n (just random for now)"
+			},
+
+			{
+				"name": "rs-setting",
+				"description": "\t An rs-setting is one of the following adjustable resource settings: \n\n foodSpawnedPerSecond - How many food entities are spawned per second (float)   \n foodSpawnRadius - What radius (around the origin 0,0,0) food can spawn in (float)"
+			},
+
+			{
+				"name": "setting-value",
+				"description":  "\t A setting value is the value to assign to a given setting."
 			}
 		],
 		"subcommands": []
@@ -97,6 +106,13 @@
 		"name": "kill",
 		"description": "Kills entities.",
 		"syntax": "kill <entity> (<amount> | all | selected) [<kill-strat>]",
+		"subcommands": []
+	},
+
+	{
+		"name": "resource-settings",
+		"description": "Adjusts settings related to resources like food.",
+		"syntax": "resource-settings <rs-setting> <setting-value>",
 		"subcommands": []
 	}
 ]

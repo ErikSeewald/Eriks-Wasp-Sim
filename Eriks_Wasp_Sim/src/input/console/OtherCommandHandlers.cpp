@@ -6,10 +6,13 @@
 #include "WaspSlots.h"
 #include "MemoryManager.h"
 #include "Food.h"
+#include "ResourceSpawner.h"
+#include <set>
 
 using CommandUtil::CommandEntity;
 using Strategies::KillStrategy;
 using Strategies::SpawnStrategy;
+using ResourceSpawner::ResourceSettings;
 
 //-------------------------------------
 //----------------SPAWN----------------
@@ -39,7 +42,7 @@ void OtherCommandHandlers::commandSpawn(const std::string& subcommand)
     //AMOUNT
     curCommandString = StringUtil::cutFirstWord(curCommandString);
     firstWord = StringUtil::getFirstWord(curCommandString);
-    int amount = CommandUtil::convertToNumber(firstWord); 
+    int amount = CommandUtil::convertToInt(firstWord); 
     if (amount < 1)
     {
         CommandUtil::printInvalidSyntaxError();
@@ -65,7 +68,7 @@ void OtherCommandHandlers::commandSpawn(const std::string& subcommand)
         {
             curCommandString = StringUtil::cutFirstWord(curCommandString);
             firstWord = StringUtil::getFirstWord(curCommandString);
-            spawnRadius = CommandUtil::convertToNumber(firstWord);
+            spawnRadius = CommandUtil::convertToInt(firstWord);
 
             if (spawnRadius <= 0)
             {
@@ -164,7 +167,7 @@ void OtherCommandHandlers::commandKill(const std::string& subcommand)
 
     else
     {
-        amount = CommandUtil::convertToNumber(firstWord);
+        amount = CommandUtil::convertToInt(firstWord);
         if (amount < 1)
         {
             CommandUtil::printInvalidSyntaxError();
@@ -206,4 +209,58 @@ void OtherCommandHandlers::commandKill(const std::string& subcommand)
             std::cout << "Entity food: Killed " << killedAmount;
             break;
     }
+}
+
+//-------------------------------------
+//----------RESOURCE SETTINGS----------
+//-------------------------------------
+static const std::set<std::string> floatValueSettings = {"foodSpawnedPerSecond", "foodSpawnRadius"};
+
+void OtherCommandHandlers::commandResourceSettings(const std::string& subcommand)
+{
+    //SETTING TYPE
+    std::string type = StringUtil::getFirstWord(subcommand);
+
+    //SETTING VALUE
+    std::string curCommandString = StringUtil::cutFirstWord(subcommand);
+    std::string value = StringUtil::getFirstWord(curCommandString);
+
+    if (!StringUtil::isBlank(StringUtil::cutFirstWord(curCommandString)))
+    {  
+        CommandUtil::printInvalidSyntaxError();
+        return;
+    }
+
+    //EXECUTE
+    ResourceSettings* settings = ResourceSpawner::getResourceSettings();
+
+    // Positive float vaue
+    if (floatValueSettings.find(type) != floatValueSettings.end())
+    {
+        float f_value = CommandUtil::convertToFloat(value);
+
+        if (f_value < 0)
+        {
+            CommandUtil::printError("Setting value cannot be < 0");
+            return;
+        }
+
+        if (type == "foodSpawnedPerSecond")
+        {
+            settings->foodSpawnedPerSecond = f_value;
+            std::cout << "Set 'foodSpawnedPerSecond' to: " << f_value;
+        }
+
+        else if (type == "foodSpawnRadius")
+        {
+            settings->foodSpawnRadius = f_value;
+            std::cout << "Set 'foodSpawnRadius' to: " << f_value;
+        }
+    }
+
+    else
+    {
+        CommandUtil::printError("No such setting exists");
+    }
+
 }

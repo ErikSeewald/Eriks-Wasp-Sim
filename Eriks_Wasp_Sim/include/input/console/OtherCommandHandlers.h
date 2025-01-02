@@ -13,4 +13,7 @@ namespace OtherCommandHandlers
 
 	//KILL
 	void commandKill(const std::string& subcommand);
+
+	//RESOURCE SETTINGS
+	void commandResourceSettings(const std::string& subcommand);
 }

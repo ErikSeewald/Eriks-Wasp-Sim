@@ -1,6 +1,7 @@
 #include "Simulation.h"
 #include "UI.h"
 #include "WaspSlots.h"
+#include "ResourceSpawner.h"
 #include <thread>
 
 #include <iostream>
@@ -32,6 +33,7 @@ void Simulation::startLoop() {
         {
             updateWasps();
             updateFood();
+            ResourceSpawner::update(&deltaTime);
         }
 
         updateDeltaTime();

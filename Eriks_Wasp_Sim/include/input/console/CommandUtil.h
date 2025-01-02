@@ -31,7 +31,9 @@ namespace CommandUtil
 
 	glm::vec3 convertToPosition(const std::string& subcommand);
 
-	int convertToNumber(const std::string& subcommand);
+	int convertToInt(const std::string& subcommand);
+
+	float convertToFloat(const std::string& subcommand);
 
 	json getCommandJson(const std::string& subcommand);
 
