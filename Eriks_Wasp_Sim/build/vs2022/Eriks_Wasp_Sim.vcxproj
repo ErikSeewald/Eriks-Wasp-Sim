@@ -221,6 +221,7 @@
     <ClInclude Include="..\..\include\input\MouseRayCast.h" />
     <ClInclude Include="..\..\include\simulation\EntitySlots.h" />
     <ClInclude Include="..\..\include\simulation\Resources\food.h" />
+    <ClInclude Include="..\..\include\simulation\Resources\ResourceSpawner.h" />
     <ClInclude Include="..\..\include\simulation\Simulation.h" />
     <ClInclude Include="..\..\include\simulation\Strategies.h" />
     <ClInclude Include="..\..\include\simulation\Updatable.h" />
@@ -255,6 +256,7 @@
     <ClCompile Include="..\..\src\input\MouseRayCast.cpp" />
     <ClCompile Include="..\..\src\simulation\EntitySlots.cpp" />
     <ClCompile Include="..\..\src\simulation\Resources\food.cpp" />
+    <ClCompile Include="..\..\src\simulation\Resources\ResourceSpawner.cpp" />
     <ClCompile Include="..\..\src\simulation\Simulation.cpp" />
     <ClCompile Include="..\..\src\simulation\Wasp\wasp.cpp" />
     <ClCompile Include="..\..\src\simulation\Wasp\WaspGetSet.cpp" />

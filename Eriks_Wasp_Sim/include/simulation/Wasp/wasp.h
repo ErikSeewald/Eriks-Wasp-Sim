@@ -57,7 +57,6 @@ class Wasp : Updatable
 		void setHungerSaturation(int newSaturation);
 
 		int getMaxHungerSaturation() const;
-
 	private:
 		std::chrono::duration<double>* deltaTime;
 

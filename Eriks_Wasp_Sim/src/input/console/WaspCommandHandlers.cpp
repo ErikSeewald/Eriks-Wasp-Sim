@@ -102,7 +102,7 @@ void WaspCommandHandlers::commandWaspSetHp(const std::string& subcommand)
     }
 
     // SET HP
-    int newHp = CommandUtil::convertToNumber(hpString);
+    int newHp = CommandUtil::convertToInt(hpString);
     int maxHp = selectedWasp->getMaxHP();
     if (newHp < 0 || newHp > maxHp)
     {
@@ -132,7 +132,7 @@ void WaspCommandHandlers::commandWaspSetHunger(const std::string& subcommand)
     }
 
     // SET HUNGER SATURATION
-    int newSaturation = CommandUtil::convertToNumber(hungerString);
+    int newSaturation = CommandUtil::convertToInt(hungerString);
     int maxSaturation = selectedWasp->getMaxHungerSaturation();
     if (newSaturation < 0 || newSaturation > maxSaturation)
     {

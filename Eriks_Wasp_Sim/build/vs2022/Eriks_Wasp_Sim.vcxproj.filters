@@ -135,6 +135,9 @@
     <ClInclude Include="..\..\include\simulation\Strategies.h">
       <Filter>Header Files\simulation</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Resources\ResourceSpawner.h">
+      <Filter>Header Files\simulation\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
@@ -229,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\ModelHandler.cpp">
       <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Resources\ResourceSpawner.cpp">
+      <Filter>Source Files\simulation\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

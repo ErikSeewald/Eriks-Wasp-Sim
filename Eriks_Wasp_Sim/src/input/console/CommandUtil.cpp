@@ -96,19 +96,35 @@ glm::vec3 CommandUtil::convertToPosition(const std::string& subcommand)
     }
 }
 
-int CommandUtil::convertToNumber(const std::string& subcommand)
+int CommandUtil::convertToInt(const std::string& subcommand)
 {
     try
     {
         return std::stoi(subcommand);
     }
-    catch (std::invalid_argument& e)
+    catch (std::invalid_argument&)
     {
         return -1;
     }
-    catch (std::out_of_range& e)
+    catch (std::out_of_range&)
     {
         return -1;
+    }
+}
+
+float CommandUtil::convertToFloat(const std::string & subcommand)
+{
+    try
+    {
+        return std::stof(subcommand);
+    }
+    catch (const std::invalid_argument&)
+    {
+        return -1.0f;
+    }
+    catch (const std::out_of_range&)
+    {
+        return -1.0f;
     }
 }
 
