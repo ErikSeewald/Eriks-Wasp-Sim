@@ -25,7 +25,7 @@ CommandHandlerMap mainCommandHandlers =
         {"wasp", WaspCommandHandlers::commandWasp},
         {"spawn", OtherCommandHandlers::commandSpawn},
         {"kill", OtherCommandHandlers::commandKill},
-        {"resource-settings", OtherCommandHandlers::commandResourceSettings}
+        {"rset", OtherCommandHandlers::commandResourceSettings}
 };
 
 json commands;

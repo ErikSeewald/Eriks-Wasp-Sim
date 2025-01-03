@@ -22,6 +22,11 @@ class Wasp : Updatable
 		*/
 		void update();
 
+		/**
+		* Subroutine of the udpate() function responsible for updating the current goal.
+		*/
+		void updateGoal();
+
 		// POSITION
 		glm::vec3 getPosition() const;
 
@@ -57,6 +62,9 @@ class Wasp : Updatable
 		void setHungerSaturation(int newSaturation);
 
 		int getMaxHungerSaturation() const;
+
+		void onFoodReached();
+
 	private:
 		std::chrono::duration<double>* deltaTime;
 

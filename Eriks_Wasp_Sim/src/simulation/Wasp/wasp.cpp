@@ -59,15 +59,36 @@ void Wasp::update()
 	updateHunger();
 	updateHP();
 
-	//GOAL
-	bool randGoalUpdate = RNG::randMod(5) == 0;
-	if (randGoalUpdate || (currentGoalFoodEntity != nullptr && currentGoalFoodEntity->eaten))
+	updateGoal();
+}
+
+
+/**
+* Subroutine of the udpate() function responsible for updating the current goal.
+*/
+void Wasp::updateGoal()
+{
+	// FOOD GOAL JUST EATEN
+	if (currentGoalFoodEntity != nullptr && currentGoalFoodEntity->eaten)
 	{
-		FoodEntity* food = Simulation::getFirstFoodInApproxRadius(position, 5);
-		currentGoalFoodEntity = food;
-		if (food != nullptr)
+		currentGoalFoodEntity = nullptr;
+		currentGoal = nullptr;
+	}
+
+	// RANDOM UPDATE
+	bool randGoalUpdate = RNG::randMod(5) == 0;
+	if (randGoalUpdate)
+	{
+
+		// FOOD
+		if (hungerSaturation < MAX_HUNGER_SATURATION)
 		{
-			currentGoal = &food->position;
+			FoodEntity* food = Simulation::getFirstFoodInApproxRadius(position, 5);
+			currentGoalFoodEntity = food;
+			if (food != nullptr)
+			{
+				currentGoal = &food->position;
+			}
 		}
 	}
 }
@@ -102,22 +123,13 @@ void Wasp::updatePosition()
 	{
 		currentGoal = nullptr; 
 
-		// EAT THE FOOD
+		//FOOD
 		if (currentGoalFoodEntity != nullptr)
 		{
-			currentGoalFoodEntity->eaten = true;
-			hungerSaturation += currentGoalFoodEntity->hungerPoints;
-
-			if (hungerSaturation > 100)
-			{
-				hungerSaturation = 100;
-			}
-
-			currentGoalFoodEntity = nullptr;
+			onFoodReached();
 		}
 	}
 }
-
 
 // MOVEMENT
 /**
@@ -216,6 +228,19 @@ void Wasp::updateHP()
 }
 
 // HUNGER
+void Wasp::onFoodReached()
+{
+	currentGoalFoodEntity->eaten = true;
+	hungerSaturation += currentGoalFoodEntity->hungerPoints;
+
+	if (hungerSaturation > 100)
+	{
+		hungerSaturation = 100;
+	}
+
+	currentGoalFoodEntity = nullptr;
+}
+
 void Wasp::updateHunger()
 {
 	if (hungerSaturation <= 0)
