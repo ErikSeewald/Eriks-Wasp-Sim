@@ -15,7 +15,7 @@
 
 	{
 		"name": "element",
-		"description": "Prints an explanation of a command element (i.e. <position> etc.)",
+		"description": "Prints an explanation of a command element (i.e. position, entity, etc.)",
 		"syntax": "element <element>",
 		"elements": [
 			{
@@ -111,7 +111,7 @@
 
 	{
 		"name": "rset",
-		"description": "Adjusts resource settings (food spawn rate etc.)",
+		"description": "Adjusts resource settings (i.e. foodSpawnedPerSecond, etc.)",
 		"syntax": "rset <rset-setting> <setting-value>",
 		"subcommands": []
 	}
