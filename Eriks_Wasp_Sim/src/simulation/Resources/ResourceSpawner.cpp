@@ -22,16 +22,24 @@ void ResourceSpawner::update(std::chrono::duration<double>* deltaTime)
 #include <iostream>
 void ResourceSpawner::updateFood(std::chrono::duration<double>* deltaTime)
 {
-    static double foodTimeAccumulator = 0.0;
-    foodTimeAccumulator += deltaTime->count();
+    static double timeAccumulator = 0.0;
+    static double amountAccumulator = 0.0;
 
-    if (foodTimeAccumulator >= 1.0)
+    timeAccumulator += deltaTime->count();
+
+    if (timeAccumulator >= 1.0)
     {
-        int amountToSpawn = foodTimeAccumulator * settings.foodSpawnedPerSecond;
-        foodTimeAccumulator = 0.0;
+        amountAccumulator += timeAccumulator * settings.foodSpawnedPerSecond;
+        int amountToSpawn = (int) amountAccumulator;
+        
+        if (amountToSpawn > 0)
+        {
+            amountAccumulator -= amountToSpawn;
 
-        float radius = settings.foodSpawnRadius;
-        float halfRadius = radius / 2;
-        Food::spawnFood(glm::vec3(0,0,0), amountToSpawn, Strategies::SpawnStrategy::RANDOM, radius);
+            float radius = settings.foodSpawnRadius;
+            Food::spawnFood(glm::vec3(0, 0, 0), amountToSpawn, Strategies::SpawnStrategy::RANDOM, radius);
+        }
+
+        timeAccumulator = 0.0;
     }
 }
