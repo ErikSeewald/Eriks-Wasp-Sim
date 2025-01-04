@@ -10,6 +10,7 @@
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glut.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 Camera camera;
 
@@ -88,7 +89,7 @@ void SimVisualizer::reshape(int width, int height)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60.0, aspect_ratio, 0.01f, 500.0);
+    gluPerspective(CameraSettings::FOV_DEGREES, aspect_ratio, CameraSettings::NEAR_CLIP, CameraSettings::FAR_CLIP);
 }
 
 
@@ -98,6 +99,13 @@ void SimVisualizer::reshape(int width, int height)
 */
 void SimVisualizer::render()
 {
+    //--DEBUG--
+    /*
+    static int frames = 0;
+    static int lastTime = glutGet(GLUT_ELAPSED_TIME);
+    */
+    //--DEBUG--
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -118,6 +126,24 @@ void SimVisualizer::render()
     UI::drawUI();
 
     glutSwapBuffers();
+
+    //--DEBUG--
+    /*frames++;
+
+    int currentTime = glutGet(GLUT_ELAPSED_TIME); // in milliseconds
+    int deltaTime = currentTime - lastTime;
+    if (deltaTime >= 10000) // 10 seconds
+    {
+        // Compute frames per second
+        float fps = frames * 1000.0f / static_cast<float>(deltaTime);
+        std::cout << "FPS: " << fps << std::endl;
+
+        // Reset for the next measurement
+        frames = 0;
+        lastTime = currentTime;
+    }
+    */
+    //--DEBUG--
 }
 
 
@@ -151,6 +177,34 @@ void SimVisualizer::updateCameraVectors()
 Camera SimVisualizer::getCamera()
 {
     return camera;
+}
+
+glm::mat4 SimVisualizer::getCamProjMatrix()
+{
+    float pitchRad = glm::radians(camera.pitch);
+    float yawRad = glm::radians(camera.yaw);
+
+    glm::vec3 front;
+    front.x = cos(pitchRad) * cos(yawRad);
+    front.y = sin(pitchRad);
+    front.z = cos(pitchRad) * sin(yawRad);
+
+    front = glm::normalize(front);
+
+    glm::mat4 view = glm::lookAt(
+        camera.position,
+        camera.position + front,
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    );
+
+    glm::mat4 projection = glm::perspective(
+        glm::radians(CameraSettings::FOV_DEGREES),
+        (float)glutGet(GLUT_WINDOW_WIDTH) / (float)glutGet(GLUT_WINDOW_HEIGHT),
+        CameraSettings::NEAR_CLIP,
+        CameraSettings::FAR_CLIP
+    );
+
+    return projection * view;
 }
 
 

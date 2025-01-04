@@ -7,11 +7,13 @@
 using ModelHandler::Vertex;
 
 /**
-* Loads the wasp model fileName from the given base directory, binds it to VAO and writes the vertex count of the model into vertexCount.
-* 
+* Loads the wasp model fileName from the given base directory, binds it to VAO, VBO, EBO and writes
+* the vertex count of the model into vertexCount.
+*
 * @return bool - success of the operation
 */
-bool ModelHandler::loadModel(const std::string& baseDir, const std::string& fileName, GLuint* VAO, int* vertexCount)
+bool ModelHandler::loadModel(const std::string& baseDir, const std::string& fileName, GLuint* VAO, GLuint* VBO, GLuint* EBO,
+    int* vertexCount)
 {
     //LOAD DATA
     tinyobj::attrib_t attrib;
@@ -64,14 +66,12 @@ bool ModelHandler::loadModel(const std::string& baseDir, const std::string& file
     glGenVertexArrays(1, VAO);
     glBindVertexArray(*VAO);
 
-    GLuint VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glGenBuffers(1, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, *VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
-    GLuint EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glGenBuffers(1, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexIndices.size() * sizeof(unsigned int), vertexIndices.data(), GL_STATIC_DRAW);
 
     //POSITION

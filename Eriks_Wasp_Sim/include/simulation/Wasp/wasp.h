@@ -27,19 +27,10 @@ class Wasp : Updatable
 		*/
 		void updateGoal();
 
-		// POSITION
-		glm::vec3 getPosition() const;
-
-		void setPosition(glm::vec3 position);
-
 		// MOVEMENT
-		glm::vec3 getViewingVector() const;
-
 		float getTurnSpeed() const;
 
 		float getAscendSpeed() const;
-
-		void setViewingVector(glm::vec3 viewingVector);
 
 		void setGoal(glm::vec3* goal);
 
@@ -65,21 +56,23 @@ class Wasp : Updatable
 
 		void onFoodReached();
 
+		// I would prefer these to be private, but the overhead of a getter function
+		// just is not worth it once you reach like 100000 wasps
+		glm::vec3 position;
+		glm::vec3 viewingVector;
+
 	private:
 		std::chrono::duration<double>* deltaTime;
 
 		void updateSpeeds();
 
 		// POSITION
-		glm::vec3 position;
-
 		/**
 		* Updates the Wasp's position based on its current state
 		*/
 		void updatePosition();
 
 		// MOVEMENT
-		glm::vec3 viewingVector;
 		float flyingSpeed;
 		float turnSpeed; // speed of rotating around the y axis
 		float ascendSpeed; // speed of movement along the y axis

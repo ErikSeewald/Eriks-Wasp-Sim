@@ -28,7 +28,7 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
     {
         wasp = (Wasp*) waspSlot->entity;
 
-        glm::vec3 camToWasp = rayOrigin - wasp->getPosition();
+        glm::vec3 camToWasp = rayOrigin - wasp->position;
         if (glm::dot(camToWasp, camDirection) > 0)
         {
             // Do not check wasps that are behind the camera

@@ -21,15 +21,6 @@ namespace WaspRenderer
     * Visualizes the wasp selected by the user, provided it exists.
     */
     void drawSelectedWasp();
-#
-    /**
-    * Draws the given wasp with the assumption that the correct vertex array has already been bound and the
-    * color has been set. This allows for the function to only contain code unique to each wasp being drawn in
-    * drawWasps()'s loop and thereby increases performance.
-    *
-    * @param wasp the wasp to draw
-    */
-    void _drawWaspPrebound(Wasp* wasp);
 
     /**
     * Initializes the WaspRenderer.

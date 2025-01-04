@@ -9,7 +9,6 @@ EntitySlot* waspSlotsStart;
 EntitySlot* waspSlotsEnd;
 int aliveCount = 0;
 long deadCount = 0;
-const int MAX_WASP_COUNT = 100000;
 
 
 /**
@@ -73,7 +72,7 @@ bool WaspSlots::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strateg
             double x = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
             double y = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
             double z = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
-            wasp->setPosition(glm::vec3(position.x + x, position.y + y, position.z + z));
+            wasp->position = glm::vec3(position.x + x, position.y + y, position.z + z);
 
             allocateWaspSlot(wasp);
         }
@@ -84,7 +83,7 @@ bool WaspSlots::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strateg
         for (int i = 0; i < amount; i++)
         {
             Wasp* wasp = new Wasp();
-            wasp->setPosition(position);
+            wasp->position = position;
             allocateWaspSlot(wasp);
         }
     }

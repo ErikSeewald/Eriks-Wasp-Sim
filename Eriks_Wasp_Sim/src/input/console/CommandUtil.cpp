@@ -69,7 +69,7 @@ glm::vec3 CommandUtil::convertToPosition(const std::string& subcommand)
         Wasp* selectedWasp = UI::getUIState()->selectedWasp;
         if (selectedWasp != NULL)
         {
-            return selectedWasp->getPosition();
+            return selectedWasp->position;
         }
         else
         {

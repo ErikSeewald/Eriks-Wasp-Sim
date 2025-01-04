@@ -46,14 +46,14 @@ void UI::_drawSelectedWaspUI()
         // POSITION
         if (ImGui::CollapsingHeader("Position", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            _drawVectorTable(wasp->getPosition(), "WaspPositionTable");
+            _drawVectorTable(wasp->position, "WaspPositionTable");
         }
 
         // MOVEMENT
         if (ImGui::CollapsingHeader("Movement", ImGuiTreeNodeFlags_DefaultOpen))
         {
             ImGui::Text("Viewing vector: ");
-            _drawVectorTable(wasp->getViewingVector(), "WaspViewingVectorTable");
+            _drawVectorTable(wasp->viewingVector, "WaspViewingVectorTable");
 
             ImGui::Text("Turn speed: %.3f", wasp->getTurnSpeed());
             ImGui::Text("Ascend speed: %.3f", wasp->getAscendSpeed());

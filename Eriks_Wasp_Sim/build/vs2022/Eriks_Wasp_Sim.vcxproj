@@ -209,6 +209,7 @@
     <ClInclude Include="..\..\include\eriks_wasp_sim.h" />
     <ClInclude Include="..\..\include\graphics\FoodRenderer.h" />
     <ClInclude Include="..\..\include\graphics\ModelHandler.h" />
+    <ClInclude Include="..\..\include\graphics\ShaderHandler.h" />
     <ClInclude Include="..\..\include\graphics\SimVisualizer.h" />
     <ClInclude Include="..\..\include\graphics\UI.h" />
     <ClInclude Include="..\..\include\graphics\WaspRenderer.h" />
@@ -243,6 +244,7 @@
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp" />
     <ClCompile Include="..\..\src\graphics\FoodRenderer.cpp" />
     <ClCompile Include="..\..\src\graphics\ModelHandler.cpp" />
+    <ClCompile Include="..\..\src\graphics\ShaderHandler.cpp" />
     <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp" />
     <ClCompile Include="..\..\src\graphics\UI.cpp" />
     <ClCompile Include="..\..\src\graphics\WaspRenderer.cpp" />
@@ -270,6 +272,12 @@
   <ItemGroup>
     <Text Include="..\..\include\graphics\Camera.h" />
     <Text Include="..\..\include\input\KeyboardHandler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\shaders\food.frag" />
+    <None Include="..\..\shaders\food.vert" />
+    <None Include="..\..\shaders\wasp.frag" />
+    <None Include="..\..\shaders\wasp.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

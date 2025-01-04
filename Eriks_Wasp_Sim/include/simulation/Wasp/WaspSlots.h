@@ -12,6 +12,8 @@ using Strategies::KillStrategy;
 */
 namespace WaspSlots
 {
+	const static int MAX_WASP_COUNT = 100000;
+
 	/**
 	* Allocates space in the wasp slot linked list and creates a slot for the given wasp.
 	*

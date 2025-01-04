@@ -1,6 +1,8 @@
 #pragma once
 
 #include "food.h"
+#include <vector>
+#include "SimVisualizer.h"
 
 using EntitySlots::EntitySlot;
 using Food::FoodEntity;
@@ -15,12 +17,6 @@ namespace FoodRenderer
     * Visualizes the given FoodSlot linked list. Assumes glut, glew, etc. are preinitialized.
     */
     void drawFood(EntitySlot* foodSlot);
-
-    /**
-    * Draws the given food entity with the assumption that the correct vertex array has already been bound and the
-    * color has been set.
-    */
-    void _drawFoodPrebound(FoodEntity* food);
 
     /**
     * Initializes the FoodRenderer.

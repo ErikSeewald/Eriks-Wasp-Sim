@@ -58,6 +58,9 @@
     <Filter Include="Source Files\simulation\Resources">
       <UniqueIdentifier>{b499de6e-6893-4234-b362-e4cd3d5aacfb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{bc568c75-d993-4099-bab6-33c9d3adeb2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h">
@@ -137,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\simulation\Resources\ResourceSpawner.h">
       <Filter>Header Files\simulation\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\graphics\ShaderHandler.h">
+      <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +242,9 @@
     <ClCompile Include="..\..\src\simulation\Resources\ResourceSpawner.cpp">
       <Filter>Source Files\simulation\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\graphics\ShaderHandler.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\include\input\KeyboardHandler.h">
@@ -244,5 +253,19 @@
     <Text Include="..\..\include\graphics\Camera.h">
       <Filter>Header Files\graphics</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\shaders\wasp.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\wasp.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\food.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\food.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

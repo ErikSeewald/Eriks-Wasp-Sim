@@ -4,7 +4,6 @@
 EntitySlot* foodSlotsStart;
 EntitySlot* foodSlotsEnd;
 int foodCount = 0;
-const int MAX_FOOD_COUNT = 100000;
 
 /**
 * Allocates space in the food slot linked list and creates a slot for the given food.
@@ -30,7 +29,7 @@ EntitySlot* Food::getFoodSlots()
 
 bool Food::spaceAvailable(int foodAddAmount)
 {
-	return foodCount + foodAddAmount <= MAX_FOOD_COUNT;
+	return foodCount + foodAddAmount <= Food::MAX_FOOD_COUNT;
 }
 
 bool Food::spawnFood(glm::vec3 position, int amount, SpawnStrategy strategy, float spawnRadius)
