@@ -21,9 +21,11 @@ namespace ModelHandler
     };
 
     /**
-    * Loads the wasp model fileName from the given base directory, binds it to VAO and writes the vertex count of the model into vertexCount.
+    * Loads the wasp model fileName from the given base directory, binds it to VAO, VBO, EBO and writes
+    * the vertex count of the model into vertexCount.
     *
     * @return bool - success of the operation
     */
-    bool loadModel(const std::string& baseDir, const std::string& fileName, GLuint* VAO, int* vertexCount);
+    bool loadModel(const std::string& baseDir, const std::string& fileName, GLuint* VAO, GLuint* VBO, GLuint* EBO, 
+        int* vertexCount);
 }

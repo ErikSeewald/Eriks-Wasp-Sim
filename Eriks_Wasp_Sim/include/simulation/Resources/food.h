@@ -14,6 +14,8 @@ using Strategies::KillStrategy;
 */
 namespace Food
 {
+	const static int MAX_FOOD_COUNT = 100000;
+
 	/**
 	* @struct Food
 	* @brief A struct representing a single food entity in the simulation.

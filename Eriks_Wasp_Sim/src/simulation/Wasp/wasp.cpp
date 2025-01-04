@@ -201,7 +201,6 @@ void Wasp::turnTowardsGoal()
 	
 }
 
-
 //HEALTH
 bool Wasp::isAlive() const
 {

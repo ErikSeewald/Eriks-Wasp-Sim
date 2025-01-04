@@ -2,17 +2,6 @@
 
 // NOTE: This file only contains getters and setters for the Wasp object to avoid cluttering wasp.cpp
 
-// POSITION
-glm::vec3 Wasp::getPosition() const
-{
-	return position;
-}
-
-void Wasp::setPosition(glm::vec3 position)
-{
-	this->position = position;
-}
-
 
 // MOVEMENT
 void Wasp::setGoal(glm::vec3* goal)
@@ -23,16 +12,6 @@ void Wasp::setGoal(glm::vec3* goal)
 glm::vec3* Wasp::getCurrentGoal()
 {
 	return currentGoal;
-}
-
-glm::vec3 Wasp::getViewingVector() const
-{
-	return viewingVector;
-}
-
-void Wasp::setViewingVector(glm::vec3 viewingVector)
-{
-	this->viewingVector = viewingVector;
 }
 
 float Wasp::getTurnSpeed() const

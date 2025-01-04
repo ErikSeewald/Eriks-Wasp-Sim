@@ -74,7 +74,7 @@ void WaspCommandHandlers::commandWaspSetPos(const std::string& subcommand)
     Wasp* selectedWasp = UI::getUIState()->selectedWasp;
     if (selectedWasp != nullptr)
     {
-        selectedWasp->setPosition(newPos);
+        selectedWasp->position = newPos;
         std::cout << "Wasp's position set to " << newPos.x << "," << newPos.y << "," << newPos.z;
     }
     else

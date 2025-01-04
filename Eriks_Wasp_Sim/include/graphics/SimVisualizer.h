@@ -47,6 +47,8 @@ namespace SimVisualizer
 
     Camera getCamera();
 
+    glm::mat4 getCamProjMatrix();
+
     /**
     * Draws a 3D line between the given start and end points.
     * 
