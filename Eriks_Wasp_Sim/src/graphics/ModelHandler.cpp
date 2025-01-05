@@ -6,14 +6,18 @@
 
 using ModelHandler::Vertex;
 
+// DIRECTORIES
+const std::string baseDir = "../../../../../Assets/Models/";
+const std::string baseDirFallback = "../../../Assets/Models/";
+
 /**
-* Loads the wasp model fileName from the given base directory, binds it to VAO, VBO, EBO and writes
+* Loads the model corresponding to the fileName, binds it to VAO, VBO, EBO and writes
 * the vertex count of the model into vertexCount.
 *
+* @param fileName The path and file name relative to the 'Assets/Models/' directory (e.g. 'modelName/modelFile.obj')
 * @return bool - success of the operation
 */
-bool ModelHandler::loadModel(const std::string& baseDir, const std::string& fileName, GLuint* VAO, GLuint* VBO, GLuint* EBO,
-    int* vertexCount)
+bool ModelHandler::loadModel(const std::string& fileName, GLuint* VAO, GLuint* VBO, GLuint* EBO, int* vertexCount)
 {
     //LOAD DATA
     tinyobj::attrib_t attrib;
@@ -23,7 +27,11 @@ bool ModelHandler::loadModel(const std::string& baseDir, const std::string& file
 
     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, (baseDir+fileName).c_str(), baseDir.c_str()))
     {
-        return false;
+        // FALLBACK
+        if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, (baseDirFallback + fileName).c_str(), baseDirFallback.c_str()))
+        {
+            return false;
+        }
     }
 
     //CONVERT DATA
@@ -89,4 +97,28 @@ bool ModelHandler::loadModel(const std::string& baseDir, const std::string& file
     glBindVertexArray(0);
 
     return true;
+}
+
+/**
+* Binds the given VAO and instanceVBO to GL and expands the VertexAttribArray to enable hardware instancing.
+*/
+void ModelHandler::enableInstancing(GLuint* VAO, GLuint* instanceVBO)
+{
+    glBindVertexArray(*VAO);
+    glGenBuffers(1, instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, *instanceVBO);
+
+    // Set up matrix as 4 vec4 vertex attributes (columns 3, 4, 5, 6 because 0-2 are already used) for instanced rendering.
+    // Each attribute corresponds to a column of the matrix. Divisor of 1 to apply one matrix per instance.
+    for (int i = 0; i < 4; i++)
+    {
+        glEnableVertexAttribArray(3 + i);
+        glVertexAttribPointer(3 + i,
+            4, GL_FLOAT, GL_FALSE,
+            sizeof(glm::mat4),
+            (void*)(sizeof(glm::vec4) * i));
+        glVertexAttribDivisor(3 + i, 1);
+    }
+
+    glBindVertexArray(0);
 }

@@ -4,7 +4,9 @@
 #include "ModelHandler.h"
 #include "ShaderHandler.h"
 #include "UI.h"
-
+#include <thread>
+#include <mutex>
+#include "glm/ext.hpp"
 
 //MESH
 GLuint wasp_VAO;
@@ -12,81 +14,34 @@ GLuint wasp_VBO;
 GLuint wasp_EBO;
 GLuint wasp_instanceVBO;
 int wasp_vertexCount;
+const std::string modelFile = "wasp/Wasp.obj";
 
 //SHADER
-GLuint waspShaderProgram = 0;
-const std::string shaderDir = "../../../../shaders";
-const std::string shaderDirFallback = "../../shaders";
+GLuint waspShaderProgram;
+const std::string waspVertShaderFile = "wasp.vert";
+const std::string waspFragShaderFile = "wasp.frag";
 
-//MODEL FILE
-const std::string baseDir = "../../../../../Assets/Models/wasp/";
-const std::string baseDirFallback = "../../../Assets/Models/wasp/";
-const std::string modelFile = baseDir + "Wasp.obj";
-const std::string modelFileFallback = baseDirFallback + "Wasp.obj";
+GLuint selectedWaspShaderProgram;
+const std::string selectedWaspFragShaderFile = "selected_wasp.frag";
+
+//THREADED INSTANCE DATA
+std::vector<glm::mat4> wasp_instanceData;
+std::mutex wasp_instanceDataMutex;
 
 /**
 * Initializes the WaspRenderer.
 */
 void WaspRenderer::init()
 {
-    if (!ModelHandler::loadModel(baseDir, modelFile, &wasp_VAO, &wasp_VBO, &wasp_EBO, &wasp_vertexCount))
+    if (!ModelHandler::loadModel(modelFile, &wasp_VAO, &wasp_VBO, &wasp_EBO, &wasp_vertexCount))
     {
-        // FALLBACK
-        if (!ModelHandler::loadModel(baseDirFallback, modelFileFallback, &wasp_VAO, &wasp_VBO, &wasp_EBO, &wasp_vertexCount))
-        {
-            std::cerr << "Failed to load wasp model" << std::endl;
-            exit(EXIT_FAILURE);
-        }
-    }
-
-    // CREATE INSTANCE VBO FOR HARDWARE INSTANCING
-    glBindVertexArray(wasp_VAO);
-    glGenBuffers(1, &wasp_instanceVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, wasp_instanceVBO);
-
-    // Locations 3,4,5,6 for the matrix columns
-    for (int i = 0; i < 4; i++)
-    {
-        glEnableVertexAttribArray(3 + i);
-        glVertexAttribPointer(3 + i,
-            4, GL_FLOAT, GL_FALSE,
-            sizeof(glm::mat4),
-            (void*)(sizeof(glm::vec4) * i));
-        glVertexAttribDivisor(3 + i, 1);
-    }
-
-    glBindVertexArray(0);
-
-    // LOAD, COMPILE AND LINK SHADERS
-    try
-    {
-        std::string vertSource, fragSource;
-        try 
-        {
-            vertSource = ShaderHandler::loadShaderFile(shaderDir + "/wasp.vert");
-            fragSource = ShaderHandler::loadShaderFile(shaderDir + "/wasp.frag");
-        }
-        catch (std::runtime_error) // FALLBACK PATHS
-        {
-            vertSource = ShaderHandler::loadShaderFile(shaderDirFallback + "/wasp.vert");
-            fragSource = ShaderHandler::loadShaderFile(shaderDirFallback + "/wasp.frag");
-        }
-
-        GLuint vs = ShaderHandler::compileShader(GL_VERTEX_SHADER, vertSource);
-        GLuint fs = ShaderHandler::compileShader(GL_FRAGMENT_SHADER, fragSource);
-
-        waspShaderProgram = ShaderHandler::linkShaderProgram(vs, fs);
-
-        // CLEAN UP
-        glDeleteShader(vs);
-        glDeleteShader(fs);
-    }
-
-    catch (const std::exception& e)
-    {
-        std::cerr << "Shader initialization error: " << e.what() << std::endl;
+        std::cerr << "Failed to load wasp model" << std::endl;
         exit(EXIT_FAILURE);
     }
+    ModelHandler::enableInstancing(&wasp_VAO, &wasp_instanceVBO);
+
+    waspShaderProgram = ShaderHandler::buildShaderProgram(waspVertShaderFile, waspFragShaderFile);
+    selectedWaspShaderProgram = ShaderHandler::buildShaderProgram(waspVertShaderFile, selectedWaspFragShaderFile);
 }
 
 /**
@@ -95,49 +50,72 @@ void WaspRenderer::init()
 void WaspRenderer::drawWasps(EntitySlot* waspSlot)
 {
     // COLLECT INSTANCE DATA
-    std::vector<glm::mat4> instanceData;
-    instanceData.reserve(WaspSlots::MAX_WASP_COUNT);
+    wasp_instanceData.clear();
 
-    Wasp* selectedWasp = UI::getUIState()->selectedWasp;
-    EntitySlot* currentSlot = waspSlot;
-    while (currentSlot != nullptr)
+    // Run threads
+    static const int numThreads = 5;
+    std::vector<std::thread> threads;
+    for (int i = 0; i < numThreads; ++i) 
     {
-        Wasp* wasp = (Wasp*) currentSlot->entity;
-        currentSlot = currentSlot->next;
-
-        if (wasp == selectedWasp) { continue; }
-
-        // Optimization: Instead of using atan2(), cos() and sin() which cause too much overhead
-        // IMPORTANT: This only works based on the assumption that the components x and z are always normalized
-        // The y component is allowed to change (which means the 3d vector does not need to be normalized)
-        float cos = wasp->viewingVector.z;
-        float sin = wasp->viewingVector.x;
-
-        // Optimization: Manually construct model matrix instead of using transform and rotate functions
-        // to skip any unnecessary steps.
-        glm::mat4 model = glm::mat4(1.0f);
-
-        // Translate
-        model[3][0] = wasp->position.x;
-        model[3][1] = wasp->position.y;
-        model[3][2] = wasp->position.z;
-
-        // Rotate around y axis
-        model[0][0] = cos;
-        model[0][1] = 0.0f;
-        model[0][2] = -sin;
-        model[1][0] = 0.0f;
-        model[1][1] = 1.0f;
-        model[1][2] = 0.0f;
-        model[2][0] = sin;
-        model[2][1] = 0.0f;
-        model[2][2] = cos;
-        
-        instanceData.push_back(model);
+        threads.emplace_back(_collectInstanceDataThreaded, waspSlot, i, numThreads);
     }
 
+    for (std::thread& t : threads) {t.join();}
+
     // DRAW
-    ShaderHandler::drawInstanceData(&instanceData, &wasp_VAO, &wasp_instanceVBO, wasp_vertexCount, &waspShaderProgram);
+    ShaderHandler::drawInstanceData(&wasp_instanceData, &wasp_VAO, &wasp_instanceVBO, wasp_vertexCount, &waspShaderProgram);
+}
+
+/**
+* Collects the necessary instance data for hardware instancing for all EntitySlots matching the given
+* offset and step size to allow for multithreaded traversal. Calling this function with 5 threads
+* would mean splitting the workload evenly among 5 function calls, each thread i has t_offset = i and t_step = 5.
+* The given selectedWasp pointer is used to avoid drawing the selected wasp.
+*/
+void WaspRenderer::_collectInstanceDataThreaded(EntitySlot* startSlot, int t_offset, int t_step)
+{
+    EntitySlot* currentSlot = startSlot;
+    int index = 0;
+
+    std::vector<glm::mat4> localInstanceData;
+    while (currentSlot != nullptr)
+    {
+        if ((index % t_step) == t_offset)
+        {
+            Wasp* wasp = (Wasp*) currentSlot->entity;
+
+            // Optimization: Instead of using atan2(), cos() and sin() which cause too much overhead
+            // IMPORTANT: This only works based on the assumption that the components x and z are always normalized
+            // The y component is allowed to change (which means the 3d vector does not need to be normalized)
+            float cos = wasp->viewingVector.z;
+            float sin = wasp->viewingVector.x;
+
+            // Optimization: Manually construct model matrix instead of using transform and rotate functions
+            // to skip any unnecessary steps.
+            glm::mat4 model(1.0f);
+
+            // Translate
+            model[3][0] = wasp->position.x;
+            model[3][1] = wasp->position.y;
+            model[3][2] = wasp->position.z;
+
+            // Rotate around Y axis
+            model[0][0] = cos;
+            model[0][2] = -sin;
+            model[1][1] = 1.0f;
+            model[2][0] = sin;
+            model[2][2] = cos;
+
+            localInstanceData.push_back(model);
+            
+        }
+        currentSlot = currentSlot->next;
+        ++index;
+    }
+
+    // Merge local into global data
+    std::lock_guard<std::mutex> lock(wasp_instanceDataMutex);
+    wasp_instanceData.insert(wasp_instanceData.end(), localInstanceData.begin(), localInstanceData.end());
 }
 
 /**
@@ -145,37 +123,33 @@ void WaspRenderer::drawWasps(EntitySlot* waspSlot)
 */
 void WaspRenderer::drawSelectedWasp() 
 {
-    UI::UI_STATE* uiState = UI::getUIState();
-
     //GET SELECTED WASP
+    UI::UI_STATE* uiState = UI::getUIState();
     Wasp* wasp = uiState->selectedWasp;
     if (wasp == NULL)
     {
         return;
     }
-
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glBindVertexArray(wasp_VAO);
     glm::vec3 position = wasp->position;
-    glm::vec3 viewingVector = wasp->viewingVector;
 
-    glPushMatrix();
-    glTranslatef(position.x, position.y, position.z);
+    // BUILD SINGLE INSTANCE DATA
+    glm::mat4 model(1.0f);
+    model = glm::translate(model, position);
+    float angle = atan2(wasp->viewingVector.x, wasp->viewingVector.z);
+    model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+    std::vector<glm::mat4> singleInstanceData(1, model);
 
-    // Rotate around y-axis to match viewing vector
-    float angle = atan2(viewingVector.x, viewingVector.z);
-    glRotatef(SimVisualizer::radToDeg(angle), 0.0f, 1.0f, 0.0f);
+    // DRAW WIREFRAME WITH DEPTH TESTING DISABLED
+    glDisable(GL_DEPTH_TEST);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    ShaderHandler::drawInstanceData(&singleInstanceData, &wasp_VAO, &wasp_instanceVBO, wasp_vertexCount, &selectedWaspShaderProgram);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_DEPTH_TEST);
 
-    glDrawElements(GL_TRIANGLES, wasp_vertexCount, GL_UNSIGNED_INT, 0);
-
-    glPopMatrix();
-    glBindVertexArray(0);
-
-    //GOAL
+    //DRAW GOAL
     if (uiState->drawSelectedWaspGoal && wasp->getCurrentGoal() != nullptr)
     {
         glm::vec3 goal = *wasp->getCurrentGoal();
-        glm::vec3 position = wasp->position;
 
         glColor3f(0.0f, 1.0f, 1.0f);
         glBegin(GL_LINES);

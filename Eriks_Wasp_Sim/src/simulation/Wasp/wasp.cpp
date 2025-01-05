@@ -5,8 +5,6 @@
 
 // NOTE: Getters and setters are in WaspGetSet.cpp to avoid clutter
 
-static glm::vec3 tempos = glm::vec3(2, 2, 2);
-
 Wasp::Wasp()
 {
 	deltaTime = Simulation::getDeltaTime();
@@ -79,7 +77,6 @@ void Wasp::updateGoal()
 	bool randGoalUpdate = RNG::randMod(5) == 0;
 	if (randGoalUpdate)
 	{
-
 		// FOOD
 		if (hungerSaturation < MAX_HUNGER_SATURATION)
 		{

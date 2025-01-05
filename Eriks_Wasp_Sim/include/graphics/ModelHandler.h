@@ -21,11 +21,16 @@ namespace ModelHandler
     };
 
     /**
-    * Loads the wasp model fileName from the given base directory, binds it to VAO, VBO, EBO and writes
+    * Loads the model corresponding to the fileName, binds it to VAO, VBO, EBO and writes
     * the vertex count of the model into vertexCount.
     *
+    * @param fileName The path and file name relative to the 'Assets/Models/' directory (e.g. 'modelName/modelFile.obj')
     * @return bool - success of the operation
     */
-    bool loadModel(const std::string& baseDir, const std::string& fileName, GLuint* VAO, GLuint* VBO, GLuint* EBO, 
-        int* vertexCount);
+    bool loadModel(const std::string& fileName, GLuint* VAO, GLuint* VBO, GLuint* EBO, int* vertexCount);
+
+    /**
+    * Binds the given VAO and instanceVBO to GL and expands the VertexAttribArray to enable hardware instancing.
+    */
+    void enableInstancing(GLuint* VAO, GLuint* instanceVBO);
 }

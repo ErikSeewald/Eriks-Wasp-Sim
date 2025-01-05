@@ -98,14 +98,7 @@ void SimVisualizer::reshape(int width, int height)
 * Assumes that 'SimVisualizer::initGlut' has already been called.
 */
 void SimVisualizer::render()
-{
-    //--DEBUG--
-    /*
-    static int frames = 0;
-    static int lastTime = glutGet(GLUT_ELAPSED_TIME);
-    */
-    //--DEBUG--
-
+{ 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -126,29 +119,12 @@ void SimVisualizer::render()
     UI::drawUI();
 
     glutSwapBuffers();
-
-    //--DEBUG--
-    /*frames++;
-
-    int currentTime = glutGet(GLUT_ELAPSED_TIME); // in milliseconds
-    int deltaTime = currentTime - lastTime;
-    if (deltaTime >= 10000) // 10 seconds
-    {
-        // Compute frames per second
-        float fps = frames * 1000.0f / static_cast<float>(deltaTime);
-        std::cout << "FPS: " << fps << std::endl;
-
-        // Reset for the next measurement
-        frames = 0;
-        lastTime = currentTime;
-    }
-    */
-    //--DEBUG--
 }
 
 
 /**
 * Updates the glut 'camera' (gluLookAt) with the camera struct's attributes.
+* Used by slower direct graphics functions. Shader graphics functions make use of getCamProjMatrix().
 */
 void SimVisualizer::updateGlutCamera()
 {
