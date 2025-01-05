@@ -276,6 +276,7 @@
   <ItemGroup>
     <None Include="..\..\shaders\food.frag" />
     <None Include="..\..\shaders\food.vert" />
+    <None Include="..\..\shaders\selected_wasp.frag" />
     <None Include="..\..\shaders\wasp.frag" />
     <None Include="..\..\shaders\wasp.vert" />
   </ItemGroup>

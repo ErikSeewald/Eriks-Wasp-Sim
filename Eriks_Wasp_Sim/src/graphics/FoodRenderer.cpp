@@ -4,8 +4,8 @@
 #include "ShaderHandler.h"
 #include <vector>
 #include <iostream>
-
-// THIS IS THE NEW VERSION
+#include <thread>
+#include <mutex>
 
 using Food::FoodEntity;
 
@@ -15,81 +15,30 @@ GLuint food_VBO;
 GLuint food_EBO;
 GLuint food_instanceVBO;
 int food_vertexCount;
+const std::string modelFile = "food/Food.obj";
 
 //SHADER
-GLuint foodShaderProgram = 0;
-const std::string shaderDir = "../../../../shaders";
-const std::string shaderDirFallback = "../../shaders";
+GLuint foodShaderProgram;
+const std::string foodVertShaderFile = "food.vert";
+const std::string foodFragShaderFile = "food.frag";
 
-//FILE
-const std::string baseDir = "../../../../../Assets/Models/food/";
-const std::string baseDirFallback = "../../../Assets/Models/food/";
-const std::string modelFile = baseDir + "Food.obj";
-const std::string modelFileFallback = baseDirFallback + "Food.obj";
+//THREADED INSTANCE DATA
+std::vector<glm::mat4> food_instanceData;
+std::mutex food_instanceDataMutex;
 
 /**
 * Initializes the FoodRenderer.
 */
 void FoodRenderer::init()
 {
-    if (!ModelHandler::loadModel(baseDir, modelFile, &food_VAO, &food_VBO, &food_EBO, &food_vertexCount))
+    if (!ModelHandler::loadModel(modelFile, &food_VAO, &food_VBO, &food_EBO, &food_vertexCount))
     {
-        // FALLBACK
-        if (!ModelHandler::loadModel(baseDirFallback, modelFileFallback, &food_VAO, &food_VBO, &food_EBO, &food_vertexCount))
-        {
-            std::cerr << "Failed to load food model" << std::endl;
-            exit(EXIT_FAILURE);
-        }
-    }
-
-    // CREATE INSTANCE VBO FOR HARDWARE INSTANCING
-    glBindVertexArray(food_VAO);
-    glGenBuffers(1, &food_instanceVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, food_instanceVBO);
-
-    // Locations 3,4,5,6 for the matrix columns
-    for (int i = 0; i < 4; i++)
-    {
-        glEnableVertexAttribArray(3 + i);
-        glVertexAttribPointer(3 + i,
-            4, GL_FLOAT, GL_FALSE,
-            sizeof(glm::mat4),
-            (void*)(sizeof(glm::vec4) * i));
-        glVertexAttribDivisor(3 + i, 1);
-    }
-
-    glBindVertexArray(0);
-
-    // LOAD, COMPILE AND LINK SHADERS
-    try
-    {
-        std::string vertSource, fragSource;
-        try
-        {
-            vertSource = ShaderHandler::loadShaderFile(shaderDir + "/food.vert");
-            fragSource = ShaderHandler::loadShaderFile(shaderDir + "/food.frag");
-        }
-        catch (std::runtime_error) // FALLBACK PATHS
-        {
-            vertSource = ShaderHandler::loadShaderFile(shaderDirFallback + "/food.vert");
-            fragSource = ShaderHandler::loadShaderFile(shaderDirFallback + "/food.frag");
-        }
-
-        GLuint vs = ShaderHandler::compileShader(GL_VERTEX_SHADER, vertSource);
-        GLuint fs = ShaderHandler::compileShader(GL_FRAGMENT_SHADER, fragSource);
-
-        foodShaderProgram = ShaderHandler::linkShaderProgram(vs, fs);
-
-        // CLEAN UP
-        glDeleteShader(vs);
-        glDeleteShader(fs);
-    }
-
-    catch (const std::exception& e)
-    {
-        std::cerr << "Shader initialization error: " << e.what() << std::endl;
+        std::cerr << "Failed to load food model" << std::endl;
         exit(EXIT_FAILURE);
     }
+    ModelHandler::enableInstancing(&food_VAO, &food_instanceVBO);
+
+    foodShaderProgram = ShaderHandler::buildShaderProgram(foodVertShaderFile, foodFragShaderFile);
 }
 
 /**
@@ -98,25 +47,54 @@ void FoodRenderer::init()
 void FoodRenderer::drawFood(EntitySlot* foodSlot)
 {
     // COLLECT INSTANCE DATA
-    std::vector<glm::mat4> instanceData;
-    instanceData.reserve(Food::MAX_FOOD_COUNT);
+    food_instanceData.clear();
 
-    EntitySlot* currentSlot = foodSlot;
-    while (currentSlot != nullptr)
+    // Run threads
+    static const int numThreads = 4;
+    std::vector<std::thread> threads;
+    for (int i = 0; i < numThreads; ++i)
     {
-        FoodEntity* food = (FoodEntity*) currentSlot->entity;
-        currentSlot = currentSlot->next;
-
-        // Optimization: Manually construct model matrix instead of using transform and rotate functions
-        // to skip any unnecessary steps.
-        glm::mat4 model = glm::mat4(1.0f);
-        model[3][0] = food->position.x;
-        model[3][1] = food->position.y;
-        model[3][2] = food->position.z;
-
-        instanceData.push_back(model);
+        threads.emplace_back(_collectInstanceDataThreaded, foodSlot, i, numThreads);
     }
 
+    for (std::thread& t : threads) { t.join(); }
+
     // DRAW
-    ShaderHandler::drawInstanceData(&instanceData, &food_VAO, &food_instanceVBO, food_vertexCount, &foodShaderProgram);
+    ShaderHandler::drawInstanceData(&food_instanceData, &food_VAO, &food_instanceVBO, food_vertexCount, &foodShaderProgram);
+}
+
+/**
+* Collects the necessary instance data for hardware instancing for all EntitySlots matching the given
+* offset and step size to allow for multithreaded traversal. Calling this function with 5 threads
+* would mean splitting the workload evenly among 5 function calls, each thread i has t_offset = i and t_step = 5.
+*/
+void FoodRenderer::_collectInstanceDataThreaded(EntitySlot* startSlot, int t_offset, int t_step)
+{
+    EntitySlot* currentSlot = startSlot;
+    int index = 0;
+
+    std::vector<glm::mat4> localInstanceData;
+    while (currentSlot != nullptr)
+    {
+        if ((index % t_step) == t_offset)
+        {
+            FoodEntity* food = (FoodEntity*) currentSlot->entity;
+
+            // Optimization: Manually construct model matrix instead of using transform and rotate functions
+            // to skip any unnecessary steps.
+            glm::mat4 model(1.0f);
+            model[3][0] = food->position.x;
+            model[3][1] = food->position.y;
+            model[3][2] = food->position.z;
+
+            localInstanceData.push_back(model);
+            
+        }
+        currentSlot = currentSlot->next;
+        ++index;
+    }
+
+    // Merge local into global data
+    std::lock_guard<std::mutex> lock(food_instanceDataMutex);
+    food_instanceData.insert(food_instanceData.end(), localInstanceData.begin(), localInstanceData.end());
 }

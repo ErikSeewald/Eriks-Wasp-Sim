@@ -267,5 +267,8 @@
     <None Include="..\..\shaders\food.frag">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\..\shaders\selected_wasp.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -37,6 +37,7 @@ namespace SimVisualizer
 
     /**
     * Updates the glut 'camera' (gluLookAt) with the camera struct's attributes.
+    * Used by slower direct graphics functions. Shader graphics functions make use of getCamProjMatrix().
     */
     void updateGlutCamera();
 
