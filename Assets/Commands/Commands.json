@@ -53,8 +53,8 @@
 
 	{
 		"name": "wasp",
-		"description": "Allows editing the currently selected wasp. Type 'wasp help' for more information.",
-		"syntax": "wasp {subcommand}*",
+		"description": "Allows editing the currently selected wasp or all of them by adding 'all' to the end of the command.\n\t\tType 'wasp help' for more information.",
+		"syntax": "wasp {subcommand}* [all]",
 		"subcommands": 
 		[
 			{
