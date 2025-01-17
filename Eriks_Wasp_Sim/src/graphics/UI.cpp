@@ -127,8 +127,12 @@ void UI::_drawHiveUI()
 
 void UI::_drawCameraUI()
 {
+    // Fps counter
+    static float fps = 0.0f;
+    static int lastUpdateTime = 0;
+
     // Initial size and position
-    const static ImVec2 initSize(150, 190);
+    const static ImVec2 initSize(150, 205);
     const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 20, 120);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_FirstUseEver);
@@ -146,6 +150,16 @@ void UI::_drawCameraUI()
         {
             _drawVectorTable(camera.direction, "CameraViewingVectorTable");
         }
+
+        // only sample framerate every 500 ms
+        int currentTime = glutGet(GLUT_ELAPSED_TIME);
+        if (currentTime - lastUpdateTime > 500)
+        {
+            fps = ImGui::GetIO().Framerate;
+            lastUpdateTime = currentTime;
+        }
+
+        ImGui::Text("FPS: %.f", fps);
     }
 
     ImGui::End();
