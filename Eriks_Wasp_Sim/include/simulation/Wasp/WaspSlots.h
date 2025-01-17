@@ -1,43 +1,43 @@
 #include "Wasp.h"
 #include "Simulation.h"
-#include "EntitySlots.h"
 
-using EntitySlots::EntitySlot;
 using Strategies::SpawnStrategy;
 using Strategies::KillStrategy;
 
 /**
 * @namespace WaspSlots
-* @brief A namespace to handle the global WaspSlot linked list.
+* @brief A namespace to handle the global set of wasp slots.
 */
 namespace WaspSlots
-{
-	const static int MAX_WASP_COUNT = 100000;
+{ 
+	// Total number of wasp slots
+	const static int SLOT_COUNT = 100000;
+
+	std::vector<Wasp>* getWasps();
 
 	/**
-	* Allocates space in the wasp slot linked list and creates a slot for the given wasp.
-	*
-	* @param wasp the wasp to allocate a slot for
+	* Returns wether there are enough wasp slots available to accommodate waspAddAmount
 	*/
-	void allocateWaspSlot(Wasp* wasp);
-
-	/**
-	* Removes the given wasp slot from the linked list and marks both the slot and the wasp it
-	* points to for deletion.
-	*
-	* @param waspSlot the slot to remove
-	*/
-	void removeWaspSlot(EntitySlot* waspSlot);
-
-	EntitySlot* getWaspSlots();
-
-	bool spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy, float SpawnRadius);
-
-	int killWasps(int amountToKill, KillStrategy strategy);
-
 	bool spaceAvailable(int waspAddAmount);
 
 	int getAliveCount();
 
 	long getDeadCount();
+
+	/**
+	* Spawns the given amount of wasps at the given position using the given SpawnStrategy and spawnRadius.
+	* Returns true if the wasps have been spawned and false if not enough slots were available.
+	* Since in reality all slots are already filled with dead wasp objects from the start, when wasps are spawned they
+	* are actually respawned by resetting that wasp objects attributes and reviving it.
+	*/
+	bool spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy, float SpawnRadius);
+
+	/**
+	* Kills the given amount of wasps using the given KillStrategy.
+	* Returns the amount of wasps that have been killed.
+	* This amount can differ from the desired amount if there weren't enough living wasps to kill.
+	* Since in reality all slots are always filled with wasp objects, when wasps are killed they
+	* still remain in memory and are simply no longer updated until they are respawned.
+	*/
+	int killWasps(int amountToKill, KillStrategy strategy);
 }

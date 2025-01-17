@@ -3,17 +3,11 @@
 #include "WaspSlots.h"
 #include "ResourceSpawner.h"
 #include <thread>
-
 #include <iostream>
 
 using namespace std::chrono;
-using EntitySlots::EntitySlot;
 using Strategies::SpawnStrategy;
-
-
-//#include "food.h"
 using Food::FoodEntity;
-
 
 //DELTA TIME
 std::chrono::duration<double> deltaTime;
@@ -32,7 +26,6 @@ void Simulation::startLoop() {
         if (!UI::getUIState()->isPaused) 
         {
             updateWasps();
-            updateFood();
             ResourceSpawner::update(&deltaTime);
         }
 
@@ -49,26 +42,11 @@ void Simulation::startLoop() {
 void Simulation::updateWasps()
 {
     //WASPS
-    Wasp* wasp;
-    EntitySlot* nextSlot;
-    EntitySlot* waspSlot = WaspSlots::getWaspSlots();
-
-    while (waspSlot != nullptr)
+    std::vector<Wasp>* wasps = WaspSlots::getWasps();
+    for (int i = 0; i < WaspSlots::SLOT_COUNT; ++i)
     {
-        wasp = (Wasp*) waspSlot->entity;
-        nextSlot = waspSlot->next; // set nextSlot here incase 'waspSlot' gets removed
-    
-        if (wasp->isAlive())
-        {
-            wasp->update();
-        }
-
-        else
-        {
-            WaspSlots::removeWaspSlot(waspSlot);
-        }
-
-        waspSlot = nextSlot;
+        Wasp* wasp = &(*wasps)[i];
+        wasp->update();
     }
 
     //SELECTED WASP
@@ -78,26 +56,6 @@ void Simulation::updateWasps()
     {
         // deselect selectedWasp if it has died
         uiState->selectedWasp = nullptr;
-    }
-}
-
-void Simulation::updateFood()
-{
-    FoodEntity* food;
-    EntitySlot* nextSlot;
-    EntitySlot* foodSlot = Food::getFoodSlots();
-
-    while (foodSlot != nullptr)
-    {
-        food = (FoodEntity*)foodSlot->entity;
-        nextSlot = foodSlot->next;
-
-        if (food->eaten)
-        {
-            Food::removeFoodSlot(foodSlot);
-        }
-
-        foodSlot = nextSlot;
     }
 }
 
@@ -131,29 +89,26 @@ std::chrono::duration<double>* Simulation::getDeltaTime()
     return &deltaTime;
 }
 
+// TODO: Currently horribly inefficient. Fix this
 FoodEntity* Simulation::getFirstFoodInApproxRadius(glm::vec3 position, float radius)
 {
     // Bounding box for radius approximation
     glm::vec3 minBound = position - glm::vec3(radius);
     glm::vec3 maxBound = position + glm::vec3(radius);
 
-    EntitySlot* foodSlot = Food::getFoodSlots();
-    while (foodSlot != nullptr)
+    std::vector<FoodEntity>* foodEntities = Food::getFoodEntities();
+    for (int i = 0; i < Food::SLOT_COUNT; ++i)
     {
-        FoodEntity* food = (FoodEntity*)foodSlot->entity;
+        FoodEntity* food = &(*foodEntities)[i];
+        if (food->eaten) { continue; }
 
         // Is the food within the bounding box
         if (food->position.x >= minBound.x && food->position.x <= maxBound.x &&
             food->position.y >= minBound.y && food->position.y <= maxBound.y &&
             food->position.z >= minBound.z && food->position.z <= maxBound.z)
         {
-            if (!food->eaten)
-            {
-                return food;
-            }
+            return food;
         }
-
-        foodSlot = foodSlot->next;
     }
 
     return nullptr;

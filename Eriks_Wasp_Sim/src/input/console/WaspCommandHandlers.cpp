@@ -84,11 +84,11 @@ void WaspCommandHandlers::commandWaspSetPos(const std::string& subcommand)
     //SET POSITION
     if (allWasps)
     {
-        EntitySlot* currentSlot = WaspSlots::getWaspSlots();
-        while (currentSlot != nullptr)
-        {
-            Wasp* wasp = (Wasp*)currentSlot->entity;
-            currentSlot = currentSlot->next;
+        std::vector<Wasp>* wasps = WaspSlots::getWasps();
+        for (int i = 0; i < WaspSlots::SLOT_COUNT; ++i)
+        {   
+            Wasp* wasp = &(*wasps)[i];
+            if (!wasp->isAlive()) { continue; }
 
             wasp->position = newPos;
         }
@@ -134,11 +134,11 @@ void WaspCommandHandlers::commandWaspSetHp(const std::string& subcommand)
 
     if (allWasps)
     {
-        EntitySlot* currentSlot = WaspSlots::getWaspSlots();
-        while (currentSlot != nullptr)
+        std::vector<Wasp>* wasps = WaspSlots::getWasps();
+        for (int i = 0; i < WaspSlots::SLOT_COUNT; ++i)
         {
-            Wasp* wasp = (Wasp*)currentSlot->entity;
-            currentSlot = currentSlot->next;
+            Wasp* wasp = &(*wasps)[i];
+            if (!wasp->isAlive()) { continue; }
 
             int maxHp = wasp->getMaxHP();
             int curNewHp = newHp;
@@ -196,11 +196,11 @@ void WaspCommandHandlers::commandWaspSetHunger(const std::string& subcommand)
 
     if (allWasps)
     {
-        EntitySlot* currentSlot = WaspSlots::getWaspSlots();
-        while (currentSlot != nullptr)
+        std::vector<Wasp>* wasps = WaspSlots::getWasps();
+        for (int i = 0; i < WaspSlots::SLOT_COUNT; ++i)
         {
-            Wasp* wasp = (Wasp*)currentSlot->entity;
-            currentSlot = currentSlot->next;
+            Wasp* wasp = &(*wasps)[i];
+            if (!wasp->isAlive()) { continue; }
 
             int maxSaturation = wasp->getMaxHungerSaturation();
             int curNewSaturation = newSaturation;

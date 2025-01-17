@@ -22,8 +22,6 @@ namespace Simulation
 
 	void updateWasps();
 
-	void updateFood();
-
 	void updateDeltaTime();
 
 	/**

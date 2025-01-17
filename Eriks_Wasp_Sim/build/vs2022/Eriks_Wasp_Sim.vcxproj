@@ -220,7 +220,6 @@
     <ClInclude Include="..\..\include\input\console\WaspCommandHandlers.h" />
     <ClInclude Include="..\..\include\input\MouseHandler.h" />
     <ClInclude Include="..\..\include\input\MouseRayCast.h" />
-    <ClInclude Include="..\..\include\simulation\EntitySlots.h" />
     <ClInclude Include="..\..\include\simulation\Resources\food.h" />
     <ClInclude Include="..\..\include\simulation\Resources\ResourceSpawner.h" />
     <ClInclude Include="..\..\include\simulation\Simulation.h" />
@@ -229,7 +228,6 @@
     <ClInclude Include="..\..\include\simulation\Wasp\wasp.h" />
     <ClInclude Include="..\..\include\simulation\Wasp\WaspSlots.h" />
     <ClInclude Include="..\..\include\util\JsonHandler.h" />
-    <ClInclude Include="..\..\include\util\MemoryManager.h" />
     <ClInclude Include="..\..\include\util\RNG.h" />
     <ClInclude Include="..\..\include\util\StringUtil.h" />
     <ClInclude Include="..\..\include\util\VectorMath.h" />
@@ -256,7 +254,6 @@
     <ClCompile Include="..\..\src\input\KeyboardHandler.cpp" />
     <ClCompile Include="..\..\src\input\MouseHandler.cpp" />
     <ClCompile Include="..\..\src\input\MouseRayCast.cpp" />
-    <ClCompile Include="..\..\src\simulation\EntitySlots.cpp" />
     <ClCompile Include="..\..\src\simulation\Resources\food.cpp" />
     <ClCompile Include="..\..\src\simulation\Resources\ResourceSpawner.cpp" />
     <ClCompile Include="..\..\src\simulation\Simulation.cpp" />
@@ -264,7 +261,6 @@
     <ClCompile Include="..\..\src\simulation\Wasp\WaspGetSet.cpp" />
     <ClCompile Include="..\..\src\simulation\Wasp\WaspSlots.cpp" />
     <ClCompile Include="..\..\src\util\JsonHandler.cpp" />
-    <ClCompile Include="..\..\src\util\MemoryManager.cpp" />
     <ClCompile Include="..\..\src\util\RNG.cpp" />
     <ClCompile Include="..\..\src\util\StringUtil.cpp" />
     <ClCompile Include="..\..\src\util\VectorMath.cpp" />

@@ -99,9 +99,6 @@
     <ClInclude Include="..\..\include\input\console\CommandUtil.h">
       <Filter>Header Files\input\console</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\util\MemoryManager.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\graphics\UI.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
@@ -125,9 +122,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\simulation\Resources\food.h">
       <Filter>Header Files\simulation\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simulation\EntitySlots.h">
-      <Filter>Header Files\simulation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\graphics\FoodRenderer.h">
       <Filter>Header Files\graphics</Filter>
@@ -182,9 +176,6 @@
     <ClCompile Include="..\..\src\input\console\CommandUtil.cpp">
       <Filter>Source Files\input\console</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\util\MemoryManager.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui.cpp">
       <Filter>Source Files\graphics\imgui lib</Filter>
     </ClCompile>
@@ -229,9 +220,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\simulation\Resources\food.cpp">
       <Filter>Source Files\simulation\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simulation\EntitySlots.cpp">
-      <Filter>Source Files\simulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\FoodRenderer.cpp">
       <Filter>Source Files\graphics</Filter>

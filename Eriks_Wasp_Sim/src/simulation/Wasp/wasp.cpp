@@ -7,6 +7,12 @@
 
 Wasp::Wasp()
 {
+	initialize();
+	_isAlive = false;
+}
+
+void Wasp::initialize()
+{
 	deltaTime = Simulation::getDeltaTime();
 
 	// POSITION
@@ -25,12 +31,20 @@ Wasp::Wasp()
 	// HEALTH
 	MAX_HP = 100;
 	hp = MAX_HP;
-	_isAlive = true;
 
 	// HUNGER
 	MAX_HUNGER_SATURATION = 100;
 	hungerSaturation = MAX_HUNGER_SATURATION;
 	lastHungerDecrease = steady_clock::now();
+}
+
+/**
+* Respawns the wasp and resets its attributes. Both living and dead wasps can be respawned.
+*/
+void Wasp::respawn()
+{
+	initialize();
+	_isAlive = true;
 }
 
 /**
@@ -74,18 +88,13 @@ void Wasp::updateGoal()
 	}
 
 	// RANDOM UPDATE
-	bool randGoalUpdate = RNG::randMod(5) == 0;
-	if (randGoalUpdate)
+	if (hungerSaturation < MAX_HUNGER_SATURATION && RNG::randMod(120) == 0)
 	{
-		// FOOD
-		if (hungerSaturation < MAX_HUNGER_SATURATION)
+		FoodEntity* food = Simulation::getFirstFoodInApproxRadius(position, 5);
+		currentGoalFoodEntity = food;
+		if (food != nullptr)
 		{
-			FoodEntity* food = Simulation::getFirstFoodInApproxRadius(position, 5);
-			currentGoalFoodEntity = food;
-			if (food != nullptr)
-			{
-				currentGoal = &food->position;
-			}
+			currentGoal = &food->position;
 		}
 	}
 }
@@ -199,11 +208,18 @@ void Wasp::turnTowardsGoal()
 }
 
 //HEALTH
+/**
+* Returns wether the wasp is alive.
+* Dead wasp objects are kept in memory but are no longer updated or rendered.
+*/
 bool Wasp::isAlive() const
 {
 	return _isAlive;
 }
 
+/**
+* Kills the wasp. Until this wasp is respawned, isAlive() will return false.
+*/
 void Wasp::kill()
 {
 	hp = 0;

@@ -27,7 +27,6 @@ void SimVisualizer::initGlut(int argc, char** argv)
     glutCreateWindow("Eriks Wasp Sim");
     glutDisplayFunc(SimVisualizer::render);
     glutReshapeFunc(SimVisualizer::reshape);
-    glutIdleFunc(SimVisualizer::idleUpdate);
 
     //GLEW
     glewExperimental = GL_TRUE;
@@ -62,16 +61,18 @@ void SimVisualizer::initGlut(int argc, char** argv)
     WaspRenderer::init();
     FoodRenderer::init();
  
+    glutTimerFunc(0, timer, 0);
     glutMainLoop();
 }
 
 /**
-* The glut idle function for the SimVisualizer. Updates the display and input handlers. Makes use of vsync.
+* The glut timer function for the SimVisualizer. Updates the display and input handlers.
 */
-void SimVisualizer::idleUpdate()
+void SimVisualizer::timer(int value)
 {
     KeyboardHandler::updateCamera(&camera);
     glutPostRedisplay();
+    glutTimerFunc(16, timer, 0);
 }
 
 /**
@@ -107,9 +108,9 @@ void SimVisualizer::render()
     // SCENE
     drawGrid();
 
-    FoodRenderer::drawFood(Food::getFoodSlots());
+    FoodRenderer::drawFood(Food::getFoodEntities());
 
-    WaspRenderer::drawWasps(WaspSlots::getWaspSlots());
+    WaspRenderer::drawWasps(WaspSlots::getWasps());
     WaspRenderer::drawSelectedWasp();
  
     // UI
