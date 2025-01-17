@@ -4,7 +4,6 @@
 #include "StringUtil.h"
 #include "CommandUtil.h"
 #include "WaspSlots.h"
-#include "MemoryManager.h"
 #include "Food.h"
 #include "ResourceSpawner.h"
 #include <set>
@@ -130,14 +129,6 @@ void OtherCommandHandlers::commandSpawn(const std::string& subcommand)
 //-------------------------------------
 void OtherCommandHandlers::commandKill(const std::string& subcommand)
 {
-    // The kill command schedules a new cleanup. If the user was allowed to continue spamming kill constantly
-    // it would cause the cleanup to never occur. Avoid that.
-    if (MemoryManager::isCleanupScheduled())
-    {
-        CommandUtil::printError("Cannot invoke 'kill' while memory is still being cleaned. \nTry again in a few seconds.");
-        return;
-    }
-
     KillStrategy strategy{};
     std::string firstWord = StringUtil::getFirstWord(subcommand);
 

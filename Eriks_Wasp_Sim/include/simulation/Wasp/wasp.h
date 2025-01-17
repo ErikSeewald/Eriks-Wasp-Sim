@@ -18,6 +18,11 @@ class Wasp : Updatable
 		Wasp();
 
 		/**
+		* Respawns the wasp and resets its attributes. Both living and dead wasps can be respawned.
+		*/
+		void respawn();
+
+		/**
 		* Implementation/Override of the 'Updatable' class update method. Updates the wasps state in the simulation.
 		*/
 		void update();
@@ -43,8 +48,15 @@ class Wasp : Updatable
 
 		int getMaxHP() const;
 
+		/**
+		* Returns wether the wasp is alive. 
+		* Dead wasp objects are kept in memory but are no longer updated or rendered.
+		*/
 		bool isAlive() const;
 
+		/**
+		* Kills the wasp. Until this wasp is respawned, isAlive() will return false.
+		*/
 		void kill();
 
 		// HUNGER
@@ -63,6 +75,8 @@ class Wasp : Updatable
 
 	private:
 		std::chrono::duration<double>* deltaTime;
+
+		void initialize();
 
 		void updateSpeeds();
 

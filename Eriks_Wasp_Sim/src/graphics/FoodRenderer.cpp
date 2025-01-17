@@ -42,59 +42,30 @@ void FoodRenderer::init()
 }
 
 /**
-* Visualizes the given FoodSlot linked list. Assumes glut, glew, etc. are preinitialized.
+* Renders the food entities. Assumes glut, glew, etc. are preinitialized.
 */
-void FoodRenderer::drawFood(EntitySlot* foodSlot)
+void FoodRenderer::drawFood(std::vector<FoodEntity>* foodEntities)
 {
     // COLLECT INSTANCE DATA
     food_instanceData.clear();
 
-    // Run threads
-    static const int numThreads = 4;
-    std::vector<std::thread> threads;
-    for (int i = 0; i < numThreads; ++i)
+    // Collect instance data
+    // TODO: Currently, with a SLOT_COUNT of only 1000 this is faster than threading. Maybe change this later.
+    for (int i = 0; i < Food::SLOT_COUNT; ++i)
     {
-        threads.emplace_back(_collectInstanceDataThreaded, foodSlot, i, numThreads);
-    }
+        FoodEntity* food = &(*foodEntities)[i];
+        if (food->eaten) { continue; }
 
-    for (std::thread& t : threads) { t.join(); }
+        // Optimization: Manually construct model matrix instead of using transform and rotate functions
+        // to skip any unnecessary steps.
+        glm::mat4 model(1.0f);
+        model[3][0] = food->position.x;
+        model[3][1] = food->position.y;
+        model[3][2] = food->position.z;
+
+        food_instanceData.push_back(model);
+    }
 
     // DRAW
     ShaderHandler::drawInstanceData(&food_instanceData, &food_VAO, &food_instanceVBO, food_vertexCount, &foodShaderProgram);
-}
-
-/**
-* Collects the necessary instance data for hardware instancing for all EntitySlots matching the given
-* offset and step size to allow for multithreaded traversal. Calling this function with 5 threads
-* would mean splitting the workload evenly among 5 function calls, each thread i has t_offset = i and t_step = 5.
-*/
-void FoodRenderer::_collectInstanceDataThreaded(EntitySlot* startSlot, int t_offset, int t_step)
-{
-    EntitySlot* currentSlot = startSlot;
-    int index = 0;
-
-    std::vector<glm::mat4> localInstanceData;
-    while (currentSlot != nullptr)
-    {
-        if ((index % t_step) == t_offset)
-        {
-            FoodEntity* food = (FoodEntity*) currentSlot->entity;
-
-            // Optimization: Manually construct model matrix instead of using transform and rotate functions
-            // to skip any unnecessary steps.
-            glm::mat4 model(1.0f);
-            model[3][0] = food->position.x;
-            model[3][1] = food->position.y;
-            model[3][2] = food->position.z;
-
-            localInstanceData.push_back(model);
-            
-        }
-        currentSlot = currentSlot->next;
-        ++index;
-    }
-
-    // Merge local into global data
-    std::lock_guard<std::mutex> lock(food_instanceDataMutex);
-    food_instanceData.insert(food_instanceData.end(), localInstanceData.begin(), localInstanceData.end());
 }

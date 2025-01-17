@@ -45,19 +45,22 @@ void WaspRenderer::init()
 }
 
 /**
-* Visualizes the given WaspSlot linked list. Assumes glut, glew, etc. are preinitialized.
+* Renders the given wasps. Assumes glut, glew, etc. are preinitialized.
 */
-void WaspRenderer::drawWasps(EntitySlot* waspSlot)
+void WaspRenderer::drawWasps(std::vector<Wasp>* wasps)
 {
     // COLLECT INSTANCE DATA
     wasp_instanceData.clear();
 
-    // Run threads
-    static const int numThreads = 5;
+    // Divide wasp array into local sections and use threads to collect their data
+    static const int numThreads = 4; // performance tradeoff balance. For 100_000 slots 4 threads is best
+    int sectionSize = std::floor(WaspSlots::SLOT_COUNT / numThreads);
     std::vector<std::thread> threads;
     for (int i = 0; i < numThreads; ++i) 
     {
-        threads.emplace_back(_collectInstanceDataThreaded, waspSlot, i, numThreads);
+        int start = sectionSize * i;
+        int end = i < numThreads - 1 ? sectionSize * (i + 1) : WaspSlots::SLOT_COUNT;
+        threads.emplace_back(_collectInstanceDataThreaded, wasps, start, end);
     }
 
     for (std::thread& t : threads) {t.join();}
@@ -67,50 +70,41 @@ void WaspRenderer::drawWasps(EntitySlot* waspSlot)
 }
 
 /**
-* Collects the necessary instance data for hardware instancing for all EntitySlots matching the given
-* offset and step size to allow for multithreaded traversal. Calling this function with 5 threads
-* would mean splitting the workload evenly among 5 function calls, each thread i has t_offset = i and t_step = 5.
-* The given selectedWasp pointer is used to avoid drawing the selected wasp.
+* Collects the necessary data for hardware instancing and safely inserts it into wasp_instanceData using a mutex. 
+* A single thread works within a section of the wasps vector defined by the given start and end indices. 
+* This ensures that each thread works on data with high memory/cache locality.
 */
-void WaspRenderer::_collectInstanceDataThreaded(EntitySlot* startSlot, int t_offset, int t_step)
+void WaspRenderer::_collectInstanceDataThreaded(std::vector<Wasp>* wasps, int start, int end)
 {
-    EntitySlot* currentSlot = startSlot;
-    int index = 0;
-
     std::vector<glm::mat4> localInstanceData;
-    while (currentSlot != nullptr)
+    for (int i = start; i < end; ++i)
     {
-        if ((index % t_step) == t_offset)
-        {
-            Wasp* wasp = (Wasp*) currentSlot->entity;
+        Wasp* wasp = &(*wasps)[i];
+        if (!wasp->isAlive()) { continue; }
 
-            // Optimization: Instead of using atan2(), cos() and sin() which cause too much overhead
-            // IMPORTANT: This only works based on the assumption that the components x and z are always normalized
-            // The y component is allowed to change (which means the 3d vector does not need to be normalized)
-            float cos = wasp->viewingVector.z;
-            float sin = wasp->viewingVector.x;
+        // Optimization: Instead of using atan2(), cos() and sin() which cause too much overhead
+        // IMPORTANT: This only works based on the assumption that the components x and z are always normalized
+        // The y component is allowed to change (which means the 3d vector does not need to be normalized)
+        float cos = wasp->viewingVector.z;
+        float sin = wasp->viewingVector.x;
 
-            // Optimization: Manually construct model matrix instead of using transform and rotate functions
-            // to skip any unnecessary steps.
-            glm::mat4 model(1.0f);
+        // Optimization: Manually construct model matrix instead of using transform and rotate functions
+        // to skip any unnecessary steps.
+        glm::mat4 model(1.0f);
 
-            // Translate
-            model[3][0] = wasp->position.x;
-            model[3][1] = wasp->position.y;
-            model[3][2] = wasp->position.z;
+        // Translate
+        model[3][0] = wasp->position.x;
+        model[3][1] = wasp->position.y;
+        model[3][2] = wasp->position.z;
 
-            // Rotate around Y axis
-            model[0][0] = cos;
-            model[0][2] = -sin;
-            model[1][1] = 1.0f;
-            model[2][0] = sin;
-            model[2][2] = cos;
+        // Rotate around Y axis
+        model[0][0] = cos;
+        model[0][2] = -sin;
+        model[1][1] = 1.0f;
+        model[2][0] = sin;
+        model[2][2] = cos;
 
-            localInstanceData.push_back(model);
-            
-        }
-        currentSlot = currentSlot->next;
-        ++index;
+        localInstanceData.push_back(model);
     }
 
     // Merge local into global data

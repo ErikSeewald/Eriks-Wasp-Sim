@@ -1,9 +1,6 @@
 #include "MouseRayCast.h"
-
 #include "WaspSlots.h"
 #include "SimVisualizer.h"
-
-using EntitySlots::EntitySlot;
 
 /**
 * Selects the closest wasp in the scene at the given 2D screen coordinates.
@@ -21,18 +18,16 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
     Wasp* selectedWasp{};
     double shortestDistance = std::numeric_limits<double>::infinity();
 
-    EntitySlot* waspSlot = WaspSlots::getWaspSlots();
-    Wasp* wasp;
-
-    while (waspSlot != nullptr)
+    std::vector<Wasp>* wasps = WaspSlots::getWasps();
+    for (int i = 0; i < WaspSlots::SLOT_COUNT; ++i)
     {
-        wasp = (Wasp*) waspSlot->entity;
+        Wasp* wasp = &(*wasps)[i];
+        if (!wasp->isAlive()) { continue; }
 
         glm::vec3 camToWasp = rayOrigin - wasp->position;
         if (glm::dot(camToWasp, camDirection) > 0)
         {
             // Do not check wasps that are behind the camera
-            waspSlot = waspSlot->next;
             continue;
         }
         
@@ -48,8 +43,6 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
                 selectedWasp = wasp;
             }
         }
-
-        waspSlot = waspSlot->next;
     }
     return selectedWasp;
 }

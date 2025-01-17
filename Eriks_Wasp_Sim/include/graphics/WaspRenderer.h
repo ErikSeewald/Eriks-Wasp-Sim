@@ -4,8 +4,6 @@
 #include "WaspSlots.h"
 #include <list>
 
-using EntitySlots::EntitySlot;
-
  /**
  * @namespace WaspRenderer
  * @brief A namespace for all methods for rendering Wasps with OpenGL
@@ -13,16 +11,16 @@ using EntitySlots::EntitySlot;
 namespace WaspRenderer
 {
     /**
-    * Visualizes the given WaspSlot linked list. Assumes glut, glew, etc. are preinitialized.
+    * Renders the given wasps. Assumes glut, glew, etc. are preinitialized.
     */
-    void drawWasps(EntitySlot* waspSlot);
+    void drawWasps(std::vector<Wasp>* wasps);
 
     /**
-    * Collects the necessary instance data for hardware instancing for all EntitySlots matching the given
-    * offset and step size to allow for multithreaded traversal. Calling this function with 5 threads
-    * would mean splitting the workload evenly among 5 function calls, each thread i has t_offset = i and t_step = 5.
+    * Collects the necessary data for hardware instancing and safely inserts it into wasp_instanceData using a mutex.
+    * A single thread works within a section of the wasps vector defined by the given start and end indices.
+    * This ensures that each thread works on data with high memory/cache locality.
     */
-    void _collectInstanceDataThreaded(EntitySlot* startSlot, int t_offset, int t_step);
+    void _collectInstanceDataThreaded(std::vector<Wasp>* wasps, int start, int end);
 
     /**
     * Visualizes the wasp selected by the user, provided it exists.
