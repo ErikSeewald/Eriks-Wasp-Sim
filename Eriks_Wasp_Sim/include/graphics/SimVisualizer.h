@@ -20,9 +20,9 @@ namespace SimVisualizer
     void initGlut(int argc, char** argv);
 
     /**
-    * The glut timer function for the SimVisualizer. Updates the display and input handlers.
+    * The glut idle function for the SimVisualizer. Updates the display and input handlers. Makes use of vsync.
     */
-    void timer(int value);
+    void idleUpdate();
 
     /**
     * The glut reshape function for the SimVisualizer. Handles proper window-reshape modifications.
