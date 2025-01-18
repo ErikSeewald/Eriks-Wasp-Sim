@@ -1,5 +1,5 @@
 # Eriks-Wasp-Sim
-This project holds all my work on the wasp colony simulator.
+This is an unrealistic wasp colony simulator that I mostly use to experiment with computational optimization.
 
 ## Dependencies
 If you just want to run the program, clone the repo and use the [executable](Eriks_Wasp_Sim/build/vs2022/x64/Debug/Eriks_Wasp_Sim.exe) in the '/Eriks_Wasp_Sim/build/vs2022/x64/Debug/' directory.
