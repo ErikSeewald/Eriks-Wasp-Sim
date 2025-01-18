@@ -73,6 +73,8 @@ void KeyboardHandler::updateCamera(Camera* camera)
 */
 void KeyboardHandler::keyboardDown(unsigned char key, int x, int y)
 {
+    key = std::tolower(key);
+
     // PAUSE/UNPAUSE
     if (key == 'p')
     {
@@ -87,6 +89,7 @@ void KeyboardHandler::keyboardDown(unsigned char key, int x, int y)
 */
 void KeyboardHandler::keyboardUp(unsigned char key, int x, int y)
 {
+    key = std::tolower(key);
     keyStates[key] = false;
 }
 
