@@ -15,6 +15,16 @@ class Wasp : Updatable
 {
 	public:
 
+		// Position in the wasp vector
+		const int w_Index;
+
+		/**
+		* Constructs the wasp object and assigns it the given w_Index (which indicates its position in the wasp vector).
+		* By default the wasp is constructed with isAlive = false.
+		*/
+		Wasp(const int w_Index);
+
+		// Default constructor, only exists for the compiler
 		Wasp();
 
 		/**
@@ -32,47 +42,37 @@ class Wasp : Updatable
 		*/
 		void updateGoal();
 
-		// MOVEMENT
-		float getTurnSpeed() const;
-
-		float getAscendSpeed() const;
-
-		void setGoal(glm::vec3* goal);
-
-		glm::vec3* getCurrentGoal();
-
-		// HEALTH
-		int getHP() const;
-
-		void setHP(int newHP);
-
-		int getMaxHP() const;
-
-		/**
-		* Returns wether the wasp is alive. 
-		* Dead wasp objects are kept in memory but are no longer updated or rendered.
-		*/
-		bool isAlive() const;
-
-		/**
-		* Kills the wasp. Until this wasp is respawned, isAlive() will return false.
-		*/
-		void kill();
-
-		// HUNGER
-		int getHungerSaturation() const;
-
-		void setHungerSaturation(int newSaturation);
-
-		int getMaxHungerSaturation() const;
-
-		void onFoodReached();
-
-		// I would prefer these to be private, but the overhead of a getter function
-		// just is not worth it once you reach like 100000 wasps
+		// ---MOVEMENT---
 		glm::vec3 position;
 		glm::vec3 viewingVector;
 
+		float flyingSpeed;
+		float turnSpeed; // speed of rotating around the y axis
+		float ascendSpeed; // speed of movement along the y axis
+
+		// ---HEALTH---
+		bool isAlive;
+		int MAX_HP;
+		int hp;
+
+		/**
+		* Kills the wasp. Until this wasp is respawned, isAlive will be false.
+		* Dead wasp objects are kept in memory but are no longer updated or rendered.
+		*/
+		void kill();
+
+		// ---HUNGER---
+		int MAX_HUNGER_SATURATION;
+		int hungerSaturation;
+
+		void onFoodReached();
+
+		//GOAL
+		glm::vec3* currentGoal;
+		Food::FoodEntity* currentGoalFoodEntity;
+
+	// Note: While I would prefer more attributes to be private, the overhead of getter functions
+	// is just not worth it at very high wasp counts
 	private:
 		std::chrono::duration<double>* deltaTime;
 
@@ -80,20 +80,11 @@ class Wasp : Updatable
 
 		void updateSpeeds();
 
-		// POSITION
+		// ---POSITION---
 		/**
 		* Updates the Wasp's position based on its current state
 		*/
 		void updatePosition();
-
-		// MOVEMENT
-		float flyingSpeed;
-		float turnSpeed; // speed of rotating around the y axis
-		float ascendSpeed; // speed of movement along the y axis
-
-		//GOAL
-		glm::vec3* currentGoal;
-		Food::FoodEntity* currentGoalFoodEntity;
 
 		/**
 		* Updates the Wasp's viewingVector based on its current state
@@ -104,17 +95,10 @@ class Wasp : Updatable
 
 		void turnTowardsGoal();
 
-		// HEALTH
-		int MAX_HP;
-		int hp;
-		bool _isAlive;
-
+		// ---HEALTH---
 		void updateHP();
 
-		// HUNGER
-		int MAX_HUNGER_SATURATION;
-		int hungerSaturation;
-
+		// ---HUNGER---
 		const double secondsBetweenHungerDecreases = 5.0;
 		steady_clock::time_point lastHungerDecrease;
 

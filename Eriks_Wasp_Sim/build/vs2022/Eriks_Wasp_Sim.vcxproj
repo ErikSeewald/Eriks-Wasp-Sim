@@ -258,7 +258,6 @@
     <ClCompile Include="..\..\src\simulation\Resources\ResourceSpawner.cpp" />
     <ClCompile Include="..\..\src\simulation\Simulation.cpp" />
     <ClCompile Include="..\..\src\simulation\Wasp\wasp.cpp" />
-    <ClCompile Include="..\..\src\simulation\Wasp\WaspGetSet.cpp" />
     <ClCompile Include="..\..\src\simulation\Wasp\WaspSlots.cpp" />
     <ClCompile Include="..\..\src\util\JsonHandler.cpp" />
     <ClCompile Include="..\..\src\util\RNG.cpp" />

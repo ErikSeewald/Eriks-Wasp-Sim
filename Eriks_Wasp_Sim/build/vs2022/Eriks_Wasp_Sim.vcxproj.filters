@@ -215,9 +215,6 @@
     <ClCompile Include="..\..\src\simulation\Wasp\WaspSlots.cpp">
       <Filter>Source Files\simulation\Wasp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\simulation\Wasp\WaspGetSet.cpp">
-      <Filter>Source Files\simulation\Wasp</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\simulation\Resources\food.cpp">
       <Filter>Source Files\simulation\Resources</Filter>
     </ClCompile>

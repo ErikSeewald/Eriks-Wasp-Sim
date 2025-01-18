@@ -13,10 +13,6 @@ using Strategies::KillStrategy;
 */
 namespace Food
 {
-	// Follows the same slot pattern as WaspSlots.h
-	// For more info read the docs (SLOT_COUNT, spawnWasps, killWasps) over there
-	const static int SLOT_COUNT = 1000;
-
 	/**
 	* @struct Food
 	* @brief A struct representing a single food entity in the simulation.
@@ -31,9 +27,27 @@ namespace Food
 	std::vector<FoodEntity>* getFoodEntities();
 
 	/**
-	* Returns wether there are enough food slots available to accommodate foodAddAmount
+	* Returns an index that can be used as the upper bound for loops.
+	* After this index there are no more uneaten food entities in the list.
+	* This optimization relies heavily on well managed calls to updateMaxIndex()
+	* and on killing entities with higher indices before entities with smaller indices.
+	*/
+	int getMaxIndex();
+
+	/**
+	* Updates maxIndex by finding the largest index containing an uneaten food entity in the entity vector.
+	*/
+	void updateMaxIndex();
+
+	/**
+	* Returns wether there are enough food slots available to accommodate foodAddAmount.
 	*/
 	bool spaceAvailable(int foodAddAmount);
+
+	/**
+	* Used to register that a food entity has been eaten thereby update uneatenFoodCount.
+	*/
+	void registerEntityEaten();
 
 	bool spawnFood(glm::vec3 position, int amount, SpawnStrategy strategy, float spawnRadius);
 

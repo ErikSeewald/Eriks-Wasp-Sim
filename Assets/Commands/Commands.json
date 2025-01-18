@@ -65,6 +65,13 @@
 			},
 
 			{
+				"name": "select",
+				"description": "Selects the wasp at the given index in the wasp list.",
+				"syntax": "wasp select <index>",
+				"subcommands": []
+			},
+
+			{
 				"name": "kill",
 				"description": "Kills the currently selected wasp.",
 				"syntax": "wasp kill",

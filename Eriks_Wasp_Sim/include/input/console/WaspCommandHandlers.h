@@ -12,6 +12,8 @@ namespace WaspCommandHandlers
 
 	void commandWaspHelp(const std::string& subcommand);
 
+	void commandWaspSelect(const std::string& subcommand);
+
 	void commandWaspKill(const std::string& subcommand);
 
 	void commandWaspSetPos(const std::string& subcommand);
