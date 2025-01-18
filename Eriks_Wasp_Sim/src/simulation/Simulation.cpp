@@ -23,12 +23,26 @@ void Simulation::startLoop() {
     static const double secondsBetweenUpdates = 1.0 / 60.0;
     while (true) 
     {
+        // SIMULATION LOGIC
         if (!UI::getUIState()->isPaused) 
         {
             updateWasps();
             ResourceSpawner::update(&deltaTime);
         }
 
+        // MAX INDICES
+        static const double secondsBetweenMaxIndexUpdates = 5.0;
+        static double secondsSinceMaxIndexUpdate = 0.0;
+
+        secondsSinceMaxIndexUpdate += deltaTime.count();
+        if (secondsSinceMaxIndexUpdate > secondsBetweenMaxIndexUpdates)
+        {
+            WaspSlots::updateMaxIndex();
+            Food::updateMaxIndex();
+            secondsSinceMaxIndexUpdate = 0.0;
+        }
+
+        // DELTA TIME
         updateDeltaTime();
 
         double sleepTimeSeconds = secondsBetweenUpdates - deltaTime.count();
@@ -43,7 +57,8 @@ void Simulation::updateWasps()
 {
     //WASPS
     std::vector<Wasp>* wasps = WaspSlots::getWasps();
-    for (int i = 0; i < WaspSlots::SLOT_COUNT; ++i)
+    int maxIndex = WaspSlots::getMaxIndex();
+    for (int i = 0; i < maxIndex; ++i)
     {
         Wasp* wasp = &(*wasps)[i];
         wasp->update();
@@ -52,7 +67,7 @@ void Simulation::updateWasps()
     //SELECTED WASP
     UI::UI_STATE* uiState = UI::getUIState();
     Wasp* selectedWasp = uiState->selectedWasp;
-    if (selectedWasp != nullptr && !selectedWasp->isAlive())
+    if (selectedWasp != nullptr && !selectedWasp->isAlive)
     {
         // deselect selectedWasp if it has died
         uiState->selectedWasp = nullptr;
@@ -75,6 +90,8 @@ void Simulation::_loopInit()
     previousTime = steady_clock::now();
 
     //SETUP WASPS
+    WaspSlots::init();
+
     static const int initWaspCount = 250;
     WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM, 10);
 }
@@ -97,7 +114,8 @@ FoodEntity* Simulation::getFirstFoodInApproxRadius(glm::vec3 position, float rad
     glm::vec3 maxBound = position + glm::vec3(radius);
 
     std::vector<FoodEntity>* foodEntities = Food::getFoodEntities();
-    for (int i = 0; i < Food::SLOT_COUNT; ++i)
+    int maxIndex = Food::getMaxIndex();
+    for (int i = 0; i < maxIndex; ++i)
     {
         FoodEntity* food = &(*foodEntities)[i];
         if (food->eaten) { continue; }

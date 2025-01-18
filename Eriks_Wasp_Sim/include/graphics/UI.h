@@ -30,6 +30,8 @@ namespace UI
 
 	void _drawSelectedWaspUI();
 
+	void _drawPerformanceUI();
+
 	void _drawHiveUI();
 
 	void _drawCameraUI();

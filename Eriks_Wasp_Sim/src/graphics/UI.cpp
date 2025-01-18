@@ -20,6 +20,7 @@ void UI::drawUI()
     ImGui::NewFrame();
 
     _drawSelectedWaspUI();
+    _drawPerformanceUI();
     _drawHiveUI();
     _drawCameraUI();
 
@@ -36,13 +37,15 @@ void UI::_drawSelectedWaspUI()
     }
 
     // Initial size and position
-    const static ImVec2 initSize(250, 400);
-    const static ImVec2 initPos(20,20);
-    ImGui::SetNextWindowPos(initPos, ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(initSize, ImGuiCond_FirstUseEver);
+    const static ImVec2 initSize(250, 420);
+    const static ImVec2 initPos(10,10);
+    ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
+    ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
     if (ImGui::Begin("Selected Wasp"))
     {
+        ImGui::Text("w_Index: %i", wasp->w_Index);
+
         // POSITION
         if (ImGui::CollapsingHeader("Position", ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -55,14 +58,14 @@ void UI::_drawSelectedWaspUI()
             ImGui::Text("Viewing vector: ");
             _drawVectorTable(wasp->viewingVector, "WaspViewingVectorTable");
 
-            ImGui::Text("Turn speed: %.3f", wasp->getTurnSpeed());
-            ImGui::Text("Ascend speed: %.3f", wasp->getAscendSpeed());
+            ImGui::Text("Turn speed: %.3f", wasp->turnSpeed);
+            ImGui::Text("Ascend speed: %.3f", wasp->ascendSpeed);
 
             if (ImGui::CollapsingHeader("Current goal", ImGuiTreeNodeFlags_None))
             {
-                if (uiState.selectedWasp->getCurrentGoal() != nullptr)
+                if (uiState.selectedWasp->currentGoal != nullptr)
                 {
-                    _drawVectorTable(*uiState.selectedWasp->getCurrentGoal(), "WaspGoalTable");
+                    _drawVectorTable(*uiState.selectedWasp->currentGoal, "WaspGoalTable");
                     ImGui::Checkbox("Display current goal", &uiState.drawSelectedWaspGoal);
                 }
                 
@@ -77,14 +80,14 @@ void UI::_drawSelectedWaspUI()
         // HEALTH
         if (ImGui::CollapsingHeader("Health", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            bool isAlive = wasp->isAlive();
+            bool isAlive = wasp->isAlive;
             ImGui::Text("Alive: ");
             ImGui::SameLine();
             ImGui::Text(isAlive ? "true" : "false");
 
             // HP BAR
-            int hp = wasp->getHP();
-            int maxHP = wasp->getMaxHP();
+            int hp = wasp->hp;
+            int maxHP = wasp->MAX_HP;
             ImGui::Text("HP: %d/%d", hp, maxHP);
 
             _drawPercentageBar(hp, maxHP, ImVec4(0.0f, 1.0f, 0.0f, 0.2f));
@@ -94,8 +97,8 @@ void UI::_drawSelectedWaspUI()
         if (ImGui::CollapsingHeader("Hunger", ImGuiTreeNodeFlags_DefaultOpen))
         {
             // HUNGER BAR
-            int hungerSaturation = wasp->getHungerSaturation();
-            int maxSaturation = wasp->getMaxHungerSaturation();
+            int hungerSaturation = wasp->hungerSaturation;
+            int maxSaturation = wasp->MAX_HUNGER_SATURATION;
             ImGui::Text("Hunger saturation: %d/%d", hungerSaturation, maxSaturation);
 
             _drawPercentageBar(hungerSaturation, maxSaturation, ImVec4(1.0f, 0.3f, 0.0f, 0.3f));
@@ -105,13 +108,43 @@ void UI::_drawSelectedWaspUI()
     ImGui::End();
 }
 
+void UI::_drawPerformanceUI()
+{
+    // Fps counter
+    static float fps = 0.0f;
+    static int lastUpdateTime = 0;
+
+    // Initial size and position
+    const static ImVec2 initSize(150, 90);
+    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 10);
+    ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
+    ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
+
+    if (ImGui::Begin("Performance"))
+    {
+        // only sample framerate every 500 ms
+        int currentTime = glutGet(GLUT_ELAPSED_TIME);
+        if (currentTime - lastUpdateTime > 500)
+        {
+            fps = ImGui::GetIO().Framerate;
+            lastUpdateTime = currentTime;
+        }
+
+        ImGui::Text("FPS: %.f", fps);
+        ImGui::Text("Max w_index: %i", WaspSlots::getMaxIndex());
+        ImGui::Text("Max f_index: %i", Food::getMaxIndex());
+    }
+
+    ImGui::End();
+}
+
 void UI::_drawHiveUI()
 {
     // Initial size and position
     const static ImVec2 initSize(150, 85);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 20, 20);
-    ImGui::SetNextWindowPos(initPos, ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(initSize, ImGuiCond_FirstUseEver);
+    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 110);
+    ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
+    ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
     if (ImGui::Begin("Hive"))
     {
@@ -125,17 +158,14 @@ void UI::_drawHiveUI()
     ImGui::End();
 }
 
+
 void UI::_drawCameraUI()
 {
-    // Fps counter
-    static float fps = 0.0f;
-    static int lastUpdateTime = 0;
-
     // Initial size and position
-    const static ImVec2 initSize(150, 205);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 20, 120);
-    ImGui::SetNextWindowPos(initPos, ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(initSize, ImGuiCond_FirstUseEver);
+    const static ImVec2 initSize(150, 190);
+    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 210);
+    ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
+    ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
     if (ImGui::Begin("Camera"))
     {
@@ -150,16 +180,6 @@ void UI::_drawCameraUI()
         {
             _drawVectorTable(camera.direction, "CameraViewingVectorTable");
         }
-
-        // only sample framerate every 500 ms
-        int currentTime = glutGet(GLUT_ELAPSED_TIME);
-        if (currentTime - lastUpdateTime > 500)
-        {
-            fps = ImGui::GetIO().Framerate;
-            lastUpdateTime = currentTime;
-        }
-
-        ImGui::Text("FPS: %.f", fps);
     }
 
     ImGui::End();

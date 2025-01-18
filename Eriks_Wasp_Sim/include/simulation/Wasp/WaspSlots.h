@@ -10,19 +10,46 @@ using Strategies::KillStrategy;
 */
 namespace WaspSlots
 { 
-	// Total number of wasp slots
-	const static int SLOT_COUNT = 100000;
-
 	std::vector<Wasp>* getWasps();
 
 	/**
-	* Returns wether there are enough wasp slots available to accommodate waspAddAmount
+	* Initializes all wasp slots.
+	* Do not call spawnWasps() before initialization.
+	*/
+	void init();
+
+	/**
+	* Returns an index that can be used as the upper bound for loops.
+	* After this index there are no more living wasp objects in the list.
+	* This optimization relies heavily on well managed calls to updateMaxIndex()
+	* and on killing wasps with higher indices before wasps with smaller indices.
+	*/
+	int getMaxIndex();
+
+	/**
+	* Updates maxIndex by finding the largest index containing a living wasp in the wasp vector.
+	*/
+	void updateMaxIndex();
+
+	/**
+	* Returns wether there are enough wasp slots available to accommodate waspAddAmount.
 	*/
 	bool spaceAvailable(int waspAddAmount);
 
+	/**
+	* Returns the total number of currently living wasps.
+	*/
 	int getAliveCount();
 
+	/**
+	* Returns the total number of wasp deaths since initialization.
+	*/
 	long getDeadCount();
+
+	/**
+	* Used to register the death of a wasp and thereby update aliveCount and deadCount.
+	*/
+	void registerDeath();
 
 	/**
 	* Spawns the given amount of wasps at the given position using the given SpawnStrategy and spawnRadius.

@@ -1,4 +1,5 @@
 #include "WaspCommandHandlers.h"
+#include "OtherCommandHandlers.h"
 #include "Console.h"
 #include "StringUtil.h"
 #include "CommandUtil.h"
@@ -9,6 +10,7 @@ static const std::string waspCommandName = "wasp";
 CommandHandlerMap waspCommandHandlers =
 {
         {"help", WaspCommandHandlers::commandWaspHelp},
+        {"select", WaspCommandHandlers::commandWaspSelect},
         {"kill", WaspCommandHandlers::commandWaspKill},
         {"setpos", WaspCommandHandlers::commandWaspSetPos},
         {"sethp", WaspCommandHandlers::commandWaspSetHp},
@@ -31,7 +33,38 @@ void WaspCommandHandlers::commandWaspHelp(const std::string& subcommand)
     CommandUtil::printSubCommands(waspCommandName);
 }
 
-#include "OtherCommandHandlers.h"
+void WaspCommandHandlers::commandWaspSelect(const std::string& subcommand)
+{
+    // INDEX STRING
+    std::string indexString = StringUtil::getFirstWord(subcommand);
+
+    int index = CommandUtil::convertToInt(indexString);
+    int maxIndex = WaspSlots::getMaxIndex();
+    if (index < 0 || index >= maxIndex)
+    {
+        CommandUtil::printError("Index must be greater than 0 and less than the max w_Index");
+        return;
+    }
+
+    std::string cutCommand = StringUtil::cutFirstWord(subcommand);
+    if (!StringUtil::isBlank(cutCommand) && StringUtil::trimLeadingWhitespace(cutCommand) != "all")
+    {
+        CommandUtil::printInvalidSyntaxError();
+        return;
+    }
+
+    // SELECT WASP
+    Wasp* wasp = &(*WaspSlots::getWasps())[index];
+    if (!wasp->isAlive)
+    {
+        CommandUtil::printError("That wasp is not alive");
+        return;
+    }
+
+    UI::getUIState()->selectedWasp = wasp;
+    std::cout << "Selected wasp at index " << index;
+}
+
 void WaspCommandHandlers::commandWaspKill(const std::string& subcommand)
 {
     static const std::string successfulKillPrint = "Wasp killed successfully!";
@@ -51,6 +84,8 @@ void WaspCommandHandlers::commandWaspKill(const std::string& subcommand)
     if (selectedWasp != NULL)
     {
         selectedWasp->kill();
+        WaspSlots::registerDeath();
+        WaspSlots::updateMaxIndex();
         std::cout << successfulKillPrint;
     }
     else
@@ -85,10 +120,11 @@ void WaspCommandHandlers::commandWaspSetPos(const std::string& subcommand)
     if (allWasps)
     {
         std::vector<Wasp>* wasps = WaspSlots::getWasps();
-        for (int i = 0; i < WaspSlots::SLOT_COUNT; ++i)
+        int maxIndex = WaspSlots::getMaxIndex();
+        for (int i = 0; i < maxIndex; ++i)
         {   
             Wasp* wasp = &(*wasps)[i];
-            if (!wasp->isAlive()) { continue; }
+            if (!wasp->isAlive) { continue; }
 
             wasp->position = newPos;
         }
@@ -128,25 +164,26 @@ void WaspCommandHandlers::commandWaspSetHp(const std::string& subcommand)
     int newHp = CommandUtil::convertToInt(hpString);
     if (newHp < 0)
     {
-        CommandUtil::printError("Hp cannot be < 0");
+        CommandUtil::printError("Invalid amount");
         return;
     }
 
     if (allWasps)
     {
         std::vector<Wasp>* wasps = WaspSlots::getWasps();
-        for (int i = 0; i < WaspSlots::SLOT_COUNT; ++i)
+        int maxIndex = WaspSlots::getMaxIndex();
+        for (int i = 0; i < maxIndex; ++i)
         {
             Wasp* wasp = &(*wasps)[i];
-            if (!wasp->isAlive()) { continue; }
+            if (!wasp->isAlive) { continue; }
 
-            int maxHp = wasp->getMaxHP();
+            int maxHp = wasp->MAX_HP;
             int curNewHp = newHp;
             if (newHp > maxHp)
             {
                 curNewHp = maxHp;
             }
-            wasp->setHP(curNewHp);
+            wasp->hp = curNewHp;
         }
         std::cout << "All wasp's hp set to min(" << newHp << ", their maximum hp)";
     }
@@ -160,13 +197,13 @@ void WaspCommandHandlers::commandWaspSetHp(const std::string& subcommand)
             return;
         }
 
-        int maxHp = selectedWasp->getMaxHP();
+        int maxHp = selectedWasp->MAX_HP;
         if (newHp > maxHp)
         {
             std::cout << "Desired hp had to be limited to the wasp's max hp" << std::endl;
             newHp = maxHp;
         }
-        selectedWasp->setHP(newHp);
+        selectedWasp->hp = newHp;
         std::cout << "Wasp's hp set to " << newHp;
     }
 }
@@ -190,25 +227,26 @@ void WaspCommandHandlers::commandWaspSetHunger(const std::string& subcommand)
 
     if (newSaturation < 0)
     {
-        CommandUtil::printError("Hunger saturation cannot be < 0");
+        CommandUtil::printError("Invalid amount");
         return;
     }
 
     if (allWasps)
     {
         std::vector<Wasp>* wasps = WaspSlots::getWasps();
-        for (int i = 0; i < WaspSlots::SLOT_COUNT; ++i)
+        int maxIndex = WaspSlots::getMaxIndex();
+        for (int i = 0; i < maxIndex; ++i)
         {
             Wasp* wasp = &(*wasps)[i];
-            if (!wasp->isAlive()) { continue; }
+            if (!wasp->isAlive) { continue; }
 
-            int maxSaturation = wasp->getMaxHungerSaturation();
+            int maxSaturation = wasp->MAX_HUNGER_SATURATION;
             int curNewSaturation = newSaturation;
             if (newSaturation > maxSaturation)
             {
                 curNewSaturation = maxSaturation;
             }
-            wasp->setHungerSaturation(curNewSaturation);
+            wasp->hungerSaturation = curNewSaturation;
         }
         std::cout << "All wasp's hunger saturation set to min(" << newSaturation << ", their maximum hunger saturation)";
     }
@@ -222,13 +260,13 @@ void WaspCommandHandlers::commandWaspSetHunger(const std::string& subcommand)
             return;
         }
 
-        int maxSaturation = selectedWasp->getMaxHungerSaturation();
+        int maxSaturation = selectedWasp->MAX_HUNGER_SATURATION;
         if (newSaturation > maxSaturation)
         {
             std::cout << "Desired hunger saturation had to be limited to the wasp's max hunger saturation" << std::endl;
             newSaturation = maxSaturation;
         }
-        selectedWasp->setHungerSaturation(newSaturation);
+        selectedWasp->hungerSaturation = newSaturation;
         std::cout << "Wasp's hunger saturation set to " << newSaturation;
     }
 }

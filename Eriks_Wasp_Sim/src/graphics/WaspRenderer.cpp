@@ -54,12 +54,14 @@ void WaspRenderer::drawWasps(std::vector<Wasp>* wasps)
 
     // Divide wasp array into local sections and use threads to collect their data
     static const int numThreads = 4; // performance tradeoff balance. For 100_000 slots 4 threads is best
-    int sectionSize = std::floor(WaspSlots::SLOT_COUNT / numThreads);
+
+    int maxIndex = WaspSlots::getMaxIndex();
+    int sectionSize = std::floor(maxIndex / numThreads);
     std::vector<std::thread> threads;
     for (int i = 0; i < numThreads; ++i) 
     {
         int start = sectionSize * i;
-        int end = i < numThreads - 1 ? sectionSize * (i + 1) : WaspSlots::SLOT_COUNT;
+        int end = i < numThreads - 1 ? sectionSize * (i + 1) : maxIndex;
         threads.emplace_back(_collectInstanceDataThreaded, wasps, start, end);
     }
 
@@ -80,7 +82,7 @@ void WaspRenderer::_collectInstanceDataThreaded(std::vector<Wasp>* wasps, int st
     for (int i = start; i < end; ++i)
     {
         Wasp* wasp = &(*wasps)[i];
-        if (!wasp->isAlive()) { continue; }
+        if (!wasp->isAlive) { continue; }
 
         // Optimization: Instead of using atan2(), cos() and sin() which cause too much overhead
         // IMPORTANT: This only works based on the assumption that the components x and z are always normalized
@@ -141,9 +143,9 @@ void WaspRenderer::drawSelectedWasp()
     glEnable(GL_DEPTH_TEST);
 
     //DRAW GOAL
-    if (uiState->drawSelectedWaspGoal && wasp->getCurrentGoal() != nullptr)
+    if (uiState->drawSelectedWaspGoal && wasp->currentGoal != nullptr)
     {
-        glm::vec3 goal = *wasp->getCurrentGoal();
+        glm::vec3 goal = *wasp->currentGoal;
 
         glColor3f(0.0f, 1.0f, 1.0f);
         glBegin(GL_LINES);

@@ -2,13 +2,23 @@
 #include "Simulation.h"
 #include "RNG.h"
 #include "VectorMath.h"
+#include "WaspSlots.h"
 
-// NOTE: Getters and setters are in WaspGetSet.cpp to avoid clutter
-
-Wasp::Wasp()
+/**
+* Constructs the wasp object and assigns it the given w_Index (which indicates its position in the wasp vector).
+* By default the wasp is constructed with isAlive = false.
+*/
+Wasp::Wasp(const int w_Index) : w_Index(w_Index)
 {
 	initialize();
-	_isAlive = false;
+	isAlive = false;
+}
+
+// Default constructor, only exists for the compiler
+Wasp::Wasp() : w_Index(-1)
+{
+	initialize();
+	isAlive = false;
 }
 
 void Wasp::initialize()
@@ -44,7 +54,7 @@ void Wasp::initialize()
 void Wasp::respawn()
 {
 	initialize();
-	_isAlive = true;
+	isAlive = true;
 }
 
 /**
@@ -52,13 +62,15 @@ void Wasp::respawn()
 */
 void Wasp::update()
 {
-	if (hp <= 0)
+	if (!isAlive)
 	{
-		_isAlive = false;
+		return;
 	}
 
-	if (!_isAlive)
+	if (hp <= 0)
 	{
+		isAlive = false;
+		WaspSlots::registerDeath();
 		return;
 	}
 
@@ -209,21 +221,13 @@ void Wasp::turnTowardsGoal()
 
 //HEALTH
 /**
-* Returns wether the wasp is alive.
+* Kills the wasp. Until this wasp is respawned, isAlive will be false.
 * Dead wasp objects are kept in memory but are no longer updated or rendered.
-*/
-bool Wasp::isAlive() const
-{
-	return _isAlive;
-}
-
-/**
-* Kills the wasp. Until this wasp is respawned, isAlive() will return false.
 */
 void Wasp::kill()
 {
 	hp = 0;
-	_isAlive = false;
+	isAlive = false;
 }
 
 void Wasp::updateHP()
@@ -243,6 +247,8 @@ void Wasp::updateHP()
 void Wasp::onFoodReached()
 {
 	currentGoalFoodEntity->eaten = true;
+	Food::registerEntityEaten();
+
 	hungerSaturation += currentGoalFoodEntity->hungerPoints;
 
 	if (hungerSaturation > 100)

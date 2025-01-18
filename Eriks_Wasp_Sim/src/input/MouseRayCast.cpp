@@ -19,10 +19,11 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
     double shortestDistance = std::numeric_limits<double>::infinity();
 
     std::vector<Wasp>* wasps = WaspSlots::getWasps();
-    for (int i = 0; i < WaspSlots::SLOT_COUNT; ++i)
+    int maxIndex = WaspSlots::getMaxIndex();
+    for (int i = 0; i < maxIndex; ++i)
     {
         Wasp* wasp = &(*wasps)[i];
-        if (!wasp->isAlive()) { continue; }
+        if (!wasp->isAlive) { continue; }
 
         glm::vec3 camToWasp = rayOrigin - wasp->position;
         if (glm::dot(camToWasp, camDirection) > 0)
@@ -44,6 +45,7 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
             }
         }
     }
+
     return selectedWasp;
 }
 
