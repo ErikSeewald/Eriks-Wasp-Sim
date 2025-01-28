@@ -126,6 +126,12 @@ std::chrono::duration<double>* Simulation::getDeltaTime()
 }
 
 // TODO: Currently horribly inefficient. Fix this
+// Probably go with a chunk based system in which you have a hashmap that maps glm::ivec3 
+// (using glm::floor(position / chunkSize) that maps to a list of food entities in that chunk.
+// Since food cannot move, the food chunks only need to be updated when spawning and eating.
+// This should massively improve performance but will come with some other issues:
+// 1. Spawning and killing lots of food at once will by default take a long time using this system
+// 2. Need to find a way to make this chunk system multithreading safe
 FoodEntity* Simulation::getFirstFoodInApproxRadius(glm::vec3 position, float radius)
 {
     // Bounding box for radius approximation
@@ -150,7 +156,6 @@ FoodEntity* Simulation::getFirstFoodInApproxRadius(glm::vec3 position, float rad
 
     return nullptr;
 }
-
 
 
 /**
