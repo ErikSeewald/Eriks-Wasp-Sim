@@ -73,7 +73,7 @@ void ThreadPool::_workerLoop()
             jobAvailableCond.wait(lock, [this]
             {
                 return !jobs.empty() || shutDown;
-            });
+            }); // checked once, then the thread is blocked until the cond variable is signaled by enqueue
 
             if (shutDown && jobs.empty()) { return; }
 
