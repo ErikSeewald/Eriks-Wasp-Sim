@@ -50,7 +50,7 @@ void FoodRenderer::drawFood(std::vector<FoodEntity>* foodEntities)
     food_instanceData.clear();
 
     // Collect instance data
-    // TODO: Currently, with a SLOT_COUNT of only 1000 this is faster than threading. Maybe change this later.
+    // TODO: Currently, with a SLOT_COUNT of only 10000 this is faster than threading. Maybe change this later.
     int maxIndex = Food::getMaxIndex();
     for (int i = 0; i < maxIndex; ++i)
     {
