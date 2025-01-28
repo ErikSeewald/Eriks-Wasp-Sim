@@ -57,3 +57,10 @@ The Wasp-Sim makes use of multiple performance optimizations, some of which have
 * **Threading**: Not only does the OpenGL code run on a different thread than the simulation code, both of these threads also occasionally spawn more child threads.
   - The cpu needs to collect matrix information before sending it off to the gpu for hardware instancing. This is done with multiple threads looping over sections of the aforementioned localized entity vectors.
     Usually, dividing the task into 4 threads yields the best results, but that is highly situational.
+  - Threading is achieved using a custom [ThreadPool](Eriks_Wasp_Sim/include/util/ThreadPool.h) class. Instead of creating new threads each time they are used, a pool of threads is constantly waiting (BLOCKED) for new tasks
+    that can be enqueued
+  - For now it seems that multithreading is hugely benefitial in the rendering loop but has mixed results in the simulation loop. Under most circumstances a multithreaded simulation loop is a tiny bit slower due to the
+    overhead of the thread pool class. This is also made more noticable due to the demand for extra threads having an influence on the framerate of the render loop as well (whereas the single thread approach only results in slower
+    simulation update speeds and thereby choppy wasp movement). However, when the computational load of the simulation gets very high (like when there are a lot of food entities and a lot of wasp objects at the same time and
+    each wasp is searching the list for the closest food object), the multithreaded approach is way faster and ends up looking a lot smoother. Sadly, dynamically scaling the size of the thread pool does not seem to help. It seems
+    to be all or nothing.
