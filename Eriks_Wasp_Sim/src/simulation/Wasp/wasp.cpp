@@ -246,14 +246,14 @@ void Wasp::updateHP()
 // HUNGER
 void Wasp::onFoodReached()
 {
-	currentGoalFoodEntity->eaten = true;
-	Food::registerEntityEaten();
-
-	hungerSaturation += currentGoalFoodEntity->hungerPoints;
-
-	if (hungerSaturation > 100)
+	if (Simulation::attemptEatFoodMutex(currentGoalFoodEntity))
 	{
-		hungerSaturation = 100;
+		hungerSaturation += currentGoalFoodEntity->hungerPoints;
+
+		if (hungerSaturation > 100)
+		{
+			hungerSaturation = 100;
+		}
 	}
 
 	currentGoalFoodEntity = nullptr;
