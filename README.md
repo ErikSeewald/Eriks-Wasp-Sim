@@ -64,3 +64,5 @@ The Wasp-Sim makes use of multiple performance optimizations, some of which have
     simulation update speeds and thereby choppy wasp movement). However, when the computational load of the simulation gets very high (like when there are a lot of food entities and a lot of wasp objects at the same time and
     each wasp is searching the list for the closest food object), the multithreaded approach is way faster and ends up looking a lot smoother. Sadly, dynamically scaling the size of the thread pool does not seem to help. It seems
     to be all or nothing.
+  - Another quirk of thread pooling is specific to battery devices like laptops that have situational power saving modes: Using thread pooling in the simulation loop is slower than the single threaded approach when running on battery
+    but a lot faster when connected to power.
