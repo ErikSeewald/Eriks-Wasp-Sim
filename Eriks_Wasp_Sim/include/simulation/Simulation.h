@@ -37,4 +37,10 @@ namespace Simulation
 	std::chrono::duration<double>* getDeltaTime();
 
 	FoodEntity* getFirstFoodInApproxRadius(glm::vec3 position, float radius);
+
+	/**
+	* Synchronous function that locks the food mutex and checks whether the given FoodEntity has been eaten.
+	* If so, it returns false. Otherwise it sets food->eaten to true and returns true.
+	*/
+	bool attemptEatFoodMutex(FoodEntity* food);
 }

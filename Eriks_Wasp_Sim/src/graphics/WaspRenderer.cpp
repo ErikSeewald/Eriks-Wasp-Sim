@@ -3,6 +3,7 @@
 #include "SimVisualizer.h"
 #include "ModelHandler.h"
 #include "ShaderHandler.h"
+#include "ThreadPool.h"
 #include "UI.h"
 #include <thread>
 #include <mutex>
@@ -27,6 +28,8 @@ const std::string selectedWaspFragShaderFile = "selected_wasp.frag";
 //THREADED INSTANCE DATA
 std::vector<glm::mat4> wasp_instanceData;
 std::mutex wasp_instanceDataMutex;
+static const int threadPoolSize = 4;
+static ThreadPool pool(threadPoolSize);
 
 /**
 * Initializes the WaspRenderer.
@@ -53,19 +56,17 @@ void WaspRenderer::drawWasps(std::vector<Wasp>* wasps)
     wasp_instanceData.clear();
 
     // Divide wasp array into local sections and use threads to collect their data
-    static const int numThreads = 4; // performance tradeoff balance. For 100_000 slots 4 threads is best
-
     int maxIndex = WaspSlots::getMaxIndex();
-    int sectionSize = std::floor(maxIndex / numThreads);
+    int sectionSize = std::floor(maxIndex / threadPoolSize);
     std::vector<std::thread> threads;
-    for (int i = 0; i < numThreads; ++i) 
+    for (int i = 0; i < threadPoolSize; ++i) 
     {
         int start = sectionSize * i;
-        int end = i < numThreads - 1 ? sectionSize * (i + 1) : maxIndex;
-        threads.emplace_back(_collectInstanceDataThreaded, wasps, start, end);
+        int end = i < threadPoolSize - 1 ? sectionSize * (i + 1) : maxIndex;
+        pool.enqueue([start, end, &wasps] {_collectInstanceDataThreaded(wasps, start, end);});
     }
+    pool.waitFinishAll();
 
-    for (std::thread& t : threads) {t.join();}
 
     // DRAW
     ShaderHandler::drawInstanceData(&wasp_instanceData, &wasp_VAO, &wasp_instanceVBO, wasp_vertexCount, &waspShaderProgram);

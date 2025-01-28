@@ -230,6 +230,7 @@
     <ClInclude Include="..\..\include\util\JsonHandler.h" />
     <ClInclude Include="..\..\include\util\RNG.h" />
     <ClInclude Include="..\..\include\util\StringUtil.h" />
+    <ClInclude Include="..\..\include\util\ThreadPool.h" />
     <ClInclude Include="..\..\include\util\VectorMath.h" />
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +263,7 @@
     <ClCompile Include="..\..\src\util\JsonHandler.cpp" />
     <ClCompile Include="..\..\src\util\RNG.cpp" />
     <ClCompile Include="..\..\src\util\StringUtil.cpp" />
+    <ClCompile Include="..\..\src\util\ThreadPool.cpp" />
     <ClCompile Include="..\..\src\util\VectorMath.cpp" />
   </ItemGroup>
   <ItemGroup>

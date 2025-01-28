@@ -2,7 +2,9 @@
 #include "UI.h"
 #include "WaspSlots.h"
 #include "ResourceSpawner.h"
+#include "ThreadPool.h"
 #include <thread>
+#include <mutex>
 #include <iostream>
 
 using namespace std::chrono;
@@ -12,6 +14,10 @@ using Food::FoodEntity;
 //DELTA TIME
 std::chrono::duration<double> deltaTime;
 steady_clock::time_point previousTime;
+
+//THREADS
+static const int threadPoolSize = 4;
+static ThreadPool sim_pool(threadPoolSize);
 
 /**
 * Starts and runs the simulation loop.
@@ -55,14 +61,27 @@ void Simulation::startLoop() {
 
 void Simulation::updateWasps()
 {
-    //WASPS
+    //WASPS (Divide wasp array into local sections and use threads to update them)
     std::vector<Wasp>* wasps = WaspSlots::getWasps();
+
     int maxIndex = WaspSlots::getMaxIndex();
-    for (int i = 0; i < maxIndex; ++i)
+    int sectionSize = std::floor(maxIndex / threadPoolSize);
+
+    for (int i = 0; i < threadPoolSize; ++i)
     {
-        Wasp* wasp = &(*wasps)[i];
-        wasp->update();
+        int start = sectionSize * i;
+        int end = (i < threadPoolSize - 1) ? sectionSize * (i + 1) : maxIndex;
+
+        sim_pool.enqueue([start, end, &wasps] 
+        {
+            for (int j = start; j < end; ++j)
+            {
+                Wasp* wasp = &(*wasps)[j];
+                wasp->update();
+            }
+        });
     }
+    sim_pool.waitFinishAll();
 
     //SELECTED WASP
     UI::UI_STATE* uiState = UI::getUIState();
@@ -130,4 +149,27 @@ FoodEntity* Simulation::getFirstFoodInApproxRadius(glm::vec3 position, float rad
     }
 
     return nullptr;
+}
+
+
+
+/**
+* Synchronous function that locks the food mutex and checks whether the given FoodEntity has been eaten.
+* If so, it returns false. Otherwise it sets food->eaten to true and returns true.
+*/
+bool Simulation::attemptEatFoodMutex(FoodEntity* food)
+{
+    // TODO: Currently only one mutex for all food. Not sure wether the trade of for
+    // individual mutexes for individual food entites would be worth it.
+    static std::mutex foodMutex;
+
+    std::lock_guard<std::mutex> lock(foodMutex);
+    if (food->eaten)
+    { 
+        return false; 
+    }
+
+    food->eaten = true;
+    Food::registerEntityEaten();
+    return true;
 }
