@@ -40,8 +40,12 @@ By using the 'element' command (e.g., ```element position```) you can print that
 ## Performance notes
 The Wasp-Sim makes use of multiple performance optimizations, some of which have a difficult tradeoff balance. Here are a few of them along with some notes:
 * **Hardware Instancing** for rendering wasp and food entities.
-* **Memory/Cache locality**: Wasp and food entities are kept in a vector of fixed-size and are all initialized at startup. Spawning and killing them simply means activating/deactivating the already initialized objects.
+* **Memory/Cache locality**: 
+  - Wasp and food entities are kept in a vector of fixed-size and are all initialized at startup. Spawning and killing them simply means activating/deactivating the already initialized objects.
   This makes loops over large amounts of objects faster due to high levels of locality but comes with the downsides of fixed-size vectors.
+  - It is better to use a vector on the heap instead of an array despite the fixed size because having this much data constantly stored on the stack and accessed through it introduces stutter. 
+  Since the vector only grows at the start of the program and the memory stays locally fixed in one continuous block on the heap afterwards, the initialization overhead can be ignored. 
+  (At more than 100000 wasps an array can be ~20% faster, but this is not worth the extra stutter at lower amounts)
 * **Max indices**:
   - To reduce the downsides caused by the fixed-size vector optimization the Wasp-Sim makes use of variables that keep track of the highest index of activated objects within the vector.
   These indices are then used to limit loops over the vector (i.e., if the wasp vector has a size of 100000 but only the first 5000 wasps are alive, wasp_maxIndex is set to 5000 and the other slots are not iterated over).
