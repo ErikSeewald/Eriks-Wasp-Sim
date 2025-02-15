@@ -15,6 +15,12 @@ long deadCount = 0; // Total number of deaths
 // Spawning wasps means respawning and thereby 'reactivating' dead wasp objects.
 // This way the wasp data can be entirely localized within the wasps vector which means high memory/cache locality
 // and better performance.
+// 
+// Note that it is still better to use a vector on the heap instead of an array despite the fixed size
+// because having this much data constantly stored on the stack and accessed through it introduces stutter.
+// Since the vector only grows at the start of the program and the memory stays locally fixed in one 
+// continuous block on the heap afterwards, the initialization overhead can be ignored.
+// (At SLOT_COUNT > 100000 an array can be ~20% faster, but this is not worth the extra stutter at lower slot counts)
 std::vector<Wasp> wasps{};
 
 std::vector<Wasp>* WaspSlots::getWasps()
@@ -28,6 +34,9 @@ std::vector<Wasp>* WaspSlots::getWasps()
 */
 void WaspSlots::init()
 {
+    // Since std::vector always maintains locality (moves all elements to a larger 
+    // empty spot on the heap when the currently reserved space is filled),  
+    // emplace_back() can safely be used at allocation time without risk of breaking locality.
     for (int i = 0; i < SLOT_COUNT; i++)
     {
         wasps.emplace_back(Wasp(i));
