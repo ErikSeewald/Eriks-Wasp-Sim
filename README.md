@@ -40,6 +40,10 @@ By using the 'element' command (e.g., ```element position```) you can print that
 ## Performance notes
 The Wasp-Sim makes use of multiple performance optimizations, some of which have a difficult tradeoff balance. Here are a few of them along with some notes:
 * **Hardware Instancing** for rendering wasp and food entities.
+  - Additionally, some computations (e.g. transforming the wasp model based on position and viewing vector) are also only performed in the shader code on the GPU. This
+    gives a massive performance boost on computations that are well suited for the GPU and do not need to return anything to the CPU (e.g. rendering transformations for thousands of instanced wasps).
+  - To eliminate all code based on immediate rendering and fully focus on a single instanced rendering pipeline with a single .obj loader that only loads faces, debug lines connecting two points are rendered using a little workaround.
+    A line between vert A and B is actually a face **f A B B** in the .obj file. This collapses the triangle onto the line. If the mesh is drawn using wireframe mode, it looks like a normal line.
 * **Memory/Cache locality**: 
   - Wasp and food entities are kept in a vector of fixed-size and are all initialized at startup. Spawning and killing them simply means activating/deactivating the already initialized objects.
   This makes loops over large amounts of objects faster due to high levels of locality but comes with the downsides of fixed-size vectors.
@@ -70,3 +74,11 @@ The Wasp-Sim makes use of multiple performance optimizations, some of which have
     to be all or nothing.
   - Another quirk of thread pooling is specific to battery devices like laptops that have situational power saving modes: Using thread pooling in the simulation loop is slower than the single threaded approach when running on battery
     but a lot faster when connected to power.
+* **No Chunks**: Originally, I intended to make use of dynamically loaded chunks to, for example, minimize the amount of entities the code needs to loop through when finding neighbours. However, there were significant downsides that made me
+    decide against it:
+  - Dynamically growing and shrinking the list of entities within a chunk is very expensive and necessitates a datastructure that would eliminate all the benefits of locality from the earlier sections.
+  - If thousands of entities left their chunk at the same time (not very rare) and thereby caused the chunks' datastructures to be updated, the simulation ended up coming to a screeching halt until all chunks had been updated.
+  - Performance would be way too dependant on how many entities are in the same chunk.
+  - While accessing a chunk based on coordinates using an unordered map should theoretically be very fast, the reality of having to add and remove chunks from the map all the time prevents hashed access from reaching its full potential.
+    Using a static set of chunks instead of dynamically growing and shrinking the map might lead to a small improvement in this aspect, but it would also severely limit how dynamic the simulation can be.
+  - Erasing the benefits of locality and performance consistency for a small increase in performance in the best case and a huge decrease in performance (even with heavy optimization) in the worst case is simply not worth it.
