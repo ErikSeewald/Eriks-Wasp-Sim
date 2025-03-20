@@ -1,8 +1,8 @@
 #pragma once
 
-#include <chrono>
 #include "Updatable.h"
 #include "food.h"
+#include <chrono>
 #include <glm/glm.hpp>
 
 using namespace std::chrono;

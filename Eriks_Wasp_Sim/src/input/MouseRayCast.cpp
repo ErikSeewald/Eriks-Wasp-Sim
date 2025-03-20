@@ -11,9 +11,8 @@
 */
 Wasp* MouseRayCast::selectWasp(int x, int y) 
 {
-    glm::vec3 clickRay = _castClickRay(x, y);
-    glm::vec3 rayOrigin = SimVisualizer::getCamera().position;
-    glm::vec3 camDirection = SimVisualizer::getCamera().direction;
+    const Camera& camera = SimVisualizer::getCamera();
+    glm::vec3 clickRay = _castClickRay(x, y, camera);
 
     Wasp* selectedWasp{};
     double shortestDistance = std::numeric_limits<double>::infinity();
@@ -25,8 +24,8 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
         Wasp* wasp = &(*wasps)[i];
         if (!wasp->isAlive) { continue; }
 
-        glm::vec3 camToWasp = rayOrigin - wasp->position;
-        if (glm::dot(camToWasp, camDirection) > 0)
+        glm::vec3 camToWasp = camera.position - wasp->position;
+        if (glm::dot(camToWasp, camera.direction) > 0)
         {
             // Do not check wasps that are behind the camera
             continue;
@@ -55,12 +54,13 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
 *
 * @param x the x coordinate of the click
 * @param y the y coordinate of the click
+* @param camera the camera used for projection
 * @return the converted vec3 ray
 */
 #include <iostream>
-glm::vec3 MouseRayCast::_castClickRay(int x, int y)
+glm::vec3 MouseRayCast::_castClickRay(int x, int y, const Camera& camera)
 {
-    //WINDOW SIZE
+    //WINDOW SIZE AND CAMERA
     int windowWidth = glutGet(GLUT_WINDOW_WIDTH);
     int windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
 
@@ -70,18 +70,10 @@ glm::vec3 MouseRayCast::_castClickRay(int x, int y)
     ndc.y = 1.0f - (2.0f * y) / windowHeight; // convert to range [1, -1] (flipped because screen origin at top left)
     glm::vec4 rayClip = glm::vec4(ndc.x, ndc.y, -1.0f, 1.0f);
 
-    //GET PROJECTION MATRIX
-    glm::mat4 projectionMatrix{};
-    glGetFloatv(GL_PROJECTION_MATRIX, &projectionMatrix[0][0]);
-
     //RAY TO EYE COORDINATES
-    glm::vec4 rayEye = glm::inverse(projectionMatrix) * rayClip;
+    glm::vec4 rayEye = glm::inverse(camera.projection) * rayClip;
     rayEye = glm::vec4(rayEye.x, rayEye.y, -1.0, 0.0);
 
-    //GET VIEW MATRIX
-    glm::mat4 viewMatrix{};
-    glGetFloatv(GL_MODELVIEW_MATRIX, &viewMatrix[0][0]);
-
     //RAY TO WORLD COORDINATES
-    return glm::normalize(glm::inverse(viewMatrix) * rayEye);
+    return glm::normalize(glm::inverse(camera.view) * rayEye);
 }

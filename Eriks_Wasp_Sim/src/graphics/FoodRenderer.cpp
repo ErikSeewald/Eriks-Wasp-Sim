@@ -2,12 +2,14 @@
 #include "SimVisualizer.h"
 #include "ModelHandler.h"
 #include "ShaderHandler.h"
+#include "InstancedRendering.h"
 #include <vector>
 #include <iostream>
 #include <thread>
 #include <mutex>
 
 using Food::FoodEntity;
+using InstancedRendering::InstanceDataBasic;
 
 //MESH
 GLuint food_VAO;
@@ -16,6 +18,7 @@ GLuint food_EBO;
 GLuint food_instanceVBO;
 int food_vertexCount;
 const std::string modelFile = "food/Food.obj";
+const glm::vec4 foodColor = glm::vec4(0.4f, 0.1f, 0.05f, 1.0f);
 
 //SHADER
 GLuint foodShaderProgram;
@@ -23,11 +26,11 @@ const std::string foodVertShaderFile = "food.vert";
 const std::string foodFragShaderFile = "food.frag";
 
 //THREADED INSTANCE DATA
-std::vector<glm::mat4> food_instanceData;
+std::vector<InstanceDataBasic> food_instanceData;
 std::mutex food_instanceDataMutex;
 
 /**
-* Initializes the FoodRenderer.
+* Initializes the FoodRenderer. Loads models and builds shaders.
 */
 void FoodRenderer::init()
 {
@@ -36,7 +39,7 @@ void FoodRenderer::init()
         std::cerr << "Failed to load food model" << std::endl;
         exit(EXIT_FAILURE);
     }
-    ModelHandler::enableInstancing(&food_VAO, &food_instanceVBO);
+    InstancedRendering::setupInstancing<InstanceDataBasic>(food_VAO, &food_instanceVBO);
 
     foodShaderProgram = ShaderHandler::buildShaderProgram(foodVertShaderFile, foodFragShaderFile);
 }
@@ -44,7 +47,7 @@ void FoodRenderer::init()
 /**
 * Renders the food entities. Assumes glut, glew, etc. are preinitialized.
 */
-void FoodRenderer::drawFood(std::vector<FoodEntity>* foodEntities)
+void FoodRenderer::drawFood(const std::vector<FoodEntity>& foodEntities)
 {
     // COLLECT INSTANCE DATA
     food_instanceData.clear();
@@ -54,19 +57,11 @@ void FoodRenderer::drawFood(std::vector<FoodEntity>* foodEntities)
     int maxIndex = Food::getMaxIndex();
     for (int i = 0; i < maxIndex; ++i)
     {
-        FoodEntity* food = &(*foodEntities)[i];
-        if (food->eaten) { continue; }
-
-        // Optimization: Manually construct model matrix instead of using transform and rotate functions
-        // to skip any unnecessary steps.
-        glm::mat4 model(1.0f);
-        model[3][0] = food->position.x;
-        model[3][1] = food->position.y;
-        model[3][2] = food->position.z;
-
-        food_instanceData.push_back(model);
+        const FoodEntity& food = foodEntities[i];
+        if (food.eaten) { continue; }
+        food_instanceData.push_back(InstanceDataBasic{ food.position, foodColor });
     }
 
     // DRAW
-    ShaderHandler::drawInstanceData(&food_instanceData, &food_VAO, &food_instanceVBO, food_vertexCount, &foodShaderProgram);
+    InstancedRendering::drawInstanceData(food_instanceData, food_VAO, food_instanceVBO, food_vertexCount, foodShaderProgram);
 }

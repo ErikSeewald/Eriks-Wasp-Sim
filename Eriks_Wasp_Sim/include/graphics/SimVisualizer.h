@@ -12,68 +12,35 @@
 */
 namespace SimVisualizer
 {
+    const glm::vec3 upVector(0.0f, 1.0f, 0.0f);
     const glm::vec3 zeroVector(0.0f, 0.0f, 0.0f);
 
     /**
-    * Initializes freeglut with all necessary parameters.
+    * Initializes freeglut and ImGUI with all necessary parameters.
     */
-    void initGlut(int argc, char** argv);
+    void init(int argc, char** argv);
 
     /**
-    * The glut timer function for the SimVisualizer. Updates the display and input handlers.
+    * The glut timer function for the SimVisualizer. Updates the display.
     */
     void timer(int value);
 
     /**
-    * The glut reshape function for the SimVisualizer. Handles proper window-reshape modifications.
+    * The reshape function for the SimVisualizer. Handles proper window-reshape modifications
+    * and calls ImGui_ImplGLUT_ReshapeFunc because it overrides ImGui_ImplGLUT_InstallFuncs.
     */
     void reshape(int width, int height);
 
     /**
     * The main render method of the SimVisualizer. Other render calls branch from here.
-    * Assumes that 'SimVisualizer::initGlut' has already been called.
+    * Assumes that 'SimVisualizer::init' has already been called.
     */
     void render();
 
     /**
-    * Updates the glut 'camera' (gluLookAt) with the camera struct's attributes.
-    * Used by slower direct graphics functions. Shader graphics functions make use of getCamProjMatrix().
+    * Updates the camera's position and matrices based on the current user inputs.
     */
-    void updateGlutCamera();
+    void updateCamera();
 
-    /**
-    * Updates the Cameras vectors based on its position, direction, pitch and yaw.
-    */
-    void updateCameraVectors();
-
-    Camera getCamera();
-
-    glm::mat4 getCamProjMatrix();
-
-    /**
-    * Draws a 3D line between the given start and end points.
-    * 
-    * @param start - the vec3 start of the line
-    * @param end - the vec3 end of the line
-    */
-    void drawBasicLine(glm::vec3 start, glm::vec3 end);
-
-    /**
-    * Debug helper method. Draws a grid around the center of the coordinate system.
-    */
-    void drawGrid();
-
-    /**
-    * Converts degrees to radians
-    * 
-    * @return converted radians
-    */
-    float degToRad(float degrees);
-
-    /**
-    * Converts radians to degrees
-    *
-    * @return converted degrees
-    */
-    float radToDeg(float radians);
+    const Camera& getCamera();
 };

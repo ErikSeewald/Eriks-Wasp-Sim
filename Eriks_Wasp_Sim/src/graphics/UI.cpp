@@ -23,6 +23,7 @@ void UI::drawUI()
     _drawPerformanceUI();
     _drawHiveUI();
     _drawCameraUI();
+    _drawOptionsUI();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -66,13 +67,13 @@ void UI::_drawSelectedWaspUI()
                 if (uiState.selectedWasp->currentGoal != nullptr)
                 {
                     _drawVectorTable(*uiState.selectedWasp->currentGoal, "WaspGoalTable");
-                    ImGui::Checkbox("Display current goal", &uiState.drawSelectedWaspGoal);
                 }
                 
                 else
                 {
                     ImGui::Text("No current goal");
                 }
+                ImGui::Checkbox("Display current goal", &uiState.drawSelectedWaspGoal);
             }
             
         }
@@ -115,7 +116,7 @@ void UI::_drawPerformanceUI()
     static int lastUpdateTime = 0;
 
     // Initial size and position
-    const static ImVec2 initSize(150, 90);
+    const static ImVec2 initSize(150, 85);
     const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 10);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
@@ -142,7 +143,7 @@ void UI::_drawHiveUI()
 {
     // Initial size and position
     const static ImVec2 initSize(150, 85);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 110);
+    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 105);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
@@ -163,7 +164,7 @@ void UI::_drawCameraUI()
 {
     // Initial size and position
     const static ImVec2 initSize(150, 190);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 210);
+    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 200);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
@@ -180,6 +181,22 @@ void UI::_drawCameraUI()
         {
             _drawVectorTable(camera.direction, "CameraViewingVectorTable");
         }
+    }
+
+    ImGui::End();
+}
+
+void UI::_drawOptionsUI()
+{
+    // Initial size and position
+    const static ImVec2 initSize(150, 80);
+    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 400);
+    ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
+    ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
+
+    if (ImGui::Begin("Options"))
+    {
+        ImGui::Checkbox("Draw grid", &uiState.drawGrid);
     }
 
     ImGui::End();

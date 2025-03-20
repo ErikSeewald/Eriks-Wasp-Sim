@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SimVisualizer.h"
-#include <vector>
+#include "glm/ext.hpp"
 #include <string>
 
  /**
@@ -37,11 +37,4 @@ namespace ShaderHandler
     * @return the GL ID of the shader program
     */
     GLuint buildShaderProgram(const std::string& vertShaderFile, const std::string& fragShaderFile);
-
-    /**
-    * Draws the given model instance data using hardware instancing based on the given modelVAO, instanceVBO, 
-    * vertexCount and shaderProgram to use.
-    */
-    void drawInstanceData(std::vector<glm::mat4>* instanceData, GLuint* modelVAO, GLuint* instanceVBO,
-        int vertexCount, GLuint* shaderProgram);
 }

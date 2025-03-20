@@ -3,6 +3,8 @@
 in vec3 vNormal;
 out vec4 FragColor;
 
+// Frag shader for a wasp entity. S
+// Scales the constant base color by the input normal.
 void main()
 {
     vec3 normal = normalize(vNormal);

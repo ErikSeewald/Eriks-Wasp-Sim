@@ -86,7 +86,6 @@ void Wasp::update()
 	updateGoal();
 }
 
-
 /**
 * Subroutine of the udpate() function responsible for updating the current goal.
 */

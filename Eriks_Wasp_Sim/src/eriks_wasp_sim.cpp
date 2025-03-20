@@ -8,7 +8,7 @@ int main(int argc, char** argv)
 {
     std::thread simThread(Simulation::startLoop);
     std::thread consoleThread(Console::startLoop);
-    SimVisualizer::initGlut(argc, argv); 
+    SimVisualizer::init(argc, argv); 
 
     simThread.join();
     consoleThread.join();

@@ -141,6 +141,12 @@
     <ClInclude Include="..\..\include\util\ThreadPool.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\graphics\DebugRenderer.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\graphics\InstancedRendering.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
@@ -236,6 +242,12 @@
     <ClCompile Include="..\..\src\util\ThreadPool.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\graphics\DebugRenderer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\InstancedRendering.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\include\input\KeyboardHandler.h">
@@ -258,7 +270,16 @@
     <None Include="..\..\shaders\food.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\..\shaders\selected_wasp.frag">
+    <None Include="..\..\shaders\selected_entity.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\instance_color.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\line.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\instance_basic.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

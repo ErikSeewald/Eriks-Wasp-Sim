@@ -207,7 +207,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\eriks_wasp_sim.h" />
+    <ClInclude Include="..\..\include\graphics\DebugRenderer.h" />
     <ClInclude Include="..\..\include\graphics\FoodRenderer.h" />
+    <ClInclude Include="..\..\include\graphics\InstancedRendering.h" />
     <ClInclude Include="..\..\include\graphics\ModelHandler.h" />
     <ClInclude Include="..\..\include\graphics\ShaderHandler.h" />
     <ClInclude Include="..\..\include\graphics\SimVisualizer.h" />
@@ -241,7 +243,9 @@
     <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_tables.cpp" />
     <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_widgets.cpp" />
     <ClCompile Include="..\..\src\eriks_wasp_sim.cpp" />
+    <ClCompile Include="..\..\src\graphics\DebugRenderer.cpp" />
     <ClCompile Include="..\..\src\graphics\FoodRenderer.cpp" />
+    <ClCompile Include="..\..\src\graphics\InstancedRendering.cpp" />
     <ClCompile Include="..\..\src\graphics\ModelHandler.cpp" />
     <ClCompile Include="..\..\src\graphics\ShaderHandler.cpp" />
     <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp" />
@@ -271,9 +275,12 @@
     <Text Include="..\..\include\input\KeyboardHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\shaders\instance_color.frag" />
+    <None Include="..\..\shaders\line.vert" />
     <None Include="..\..\shaders\food.frag" />
     <None Include="..\..\shaders\food.vert" />
-    <None Include="..\..\shaders\selected_wasp.frag" />
+    <None Include="..\..\shaders\selected_entity.frag" />
+    <None Include="..\..\shaders\instance_basic.vert" />
     <None Include="..\..\shaders\wasp.frag" />
     <None Include="..\..\shaders\wasp.vert" />
   </ItemGroup>

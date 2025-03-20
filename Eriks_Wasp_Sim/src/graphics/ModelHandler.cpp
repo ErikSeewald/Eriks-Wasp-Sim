@@ -98,27 +98,3 @@ bool ModelHandler::loadModel(const std::string& fileName, GLuint* VAO, GLuint* V
 
     return true;
 }
-
-/**
-* Binds the given VAO and instanceVBO to GL and expands the VertexAttribArray to enable hardware instancing.
-*/
-void ModelHandler::enableInstancing(GLuint* VAO, GLuint* instanceVBO)
-{
-    glBindVertexArray(*VAO);
-    glGenBuffers(1, instanceVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, *instanceVBO);
-
-    // Set up matrix as 4 vec4 vertex attributes (columns 3, 4, 5, 6 because 0-2 are already used) for instanced rendering.
-    // Each attribute corresponds to a column of the matrix. Divisor of 1 to apply one matrix per instance.
-    for (int i = 0; i < 4; i++)
-    {
-        glEnableVertexAttribArray(3 + i);
-        glVertexAttribPointer(3 + i,
-            4, GL_FLOAT, GL_FALSE,
-            sizeof(glm::mat4),
-            (void*)(sizeof(glm::vec4) * i));
-        glVertexAttribDivisor(3 + i, 1);
-    }
-
-    glBindVertexArray(0);
-}

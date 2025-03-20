@@ -6,6 +6,7 @@
 #include "WaspRenderer.h"
 #include "FoodRenderer.h"
 #include "UI.h"
+#include "DebugRenderer.h"
 #include <iostream>
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -15,21 +16,17 @@
 Camera camera;
 
 /**
-* Initializes freeglut with all necessary parameters.
+* Initializes freeglut and ImGUI with all necessary parameters.
 */
-void SimVisualizer::initGlut(int argc, char** argv)
+void SimVisualizer::init(int argc, char** argv)
 {
     glutInit(&argc, argv);
 
     glutInitWindowSize(1280, 720);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-
     glutCreateWindow("Eriks Wasp Sim");
-    glutDisplayFunc(SimVisualizer::render);
-    glutReshapeFunc(SimVisualizer::reshape);
 
     //GLEW
-    glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
     {
         std::cerr << "Error: glewInit failed" << std::endl;
@@ -42,8 +39,11 @@ void SimVisualizer::initGlut(int argc, char** argv)
     ImGui_ImplGLUT_Init();
     ImGui_ImplGLUT_InstallFuncs();
     ImGui_ImplOpenGL3_Init("#version 130");
+    UI::getUIState()->drawGrid = true;
 
     //EVENT HANDLERS
+    //(Overwrite the ones previously installed by ImGui_ImplGLUT_InstallFuncs().
+    // If the ImGui_ImplGLUT function is also needed they need to call it themselves)
     glutKeyboardFunc(KeyboardHandler::keyboardDown);
     glutKeyboardUpFunc(KeyboardHandler::keyboardUp);
 
@@ -52,66 +52,63 @@ void SimVisualizer::initGlut(int argc, char** argv)
 
     glutMouseFunc(MouseHandler::mouseClick);
 
+    glutDisplayFunc(SimVisualizer::render);
+    glutReshapeFunc(SimVisualizer::reshape);
+
     //CAMERA
     camera.position = glm::vec3(3.0f, 3.0f, 3.0f);
     camera.direction = glm::vec3(-1.0f, 0.0f, -1.0f);
-    updateCameraVectors();
+    updateCamera();
 
     //RENDERERS
+    DebugRenderer::init();
     WaspRenderer::init();
     FoodRenderer::init();
- 
+    
     glutTimerFunc(0, timer, 0);
     glutMainLoop();
 }
 
 /**
-* The glut timer function for the SimVisualizer. Updates the display and input handlers.
+* The glut timer function for the SimVisualizer. Updates the display.
 */
 void SimVisualizer::timer(int value)
 {
-    KeyboardHandler::updateCamera(&camera);
     glutPostRedisplay();
     glutTimerFunc(16, timer, 0);
 }
 
 /**
-* The glut reshape function for the SimVisualizer. Handles proper window-reshape modifications.
+* The reshape function for the SimVisualizer. Handles proper window-reshape modifications
+* and calls ImGui_ImplGLUT_ReshapeFunc because it overrides ImGui_ImplGLUT_InstallFuncs.
 */
 void SimVisualizer::reshape(int width, int height)
 {
-    if (height == 0) height = 1;
-    float aspect_ratio = (float) width / (float) height;
-
     glViewport(0, 0, width, height);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(CameraSettings::FOV_DEGREES, aspect_ratio, CameraSettings::NEAR_CLIP, CameraSettings::FAR_CLIP);
+    ImGui_ImplGLUT_ReshapeFunc(width, height);
 }
 
 
 /**
 * The main render method of the SimVisualizer. Other render calls branch from here.
-* Assumes that 'SimVisualizer::initGlut' has already been called.
+* Assumes that 'SimVisualizer::init' has already been called.
 */
 void SimVisualizer::render()
 { 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    UI::UI_STATE* uiState = UI::getUIState();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // CAMERA
-    reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
     glEnable(GL_DEPTH_TEST);
-    updateGlutCamera();
 
     // SCENE
-    drawGrid();
+    SimVisualizer::updateCamera();
 
-    FoodRenderer::drawFood(Food::getFoodEntities());
+    if (uiState->drawGrid) { DebugRenderer::drawGrid(); }
 
-    WaspRenderer::drawWasps(WaspSlots::getWasps());
+    FoodRenderer::drawFood(*Food::getFoodEntities());
+    WaspRenderer::drawWasps(*WaspSlots::getWasps());
     WaspRenderer::drawSelectedWasp();
+
+    DebugRenderer::drawScheduledLines();
  
     // UI
     UI::drawUI();
@@ -119,159 +116,34 @@ void SimVisualizer::render()
     glutSwapBuffers();
 }
 
-
 /**
-* Updates the glut 'camera' (gluLookAt) with the camera struct's attributes.
-* Used by slower direct graphics functions. Shader graphics functions make use of getCamProjMatrix().
+* Updates the camera's position and matrices based on the current user inputs.
 */
-void SimVisualizer::updateGlutCamera()
+void SimVisualizer::updateCamera()
 {
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt(camera.position.x, camera.position.y, camera.position.z,  // Camera position
-        camera.position.x + camera.direction.x, camera.position.y + camera.direction.y, camera.position.z + camera.direction.z, // Viewing direction
-        0.0, 1.0, 0.0); // Head is up
-}
+    KeyboardHandler::updateCamera(&camera);
 
-
-/**
-* Updates the Cameras vectors based on its position, direction, pitch and yaw.
-*/
-void SimVisualizer::updateCameraVectors()
-{
-    static float pi = 3.14159265359f;
-
-    float radianYaw = camera.yaw * pi / 180.0;
-    float radianPitch = camera.pitch * pi / 180.0;
-    camera.direction.x = cos(radianYaw) * cos(radianPitch);
-    camera.direction.y = sin(radianPitch);
-    camera.direction.z = sin(radianYaw) * cos(radianPitch);
-}
-
-Camera SimVisualizer::getCamera()
-{
-    return camera;
-}
-
-glm::mat4 SimVisualizer::getCamProjMatrix()
-{
-    float pitchRad = glm::radians(camera.pitch);
-    float yawRad = glm::radians(camera.yaw);
-
-    glm::vec3 front;
-    front.x = cos(pitchRad) * cos(yawRad);
-    front.y = sin(pitchRad);
-    front.z = cos(pitchRad) * sin(yawRad);
-
-    front = glm::normalize(front);
-
-    glm::mat4 view = glm::lookAt(
-        camera.position,
-        camera.position + front,
-        glm::vec3(0.0f, 1.0f, 0.0f)
+    camera.direction = glm::vec3(
+        cos(camera.yawRad) * cos(camera.pitchRad),
+        sin(camera.pitchRad),
+        sin(camera.yawRad) * cos(camera.pitchRad)
     );
 
-    glm::mat4 projection = glm::perspective(
-        glm::radians(CameraSettings::FOV_DEGREES),
-        (float)glutGet(GLUT_WINDOW_WIDTH) / (float)glutGet(GLUT_WINDOW_HEIGHT),
+    camera.view = glm::lookAt(
+        camera.position,
+        camera.position + camera.direction,
+        SimVisualizer::upVector
+    );
+
+    camera.projection = glm::perspective(
+        CameraSettings::FOV_RADIANS,
+        (float) glutGet(GLUT_WINDOW_WIDTH) / (float) glutGet(GLUT_WINDOW_HEIGHT),
         CameraSettings::NEAR_CLIP,
         CameraSettings::FAR_CLIP
     );
-
-    return projection * view;
 }
 
-
-/**
-* Draws a 3D line between the given start and end points.
-*
-* @param start - the vec3 start of the line
-* @param end - the vec3 end of the line
-*/
-void SimVisualizer::drawBasicLine(glm::vec3 start, glm::vec3 end)
+const Camera& SimVisualizer::getCamera()
 {
-    glBegin(GL_LINES);
-    glVertex3f(start.x, start.y, start.z);
-    glVertex3f(end.x, end.y, end.z);
-    glEnd();
-}
-
-/**
-* Debug helper method. Draws a grid around the center of the coordinate system.
-*/
-void SimVisualizer::drawGrid() {
-
-    glPushMatrix();
-
-    //X Axis
-    glColor3f(1.0f, 0.0f, 0.0f);
-    drawBasicLine(SimVisualizer::zeroVector, glm::vec3(10.0f, 0.0f, 0.0f));
-
-    //Y Axis
-    glColor3f(0.0f, 1.0f, 0.0f);
-    drawBasicLine(SimVisualizer::zeroVector, glm::vec3(0.0f, 10.0f, 0.0f));
-
-    //Z Axis
-    glColor3f(0.0f, 0.0f, 1.0f);
-    drawBasicLine(SimVisualizer::zeroVector, glm::vec3(00.0f, 0.0f, 10.0f));
-
-    //GRID
-    glColor3f(0.3f, 0.3f, 0.3f);
-
-    //X - Y Plane
-    for (float i = 1.0f; i <= 10.0f; i += 1.0f)
-    {
-        drawBasicLine(glm::vec3(0.0f, i, 0.0f), glm::vec3(10.0f, i, 0.0f));
-    }
-
-    for (float i = 1.0f; i <= 10.0f; i += 1.0f)
-    {
-        drawBasicLine(glm::vec3(i, 0.0f, 0.0f), glm::vec3(i, 10.0f, 0.0f));
-    }
-
-    //Z - Y Plane
-    for (float i = 1.0f; i <= 10.0f; i += 1.0f)
-    {
-        drawBasicLine(glm::vec3(0.0f, i, 0.0f), glm::vec3(0.0f, i, 10.0f));
-    }
-
-    for (float i = 1.0f; i <= 10.0f; i += 1.0f)
-    {
-        drawBasicLine(glm::vec3(0.0f, 0.0f, i), glm::vec3(0.0f, 10.0f, i));
-    }
-
-    //X - Z Plane
-    for (float i = 1.0f; i <= 10.0f; i += 1.0f)
-    {
-        drawBasicLine(glm::vec3(i, 0.0f, 0.0f), glm::vec3(i, 0.0f, 10.f));
-    }
-
-    for (float i = 1.0f; i <= 10.0f; i += 1.0f)
-    {
-        drawBasicLine(glm::vec3(0.0f, 0.0f, i), glm::vec3(10.0f, 0.0f, i));
-    }
-
-    glPopMatrix();
-}
-
-/**
-* Converts degrees to radians
-*
-* @return converted radians
-*/
-float SimVisualizer::degToRad(float degrees)
-{
-    static const float c = 3.14159265359f / 180.0f;
-    return degrees * c;
-}
-
-/**
-* Converts radians to degrees
-*
-* @return converted degrees
-*/
-float SimVisualizer::radToDeg(float radians)
-{
-    static const float c = 180.0f / 3.14159265359f;
-    return radians * c;
+    return camera;
 }

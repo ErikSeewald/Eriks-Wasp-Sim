@@ -21,6 +21,7 @@ namespace UI
 	{
 		Wasp* selectedWasp;
 		bool drawSelectedWaspGoal;
+		bool drawGrid;
 		bool isPaused;
 	};
 
@@ -35,6 +36,8 @@ namespace UI
 	void _drawHiveUI();
 
 	void _drawCameraUI();
+
+	void _drawOptionsUI();
 
 	void _drawVectorTable(const glm::vec3& vector, const std::string& tableName);
 
