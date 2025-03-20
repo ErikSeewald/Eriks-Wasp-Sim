@@ -28,9 +28,4 @@ namespace ModelHandler
     * @return bool - success of the operation
     */
     bool loadModel(const std::string& fileName, GLuint* VAO, GLuint* VBO, GLuint* EBO, int* vertexCount);
-
-    /**
-    * Binds the given VAO and instanceVBO to GL and expands the VertexAttribArray to enable hardware instancing.
-    */
-    void enableInstancing(GLuint* VAO, GLuint* instanceVBO);
 }

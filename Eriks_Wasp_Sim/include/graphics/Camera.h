@@ -11,8 +11,11 @@ struct Camera
 	glm::vec3 position;
 	glm::vec3 direction;
 
-	float pitch = -30.0f;
-	float yaw = -130.0f;
+	glm::mat4 projection;
+	glm::mat4 view;
+
+	float pitchRad = -0.53f;
+	float yawRad = -2.35f;
 };
 
 /**
@@ -24,4 +27,5 @@ namespace CameraSettings
 	static const float NEAR_CLIP = 0.1f;
 	static const float FAR_CLIP = 500.0f;
 	static const float FOV_DEGREES = 60.0f;
+	static const float FOV_RADIANS = glm::radians(FOV_DEGREES);
 }

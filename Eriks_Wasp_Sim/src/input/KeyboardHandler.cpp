@@ -14,7 +14,7 @@ void KeyboardHandler::updateCamera(Camera* camera)
 {
     float deltaTime = ImGui::GetIO().DeltaTime;
     float cameraSpeed = 6.0f * deltaTime;
-    float angleSpeed = 120.0f * deltaTime;
+    float radAngleSpeed = 2.0f * deltaTime;
 
     if (keyStates['w'])
     {
@@ -42,30 +42,25 @@ void KeyboardHandler::updateCamera(Camera* camera)
 
     if (specialKeyStates[GLUT_KEY_UP])
     {
-        camera->pitch += angleSpeed;
-        if (camera->pitch > 89.0f) camera->pitch = 89.0f;
+        camera->pitchRad += radAngleSpeed;
+        if (camera->pitchRad > 1.55f) camera->pitchRad = 1.55f;
     }
 
     if (specialKeyStates[GLUT_KEY_DOWN])
     {
-        camera->pitch -= angleSpeed;
-        if (camera->pitch < -89.0f) camera->pitch = -89.0f;
+        camera->pitchRad -= radAngleSpeed;
+        if (camera->pitchRad < -1.55f) camera->pitchRad = -1.55f;
     }
 
     if (specialKeyStates[GLUT_KEY_LEFT])
     {
-        camera->yaw -= angleSpeed;
+        camera->yawRad -= radAngleSpeed;
     }
 
     if (specialKeyStates[GLUT_KEY_RIGHT])
     {
-        camera->yaw += angleSpeed;
+        camera->yawRad += radAngleSpeed;
     }
-
-    if (specialKeyStates[GLUT_KEY_RIGHT] || specialKeyStates[GLUT_KEY_LEFT] || specialKeyStates[GLUT_KEY_DOWN] || specialKeyStates[GLUT_KEY_UP])
-    {
-        SimVisualizer::updateCameraVectors();
-    } 
 }
 
 

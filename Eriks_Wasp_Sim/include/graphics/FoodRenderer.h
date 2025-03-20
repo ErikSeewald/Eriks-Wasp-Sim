@@ -15,10 +15,10 @@ namespace FoodRenderer
     /**
     * Renders the food entities. Assumes glut, glew, etc. are preinitialized.
     */
-    void drawFood(std::vector<FoodEntity>* foodEntities);
+    void drawFood(const std::vector<FoodEntity>& foodEntities);
 
     /**
-    * Initializes the FoodRenderer.
+    * Initializes the FoodRenderer. Loads models and builds shaders.
     */
     void init();
 }

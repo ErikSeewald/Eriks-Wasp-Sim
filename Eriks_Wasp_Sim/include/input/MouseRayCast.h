@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Wasp.h"
+#include "Camera.h"
 #include <glm/glm.hpp>
 
 /**
@@ -24,7 +25,8 @@ namespace MouseRayCast
     * 
     * @param x the x coordinate of the click
     * @param y the y coordinate of the click
+    * @param camera the camera used for projection
     * @return the converted vec3 ray
     */
-    glm::vec3 _castClickRay(int x, int y);
+    glm::vec3 _castClickRay(int x, int y, const Camera& camera);
 }

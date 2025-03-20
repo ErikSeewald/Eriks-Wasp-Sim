@@ -5,13 +5,10 @@
 #include "MouseRayCast.h"
 #include "imgui.h"
 
-// Get a reference to the ImGui MouseFunc so we can call it from our own MouseHandler
-extern void ImGui_ImplGLUT_MouseFunc(int button, int state, int x, int y);
-
 void MouseHandler::mouseClick(int button, int state, int x, int y)
 {
-    // Call the imgui MouseFunc. If the mouse event occurred inside the gui, we return afterwards.
-    // If not, then we move on to our own mouse handling functions.
+    // Call the imgui MouseFunc. If the mouse event occurred inside the gui, return afterwards.
+    // If not, then move on to the custom mouse handling functions.
     ImGui_ImplGLUT_MouseFunc(button, state, x, y);
     if (ImGui::GetIO().WantCaptureMouse)
     {
