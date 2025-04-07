@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Updatable.h"
-#include "food.h"
+#include "Food.h"
 #include <chrono>
 #include <glm/glm.hpp>
 

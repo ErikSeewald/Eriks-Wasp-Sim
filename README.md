@@ -10,9 +10,13 @@ If you want to build manually, use the Visual Studio Solution in the [vs2022](Er
 You will also need to follow the instructions in the [Dependencies](#Dependencies) subsection before building.
 
 #### Linux
-1. Begin by following the instructions in the [Dependencies](#Dependencies) subsection. Note that depending on whether you have installed some of these dependencies to your system, not all of the downloads are strictly neccessary. I would still recommend fully following the instructions.
+1. Install the required OpenGL libraries:
+    ```
+    sudo apt install libgl1-mesa-dev libglew-dev freeglut3-dev libglfw3-dev libglm-dev
+    ```
 
-2. Open the [build/cmake](Eriks_Wasp_Sim/build/cmake) directory and run the following commands:
+2. Follow the instructions in the [Dependencies](#Dependencies) subsection. Skip glew, freeglut and glm, as they were already installed in step 1.
+3. Open the [build/cmake](Eriks_Wasp_Sim/build/cmake) directory and run the following commands:
     ```
     mkdir build; cd build; cmake ..
     ```
@@ -21,23 +25,21 @@ You will also need to follow the instructions in the [Dependencies](#Dependencie
     make
     ```
 
-    You might need to install some of the dependencies on your system. CMake will inform you.
-
-3. Run executable:
+4. Run the executable:
     ```
     ./Eriks_Wasp_Sim
     ```
     (The executable needs to remain within the Eriks-Wasp-Sim project folder, otherwise it will not work)
 
 #### Dependencies
-Download the following dependencies and put them into the '/Eriks_Wasp_Sim/dependencies' directory:
+Download the following dependencies and put them into '/Eriks_Wasp_Sim/dependencies' (create the directory if it does not exist yet):
 
 - [tinyobjloader v1.0.6](https://github.com/tinyobjloader/tinyobjloader/releases/tag/v1.0.6): Put 'tiny_obj_loader.h' into '/Eriks_Wasp_Sim/dependencies'
+- [nlohmann-json v3.11.3](https://github.com/nlohmann/json/releases): Download the json.hpp file and put it into '/Eriks_Wasp_Sim/dependencies'
+- [imgui-1.90.4](https://github.com/ocornut/imgui/releases/tag/v1.90.4): Download the imgui folder and put it into '/Eriks_Wasp_Sim/dependencies'
 - [glew-2.1.0](https://sourceforge.net/projects/glew/files/glew/2.1.0/): Put the 'glew-2.1.0' directory into '/Eriks_Wasp_Sim/dependencies'
 - [freeglut](https://www.transmissionzero.co.uk/software/freeglut-devel/): Download the MinGW Package and then put the 'freeglut' directory into '/Eriks_Wasp_Sim/dependencies'
 - [glm v1.0.0](https://github.com/g-truc/glm/releases): Download the glm folder and put it into '/Eriks_Wasp_Sim/dependencies'
-- [nlohmann-json v3.11.3](https://github.com/nlohmann/json/releases): Download the json.hpp file and put it into '/Eriks_Wasp_Sim/dependencies'
-- [imgui-1.90.4](https://github.com/ocornut/imgui/releases/tag/v1.90.4): Download the imgui folder and put it into '/Eriks_Wasp_Sim/dependencies'
 
 ## Commands
 The Wasp-Sim uses a CLI that opens alongside the OpenGL window at startup. Type 'help' to see a list of available commands or look through [commands.json](Assets/Commands/Commands.json) for more information.
