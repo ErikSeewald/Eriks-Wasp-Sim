@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Wasp.h"
-#include "food.h"
+#include "Food.h"
 #include <list>
 #include <chrono>
 #include <glm/glm.hpp>

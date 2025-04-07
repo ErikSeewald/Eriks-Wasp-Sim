@@ -1,6 +1,6 @@
 #pragma once
 
-#include "food.h"
+#include "Food.h"
 #include <vector>
 #include "SimVisualizer.h"
 
