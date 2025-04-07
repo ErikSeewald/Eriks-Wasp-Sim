@@ -1,13 +1,36 @@
 # Eriks-Wasp-Sim
 This is an unrealistic wasp colony simulator that I mostly use to experiment with computational optimization.
 
-## Dependencies
-If you just want to run the program, clone the repo and use the [executable](Eriks_Wasp_Sim/build/vs2022/x64/Debug/Eriks_Wasp_Sim.exe) in the '/Eriks_Wasp_Sim/build/vs2022/x64/Debug/' directory.
+## Build instructions
 
-The executable will not work if moved out of its directory.
+#### Windows
+If you just want to run the program, clone the repo and use the [executable](Eriks_Wasp_Sim/build/vs2022/x64/Debug/Eriks_Wasp_Sim.exe) in the '/Eriks_Wasp_Sim/build/vs2022/x64/Debug/' directory. Do not move the executable to another folder, otherwise it will not work
 
+If you want to build manually, use the Visual Studio Solution in the [vs2022](Eriks_Wasp_Sim/build/vs2022) folder. 
+You will also need to follow the instructions in the [Dependencies](#Dependencies) subsection before building.
 
-If you want to compile the source code, you need to download the following dependencies and put them into the '/Eriks_Wasp_Sim/dependencies' directory:
+#### Linux
+1. Begin by following the instructions in the [Dependencies](#Dependencies) subsection. Note that depending on whether you have installed some of these dependencies to your system, not all of the downloads are strictly neccessary. I would still recommend fully following the instructions.
+
+2. Open the [build/cmake](Eriks_Wasp_Sim/build/cmake) directory and run the following commands:
+    ```
+    mkdir build; cd build; cmake ..
+    ```
+
+    ```
+    make
+    ```
+
+    You might need to install some of the dependencies on your system. CMake will inform you.
+
+3. Run executable:
+    ```
+    ./Eriks_Wasp_Sim
+    ```
+    (The executable needs to remain within the Eriks-Wasp-Sim project folder, otherwise it will not work)
+
+#### Dependencies
+Download the following dependencies and put them into the '/Eriks_Wasp_Sim/dependencies' directory:
 
 - [tinyobjloader v1.0.6](https://github.com/tinyobjloader/tinyobjloader/releases/tag/v1.0.6): Put 'tiny_obj_loader.h' into '/Eriks_Wasp_Sim/dependencies'
 - [glew-2.1.0](https://sourceforge.net/projects/glew/files/glew/2.1.0/): Put the 'glew-2.1.0' directory into '/Eriks_Wasp_Sim/dependencies'

@@ -38,10 +38,13 @@
 # Exclude dependencies
 /Eriks_Wasp_Sim/dependencies/
 
+# ImGui
+imgui.ini
+
 # Visual Studio
 .vs/
 /Eriks_Wasp_Sim/build/vs2022/.vs/
-/Eriks_Wasp_Sim/build/vs2022/x64/Debug
+/Eriks_Wasp_Sim/build/vs2022/x64/Debug/*
 /Eriks_Wasp_Sim/build/vs2022/Eriks_Wasp_Sim/
 
 !/Eriks_Wasp_Sim/build/vs2022/x64/Debug/Eriks_Wasp_Sim.exe
