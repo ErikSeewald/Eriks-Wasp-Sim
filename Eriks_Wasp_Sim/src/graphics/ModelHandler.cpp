@@ -1,4 +1,5 @@
 #include "ModelHandler.h"
+#include "DirectoryHandler.h"
 #include <iostream>
 
 #define TINYOBJLOADER_IMPLEMENTATION
@@ -7,8 +8,7 @@
 using ModelHandler::Vertex;
 
 // DIRECTORIES
-const std::string baseDir = "../../../../../Assets/Models/";
-const std::string baseDirFallback = "../../../Assets/Models/";
+const std::string baseDir = "Assets/Models/";
 
 /**
 * Loads the model corresponding to the fileName, binds it to VAO, VBO, EBO and writes
@@ -25,13 +25,10 @@ bool ModelHandler::loadModel(const std::string& fileName, GLuint* VAO, GLuint* V
     std::vector<tinyobj::material_t> materials;
     std::string err;
 
-    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, (baseDir+fileName).c_str(), baseDir.c_str()))
+    std::string baseDirPath = DirectoryHandler::appendToProjectRoot(baseDir);
+    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, (baseDirPath +fileName).c_str(), baseDirPath.c_str()))
     {
-        // FALLBACK
-        if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, (baseDirFallback + fileName).c_str(), baseDirFallback.c_str()))
-        {
-            return false;
-        }
+        return false;
     }
 
     //CONVERT DATA

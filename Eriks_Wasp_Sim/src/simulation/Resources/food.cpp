@@ -1,4 +1,5 @@
 #include "Food.h"
+#include <cstdlib>
 
 using Food::FoodEntity;
 

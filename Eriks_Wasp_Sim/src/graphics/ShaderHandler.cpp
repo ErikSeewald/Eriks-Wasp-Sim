@@ -1,4 +1,5 @@
 #include "ShaderHandler.h"
+#include "DirectoryHandler.h"
 #include "glm/ext.hpp"
 #include <fstream>
 #include <sstream>
@@ -7,8 +8,7 @@
 #include <iostream>
 
 // DIRECTORIES
-const std::string shaderDir = "../../../../shaders/";
-const std::string shaderDirFallback = "../../shaders/";
+const std::string shaderDir = "Eriks_Wasp_Sim/shaders/";
 
 /**
 * Loads a shader file into a string and returns it.
@@ -16,15 +16,11 @@ const std::string shaderDirFallback = "../../shaders/";
 */
 std::string ShaderHandler::loadShaderFile(const std::string& fileName)
 {
-    std::ifstream file(shaderDir + fileName);
+    std::string shaderDirPath = DirectoryHandler::appendToProjectRoot(shaderDir);
+    std::ifstream file(shaderDirPath + fileName);
     if (!file.is_open())
     {
-        // FALLBACK
-        file = std::ifstream(shaderDirFallback + fileName);
-        if (!file.is_open())
-        {
-            throw std::runtime_error("Failed to open shader: " + fileName);
-        }
+        throw std::runtime_error("Failed to open shader: " + fileName);
     }
 
     std::stringstream buffer;

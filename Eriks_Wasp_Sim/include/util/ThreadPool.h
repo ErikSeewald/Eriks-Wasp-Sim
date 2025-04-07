@@ -1,5 +1,6 @@
 #include <vector>
 #include <queue>
+#include <atomic>
 #include <thread>
 #include <mutex>
 #include <condition_variable>

@@ -1,0 +1,292 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\simulation">
+      <UniqueIdentifier>{87d82e11-6e05-46ed-b707-269ed601ee90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\graphics">
+      <UniqueIdentifier>{02147efa-638e-4c5c-a765-9b4c5b970cbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\simulation">
+      <UniqueIdentifier>{a2cf78a1-8718-47dc-8e56-97b47e83e8ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{1a16a564-0a1f-45f2-b219-ec5731dfff34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\input">
+      <UniqueIdentifier>{3a406578-2c88-46da-8cc1-2cc9c0018273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\input">
+      <UniqueIdentifier>{3eff1493-9ab0-40ea-9217-7f98725521ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{03043cf7-9f6b-407c-951e-5d6574fad742}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{9b9a441e-872d-42e0-8da4-69a3fce209f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\input\console">
+      <UniqueIdentifier>{7bd9114d-959e-4419-b799-43e3698300b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\input\console">
+      <UniqueIdentifier>{bfa82394-aba9-4508-9ce3-3a1f093dbec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics\imgui lib">
+      <UniqueIdentifier>{794cda46-4e9e-4c96-8c43-65dd3f0c789b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\simulation\Wasp">
+      <UniqueIdentifier>{481789a9-b2ef-4af3-9073-4e651ac35d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\simulation\Wasp">
+      <UniqueIdentifier>{0390ab42-923a-443e-b5df-70f9bd4d1ef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\simulation\Resources">
+      <UniqueIdentifier>{6ff00b9a-6b9a-426a-bee2-bd116f82ef51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\simulation\Resources">
+      <UniqueIdentifier>{b499de6e-6893-4234-b362-e4cd3d5aacfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{bc568c75-d993-4099-bab6-33c9d3adeb2b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\eriks_wasp_sim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\graphics\SimVisualizer.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Simulation.h">
+      <Filter>Header Files\simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Updatable.h">
+      <Filter>Header Files\simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\graphics\WaspRenderer.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\MouseHandler.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\MouseRayCast.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\util\JsonHandler.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\util\StringUtil.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\console\Console.h">
+      <Filter>Header Files\input\console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\console\OtherCommandHandlers.h">
+      <Filter>Header Files\input\console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\console\CommandUtil.h">
+      <Filter>Header Files\input\console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\graphics\UI.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\util\RNG.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\util\VectorMath.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\console\WaspCommandHandlers.h">
+      <Filter>Header Files\input\console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\input\console\MetaCommandHandlers.h">
+      <Filter>Header Files\input\console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Wasp\wasp.h">
+      <Filter>Header Files\simulation\Wasp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Wasp\WaspSlots.h">
+      <Filter>Header Files\simulation\Wasp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Resources\food.h">
+      <Filter>Header Files\simulation\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\graphics\FoodRenderer.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\graphics\ModelHandler.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Strategies.h">
+      <Filter>Header Files\simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simulation\Resources\ResourceSpawner.h">
+      <Filter>Header Files\simulation\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\graphics\ShaderHandler.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\util\ThreadPool.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\graphics\DebugRenderer.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\graphics\InstancedRendering.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\util\DirectoryHandler.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\eriks_wasp_sim.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\KeyboardHandler.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Simulation.cpp">
+      <Filter>Source Files\simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\WaspRenderer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\MouseHandler.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\MouseRayCast.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\JsonHandler.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\StringUtil.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\console\OtherCommandHandlers.cpp">
+      <Filter>Source Files\input\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\console\Console.cpp">
+      <Filter>Source Files\input\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\console\CommandUtil.cpp">
+      <Filter>Source Files\input\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_draw.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_tables.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_widgets.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\backends\imgui_impl_glut.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\backends\imgui_impl_opengl3.cpp">
+      <Filter>Source Files\graphics\imgui lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\UI.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\RNG.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\VectorMath.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\console\WaspCommandHandlers.cpp">
+      <Filter>Source Files\input\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\console\MetaCommandHandlers.cpp">
+      <Filter>Source Files\input\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Wasp\wasp.cpp">
+      <Filter>Source Files\simulation\Wasp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Wasp\WaspSlots.cpp">
+      <Filter>Source Files\simulation\Wasp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Resources\food.cpp">
+      <Filter>Source Files\simulation\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\FoodRenderer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\ModelHandler.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simulation\Resources\ResourceSpawner.cpp">
+      <Filter>Source Files\simulation\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\ShaderHandler.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\ThreadPool.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\DebugRenderer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\InstancedRendering.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\DirectoryHandler.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\include\input\KeyboardHandler.h">
+      <Filter>Header Files\input</Filter>
+    </Text>
+    <Text Include="..\..\include\graphics\Camera.h">
+      <Filter>Header Files\graphics</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\shaders\wasp.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\wasp.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\food.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\food.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\selected_entity.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\instance_color.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\line.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\shaders\instance_basic.vert">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

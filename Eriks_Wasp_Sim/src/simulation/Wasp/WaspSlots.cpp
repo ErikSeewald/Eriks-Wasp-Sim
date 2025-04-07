@@ -1,4 +1,5 @@
 #include "WaspSlots.h"
+#include <cstdlib>
 
 using Strategies::SpawnStrategy;
 using Strategies::KillStrategy;

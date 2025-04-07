@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{32d0c1ed-24dc-4801-84d0-cf89c18df73a}</ProjectGuid>
+    <RootNamespace>EriksWaspSim</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies\freeglut\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>..\..\include\simulation\Resources;..\..\include\util;..\..\dependencies\imgui-1.90.4;..\..\include\graphics;..\..\include\simulation\Wasp;..\..\include\simulation;..\..\include\input\console;..\..\include\input;..\..\include;..\..\dependencies;..\..\dependencies\glew-2.1.0\include</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>..\..\dependencies\freeglut\lib\x64\freeglut.lib;..\..\dependencies\glew-2.1.0\lib\Release\x64\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>..\..\dependencies\freeglut\lib\x64\freeglut.lib;..\..\dependencies\glew-2.1.0\lib\Release\x64\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>..\..\dependencies\freeglut\lib\x64\freeglut.lib;..\..\dependencies\glew-2.1.0\lib\Release\x64\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>..\..\dependencies\freeglut\lib\x64\freeglut.lib;..\..\dependencies\glew-2.1.0\lib\Release\x64\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>..\..\dependencies\freeglut\lib\x64\freeglut.lib;..\..\dependencies\glew-2.1.0\lib\Release\x64\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>..\..\dependencies\freeglut\lib\x64\freeglut.lib;..\..\dependencies\glew-2.1.0\lib\Release\x64\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\eriks_wasp_sim.h" />
+    <ClInclude Include="..\..\include\graphics\DebugRenderer.h" />
+    <ClInclude Include="..\..\include\graphics\FoodRenderer.h" />
+    <ClInclude Include="..\..\include\graphics\InstancedRendering.h" />
+    <ClInclude Include="..\..\include\graphics\ModelHandler.h" />
+    <ClInclude Include="..\..\include\graphics\ShaderHandler.h" />
+    <ClInclude Include="..\..\include\graphics\SimVisualizer.h" />
+    <ClInclude Include="..\..\include\graphics\UI.h" />
+    <ClInclude Include="..\..\include\graphics\WaspRenderer.h" />
+    <ClInclude Include="..\..\include\input\console\MetaCommandHandlers.h" />
+    <ClInclude Include="..\..\include\input\console\OtherCommandHandlers.h" />
+    <ClInclude Include="..\..\include\input\console\CommandUtil.h" />
+    <ClInclude Include="..\..\include\input\console\Console.h" />
+    <ClInclude Include="..\..\include\input\console\WaspCommandHandlers.h" />
+    <ClInclude Include="..\..\include\input\MouseHandler.h" />
+    <ClInclude Include="..\..\include\input\MouseRayCast.h" />
+    <ClInclude Include="..\..\include\simulation\Resources\food.h" />
+    <ClInclude Include="..\..\include\simulation\Resources\ResourceSpawner.h" />
+    <ClInclude Include="..\..\include\simulation\Simulation.h" />
+    <ClInclude Include="..\..\include\simulation\Strategies.h" />
+    <ClInclude Include="..\..\include\simulation\Updatable.h" />
+    <ClInclude Include="..\..\include\simulation\Wasp\wasp.h" />
+    <ClInclude Include="..\..\include\simulation\Wasp\WaspSlots.h" />
+    <ClInclude Include="..\..\include\util\DirectoryHandler.h" />
+    <ClInclude Include="..\..\include\util\JsonHandler.h" />
+    <ClInclude Include="..\..\include\util\RNG.h" />
+    <ClInclude Include="..\..\include\util\StringUtil.h" />
+    <ClInclude Include="..\..\include\util\ThreadPool.h" />
+    <ClInclude Include="..\..\include\util\VectorMath.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\backends\imgui_impl_glut.cpp" />
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui.cpp" />
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_draw.cpp" />
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_tables.cpp" />
+    <ClCompile Include="..\..\dependencies\imgui-1.90.4\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\src\eriks_wasp_sim.cpp" />
+    <ClCompile Include="..\..\src\graphics\DebugRenderer.cpp" />
+    <ClCompile Include="..\..\src\graphics\FoodRenderer.cpp" />
+    <ClCompile Include="..\..\src\graphics\InstancedRendering.cpp" />
+    <ClCompile Include="..\..\src\graphics\ModelHandler.cpp" />
+    <ClCompile Include="..\..\src\graphics\ShaderHandler.cpp" />
+    <ClCompile Include="..\..\src\graphics\SimVisualizer.cpp" />
+    <ClCompile Include="..\..\src\graphics\UI.cpp" />
+    <ClCompile Include="..\..\src\graphics\WaspRenderer.cpp" />
+    <ClCompile Include="..\..\src\input\console\MetaCommandHandlers.cpp" />
+    <ClCompile Include="..\..\src\input\console\OtherCommandHandlers.cpp" />
+    <ClCompile Include="..\..\src\input\console\CommandUtil.cpp" />
+    <ClCompile Include="..\..\src\input\console\Console.cpp" />
+    <ClCompile Include="..\..\src\input\console\WaspCommandHandlers.cpp" />
+    <ClCompile Include="..\..\src\input\KeyboardHandler.cpp" />
+    <ClCompile Include="..\..\src\input\MouseHandler.cpp" />
+    <ClCompile Include="..\..\src\input\MouseRayCast.cpp" />
+    <ClCompile Include="..\..\src\simulation\Resources\food.cpp" />
+    <ClCompile Include="..\..\src\simulation\Resources\ResourceSpawner.cpp" />
+    <ClCompile Include="..\..\src\simulation\Simulation.cpp" />
+    <ClCompile Include="..\..\src\simulation\Wasp\wasp.cpp" />
+    <ClCompile Include="..\..\src\simulation\Wasp\WaspSlots.cpp" />
+    <ClCompile Include="..\..\src\util\DirectoryHandler.cpp" />
+    <ClCompile Include="..\..\src\util\JsonHandler.cpp" />
+    <ClCompile Include="..\..\src\util\RNG.cpp" />
+    <ClCompile Include="..\..\src\util\StringUtil.cpp" />
+    <ClCompile Include="..\..\src\util\ThreadPool.cpp" />
+    <ClCompile Include="..\..\src\util\VectorMath.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\include\graphics\Camera.h" />
+    <Text Include="..\..\include\input\KeyboardHandler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\shaders\instance_color.frag" />
+    <None Include="..\..\shaders\line.vert" />
+    <None Include="..\..\shaders\food.frag" />
+    <None Include="..\..\shaders\food.vert" />
+    <None Include="..\..\shaders\selected_entity.frag" />
+    <None Include="..\..\shaders\instance_basic.vert" />
+    <None Include="..\..\shaders\wasp.frag" />
+    <None Include="..\..\shaders\wasp.vert" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
