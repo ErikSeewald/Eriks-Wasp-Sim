@@ -1,5 +1,3 @@
-#pragma once
-
 #include "SimVisualizer.h"
 #include "KeyboardHandler.h"
 #include "MouseHandler.h"

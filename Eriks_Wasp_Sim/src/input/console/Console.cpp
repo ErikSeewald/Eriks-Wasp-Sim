@@ -5,16 +5,15 @@
 #include "MetaCommandHandlers.h"
 #include "StringUtil.h"
 #include "CommandUtil.h"
+#include "DirectoryHandler.h"
 
 //PRINTS
 const std::string initPrint = "Welcome to Eriks Wasp Sim! \nType 'help' to see a list of available commands. \n";
 const std::string postCommandPrint = "\n\n$ ";
 
 //COMMANDS JSON
-const std::string baseDir = "../../../../../Assets/Commands/";
-const std::string baseDirFallback = "../../../Assets/Commands/";
+const std::string baseDir = "Assets/Commands/";
 const std::string commandsFile = baseDir + "Commands.json";
-const std::string commandsFileFallback = baseDirFallback + "Commands.json";
 
 //COMMAND HANDLERS
 CommandHandlerMap mainCommandHandlers =
@@ -38,21 +37,8 @@ const json& Console::getCommands()
 void Console::_init()
 {
     //LOAD COMMANDS JSON
-    try {
-        commands = JsonHandler::loadJson(commandsFile);
-    }
-    catch (const std::runtime_error& e)
-    {
-        //FALLBACK FILE
-        try {
-            commands = JsonHandler::loadJson(commandsFileFallback);
-        }
-        catch (const std::runtime_error& e)
-        {
-            std::cerr << "Error: " << e.what() << std::endl;
-            exit(1);
-        }
-    }
+    std::string commandsFilePath = DirectoryHandler::appendToProjectRoot(commandsFile);
+    commands = JsonHandler::loadJson(commandsFilePath);
 
     std::cout << initPrint << postCommandPrint;
 }
