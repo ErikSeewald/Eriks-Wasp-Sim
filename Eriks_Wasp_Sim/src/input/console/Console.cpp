@@ -7,6 +7,11 @@
 #include "CommandUtil.h"
 #include "DirectoryHandler.h"
 
+#if defined(__linux__) || defined(__APPLE__)
+#include <readline/readline.h>
+#include <readline/history.h>
+#endif
+
 //PRINTS
 const std::string initPrint = "Welcome to Eriks Wasp Sim! \nType 'help' to see a list of available commands. \n";
 const std::string postCommandPrint = "\n\n$ ";
@@ -40,7 +45,7 @@ void Console::_init()
     std::string commandsFilePath = DirectoryHandler::appendToProjectRoot(commandsFile);
     commands = JsonHandler::loadJson(commandsFilePath);
 
-    std::cout << initPrint << postCommandPrint;
+    std::cout << initPrint;
 }
 
 /**
@@ -51,11 +56,23 @@ void Console::startLoop()
     _init();
 
     std::string command;
-    while (true) 
+
+    while (true)
     {
-        std::getline(std::cin, command);
-        processCommand(command, mainCommandHandlers);
+#if defined(_WIN32) || defined(_WIN64)
         std::cout << postCommandPrint;
+        std::getline(std::cin, command);
+#else
+        char* line = readline(postCommandPrint.c_str());
+        if (!line) {exit(0);}
+
+        command = line;
+        free(line);
+
+        if (!command.empty()) {add_history(command.c_str());}
+#endif
+
+        processCommand(command, mainCommandHandlers);
     }
 }
 

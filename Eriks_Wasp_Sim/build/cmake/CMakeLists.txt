@@ -66,5 +66,6 @@ target_link_libraries(Eriks_Wasp_Sim
     ${GLUT_LIBRARIES}
     ${GLFW_LIBRARIES}
     imgui
+    readline
 )
 

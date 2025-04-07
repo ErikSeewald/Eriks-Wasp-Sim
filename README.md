@@ -12,7 +12,7 @@ You will also need to follow the instructions in the [Dependencies](#Dependencie
 #### Linux
 1. Install the required OpenGL libraries:
     ```
-    sudo apt install libgl1-mesa-dev libglew-dev freeglut3-dev libglfw3-dev libglm-dev
+    sudo apt install libgl1-mesa-dev libglew-dev freeglut3-dev libglfw3-dev libglm-dev libreadline-dev
     ```
 
 2. Follow the instructions in the [Dependencies](#Dependencies) subsection. Skip glew, freeglut and glm, as they were already installed in step 1.

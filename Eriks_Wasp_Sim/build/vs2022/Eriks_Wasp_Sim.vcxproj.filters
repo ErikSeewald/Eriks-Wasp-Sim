@@ -5,19 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Header Files\simulation">
-      <UniqueIdentifier>{87d82e11-6e05-46ed-b707-269ed601ee90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\graphics">
-      <UniqueIdentifier>{02147efa-638e-4c5c-a765-9b4c5b970cbd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\simulation">
       <UniqueIdentifier>{a2cf78a1-8718-47dc-8e56-97b47e83e8ce}</UniqueIdentifier>
@@ -25,14 +15,8 @@
     <Filter Include="Source Files\graphics">
       <UniqueIdentifier>{1a16a564-0a1f-45f2-b219-ec5731dfff34}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\input">
-      <UniqueIdentifier>{3a406578-2c88-46da-8cc1-2cc9c0018273}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\input">
       <UniqueIdentifier>{3eff1493-9ab0-40ea-9217-7f98725521ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\util">
-      <UniqueIdentifier>{03043cf7-9f6b-407c-951e-5d6574fad742}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\util">
       <UniqueIdentifier>{9b9a441e-872d-42e0-8da4-69a3fce209f4}</UniqueIdentifier>
@@ -40,26 +24,45 @@
     <Filter Include="Source Files\input\console">
       <UniqueIdentifier>{7bd9114d-959e-4419-b799-43e3698300b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\input\console">
-      <UniqueIdentifier>{bfa82394-aba9-4508-9ce3-3a1f093dbec3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\graphics\imgui lib">
       <UniqueIdentifier>{794cda46-4e9e-4c96-8c43-65dd3f0c789b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\simulation\Wasp">
-      <UniqueIdentifier>{481789a9-b2ef-4af3-9073-4e651ac35d18}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\simulation\Wasp">
       <UniqueIdentifier>{0390ab42-923a-443e-b5df-70f9bd4d1ef8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\simulation\Resources">
-      <UniqueIdentifier>{6ff00b9a-6b9a-426a-bee2-bd116f82ef51}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\simulation\Resources">
       <UniqueIdentifier>{b499de6e-6893-4234-b362-e4cd3d5aacfb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{bc568c75-d993-4099-bab6-33c9d3adeb2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies">
+      <UniqueIdentifier>{1dcfb1ec-97a3-41c5-9c78-5265d1e96a7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\simulation">
+      <UniqueIdentifier>{87d82e11-6e05-46ed-b707-269ed601ee90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\simulation\Wasp">
+      <UniqueIdentifier>{481789a9-b2ef-4af3-9073-4e651ac35d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\simulation\Resources">
+      <UniqueIdentifier>{6ff00b9a-6b9a-426a-bee2-bd116f82ef51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\graphics">
+      <UniqueIdentifier>{02147efa-638e-4c5c-a765-9b4c5b970cbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\input">
+      <UniqueIdentifier>{3a406578-2c88-46da-8cc1-2cc9c0018273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\input\console">
+      <UniqueIdentifier>{bfa82394-aba9-4508-9ce3-3a1f093dbec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{03043cf7-9f6b-407c-951e-5d6574fad742}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
