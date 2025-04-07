@@ -1,3 +1,0 @@
-﻿  WaspRenderer.cpp
-C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\src\graphics\WaspRenderer.cpp(69,21): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  Eriks_Wasp_Sim.vcxproj -> C:\Users\Erik\Desktop\C++ Projects\Eriks-Wasp-Sim\Eriks_Wasp_Sim\build\vs2022\x64\Debug\Eriks_Wasp_Sim.exe
