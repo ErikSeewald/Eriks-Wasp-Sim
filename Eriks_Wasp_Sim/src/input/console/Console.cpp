@@ -6,6 +6,8 @@
 #include "StringUtil.h"
 #include "CommandUtil.h"
 #include "DirectoryHandler.h"
+#include "UI.h"
+#include <csignal>
 
 #if defined(__linux__) || defined(__APPLE__)
 #include <readline/readline.h>
@@ -37,6 +39,24 @@ json commands;
 const json& Console::getCommands()
 {
     return commands;
+}
+
+/**
+* Safely frees the terminal from readline on linux.
+* Without this function the terminal can be blocked from receiving
+* input by readline even after the program has exited.
+*/
+void Console::freeTerminal()
+{
+
+#if defined(__linux__) || defined(__APPLE__)
+        rl_cleanup_after_signal();
+        rl_callback_handler_remove();
+        rl_free_line_state();
+#endif
+
+        std::cout << std::endl;
+    
 }
 
 void Console::_init()

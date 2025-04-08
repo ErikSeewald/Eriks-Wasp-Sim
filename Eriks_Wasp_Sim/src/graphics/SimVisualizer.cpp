@@ -5,11 +5,13 @@
 #include "FoodRenderer.h"
 #include "UI.h"
 #include "DebugRenderer.h"
+#include "Console.h"
 #include <iostream>
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glut.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "GL/freeglut.h"
 
 Camera camera;
 
@@ -52,6 +54,7 @@ void SimVisualizer::init(int argc, char** argv)
 
     glutDisplayFunc(SimVisualizer::render);
     glutReshapeFunc(SimVisualizer::reshape);
+    glutCloseFunc(SimVisualizer::onWindowClose);
 
     //CAMERA
     camera.position = glm::vec3(3.0f, 3.0f, 3.0f);
@@ -86,6 +89,15 @@ void SimVisualizer::reshape(int width, int height)
     ImGui_ImplGLUT_ReshapeFunc(width, height);
 }
 
+/** 
+* Handles the GLUT window close event. Calls Console::freeTerminal().
+* On linux, if the application exits without freeTerminal(), the terminal 
+* will still be captured by readline after exiting.
+*/
+void SimVisualizer::onWindowClose()
+{
+    Console::freeTerminal();
+}
 
 /**
 * The main render method of the SimVisualizer. Other render calls branch from here.

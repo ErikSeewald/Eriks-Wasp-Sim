@@ -19,8 +19,10 @@ std::string rootPath = "Not_initialized";
 */
 void DirectoryHandler::init()
 {
-    fs::path currentPath = fs::current_path();
+    fs::path startingPath = fs::current_path();
+    fs::path currentPath = startingPath;
 
+    // Try to find the root directory by walking upward
     while (true)
     {
         if (currentPath.filename() == ROOT_NAME)
@@ -28,16 +30,30 @@ void DirectoryHandler::init()
             rootPath = normalizePathDividers(currentPath.string());
             return;
         }
+
         fs::path parent = currentPath.parent_path();
 
-        // Moving up once more does not change the path -> hit the root
-        if (parent == currentPath)
+        if (parent == currentPath)  // Reached the filesystem root
         {
-            std::cerr << "Failed to find project source directory '" << ROOT_NAME << "'" << std::endl;
-            exit(EXIT_FAILURE);
+            break;
         }
+
         currentPath = parent;
     }
+
+    // Upward search failed, try recursive downward search from original path
+    for (auto& p : fs::recursive_directory_iterator(startingPath))
+    {
+        if (p.is_directory() && p.path().filename() == ROOT_NAME)
+        {
+            rootPath = normalizePathDividers(p.path().string());
+            return;
+        }
+    }
+
+    // Still not found
+    std::cerr << "Failed to find project source directory '" << ROOT_NAME << "'" << std::endl;
+    exit(EXIT_FAILURE);
 }
 
 /**
