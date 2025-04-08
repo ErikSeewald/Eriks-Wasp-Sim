@@ -15,7 +15,7 @@
 #endif
 
 //PRINTS
-const std::string initPrint = "Welcome to Eriks Wasp Sim! \nType 'help' to see a list of available commands. \n";
+const std::string initPrint = "Welcome to Erik's Wasp Sim! \nType 'help' to see a list of available commands. \n";
 const std::string postCommandPrint = "\n\n$ ";
 
 //COMMANDS JSON
