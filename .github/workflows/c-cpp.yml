@@ -25,7 +25,9 @@ jobs:
           libglfw3-dev \
           libglfw3 \
           libreadline-dev \
-          pkg-config
+          libglm-dev \
+          pkg-config \
+          unzip
 
     - name: Download third-party dependencies
       run: |
