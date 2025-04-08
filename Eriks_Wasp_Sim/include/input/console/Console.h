@@ -32,5 +32,12 @@ namespace Console
 
 	void _init();
 
+	/**
+	* Safely frees the terminal from readline on linux.
+	* Without this function the terminal can be blocked from receiving
+	* input by readline even after the program has exited.
+	*/
+	void freeTerminal();
+
 	void sendDebugMessage(const std::string& message);
 }

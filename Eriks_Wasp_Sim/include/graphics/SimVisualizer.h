@@ -31,6 +31,13 @@ namespace SimVisualizer
     */
     void reshape(int width, int height);
 
+    /** 
+    * Handles the GLUT window close event. Calls Console::freeTerminal().
+    * On linux, if the application exits without freeTerminal(), the terminal 
+    * will still be captured by readline after exiting.
+    */
+    void onWindowClose();
+
     /**
     * The main render method of the SimVisualizer. Other render calls branch from here.
     * Assumes that 'SimVisualizer::init' has already been called.
