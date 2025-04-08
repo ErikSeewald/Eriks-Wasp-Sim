@@ -27,6 +27,23 @@ jobs:
           libreadline-dev \
           pkg-config
 
+    - name: Download third-party dependencies
+      run: |
+        mkdir -p Eriks_Wasp_Sim/dependencies
+
+        # Download tinyobjloader v1.0.6
+        curl -L https://raw.githubusercontent.com/tinyobjloader/tinyobjloader/v1.0.6/tiny_obj_loader.h \
+          -o Eriks_Wasp_Sim/dependencies/tiny_obj_loader.h
+
+        # Download nlohmann-json v3.11.3
+        curl -L https://raw.githubusercontent.com/nlohmann/json/v3.11.3/single_include/nlohmann/json.hpp \
+          -o Eriks_Wasp_Sim/dependencies/json.hpp
+
+        # Download ImGui 1.90.4 and unpack it
+        curl -L https://github.com/ocornut/imgui/archive/refs/tags/v1.90.4.tar.gz | tar xz
+        mv imgui-1.90.4 Eriks_Wasp_Sim/dependencies/imgui-1.90.4
+
+
     - name: Configure CMake
       working-directory: Eriks_Wasp_Sim/build/cmake
       run: cmake -S . -B build
