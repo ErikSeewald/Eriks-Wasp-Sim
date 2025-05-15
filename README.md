@@ -5,6 +5,7 @@ This is an unrealistic wasp colony simulator that I mostly use to experiment wit
 
 #### Windows
 If you just want to run the program, clone the repo and use the [executable](Eriks_Wasp_Sim/build/vs2022/x64/Debug/Eriks_Wasp_Sim.exe) in the `/Eriks_Wasp_Sim/build/vs2022/x64/Debug/` directory. Do not move the executable to another folder, otherwise it will not work.
+Depending on your system, you might need to install Visual Studio C++ for Game Development if the executable tells you some .dll files are missing.
 
 If you want to build manually, use the Visual Studio Solution in the [vs2022](Eriks_Wasp_Sim/build/vs2022) folder. 
 You will also need to follow the instructions in the [Dependencies](#Dependencies) subsection before building.
