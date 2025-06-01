@@ -45,5 +45,5 @@ imgui.ini
 .vscode/
 
 # Cmake
-build/cmake/linux/
-build/cmake/windows/
+build/linux/
+build/windows/
