@@ -24,7 +24,7 @@ namespace ModelHandler
     * Loads the model corresponding to the fileName, binds it to VAO, VBO, EBO and writes
     * the vertex count of the model into vertexCount.
     *
-    * @param fileName The path and file name relative to the 'Assets/Models/' directory (e.g. 'modelName/modelFile.obj')
+    * @param fileName The path and file name relative to the 'assets/models/' directory (e.g. 'modelName/modelFile.obj')
     * @return bool - success of the operation
     */
     bool loadModel(const std::string& fileName, GLuint* VAO, GLuint* VBO, GLuint* EBO, int* vertexCount);

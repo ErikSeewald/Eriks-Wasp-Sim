@@ -13,7 +13,7 @@ uniform mat4 uViewProj;
 out vec3 vNormal;
 
 // Vert shader for drawing a instanced wasp entity.
-// Computes the transformation of the original wasp model (in Assets/) to match the instance position and viewing vector.
+// Computes the transformation of the original wasp model (in assets/) to match the instance position and viewing vector.
 // Passes the normal to the frag shader.
 void main()
 {

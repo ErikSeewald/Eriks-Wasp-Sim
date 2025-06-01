@@ -72,5 +72,6 @@ const json& JsonHandler::findByName(const json& findIn, const std::string& name)
     }
     catch (const json::type_error& e) {}
 
-    return json();
+    static json defaultJson = json();
+    return defaultJson;
 }

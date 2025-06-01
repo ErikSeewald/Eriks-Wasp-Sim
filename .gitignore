@@ -41,15 +41,9 @@
 # ImGui
 imgui.ini
 
-# Visual Studio
-.vs/
-/Eriks_Wasp_Sim/build/vs2022/.vs/
-/Eriks_Wasp_Sim/build/vs2022/x64/Debug/*
-/Eriks_Wasp_Sim/build/vs2022/Eriks_Wasp_Sim/
-
-!/Eriks_Wasp_Sim/build/vs2022/x64/Debug/Eriks_Wasp_Sim.exe
-!/Eriks_Wasp_Sim/build/vs2022/x64/Debug/freeglut.dll
-!/Eriks_Wasp_Sim/build/vs2022/x64/Debug/glew32.dll
+# VS Code
+.vscode/
 
 # Cmake
-/Eriks_Wasp_Sim/build/cmake/build/
+build/cmake/linux
+build/cmake/windows

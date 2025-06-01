@@ -19,7 +19,7 @@ const std::string initPrint = "Welcome to Erik's Wasp Sim! \nType 'help' to see 
 const std::string postCommandPrint = "\n\n$ ";
 
 //COMMANDS JSON
-const std::string baseDir = "Assets/Commands/";
+const std::string baseDir = "assets/commands/";
 const std::string commandsFile = baseDir + "Commands.json";
 
 //COMMAND HANDLERS

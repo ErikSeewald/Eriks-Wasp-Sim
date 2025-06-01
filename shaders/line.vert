@@ -14,7 +14,7 @@ uniform mat4 uViewProj;
 out vec4 fragColor;
 
 // Vert shader for drawing a instanced line between two points (iStart, iEnd).
-// Computes the transformation of the original line model (in Assets/) to match the intended line.
+// Computes the transformation of the original line model (in assets/) to match the intended line.
 // Passes the instance color to the frag shader.
 void main()
 {

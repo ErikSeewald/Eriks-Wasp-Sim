@@ -8,7 +8,7 @@
 #include <iostream>
 
 // DIRECTORIES
-const std::string shaderDir = "Eriks_Wasp_Sim/shaders/";
+const std::string shaderDir = "shaders/";
 
 /**
 * Loads a shader file into a string and returns it.
