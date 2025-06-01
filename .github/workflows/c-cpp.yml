@@ -47,9 +47,9 @@ jobs:
 
 
     - name: Configure CMake
-      working-directory: Eriks_Wasp_Sim/build/cmake
-      run: cmake -S . -B build
+      working-directory: build
+      run: cmake -S . -B linux
 
     - name: Build
-      working-directory: Eriks_Wasp_Sim/build/cmake
-      run: cmake --build build
+      working-directory: build
+      run: cmake --build linux
