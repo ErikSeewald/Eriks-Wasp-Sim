@@ -36,7 +36,7 @@
 *.blend1
 
 # Exclude dependencies
-/Eriks_Wasp_Sim/dependencies/
+dependencies/
 
 # ImGui
 imgui.ini
@@ -45,5 +45,5 @@ imgui.ini
 .vscode/
 
 # Cmake
-build/cmake/linux
-build/cmake/windows
+build/cmake/linux/
+build/cmake/windows/
