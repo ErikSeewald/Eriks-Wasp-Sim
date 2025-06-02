@@ -2,13 +2,10 @@
 This is an unrealistic wasp colony simulator that I mostly use to experiment with computational optimization.
 
 ## Build instructions
-
-#### Windows
-If you just want to run the program, clone the repo and use the [executable](Eriks_Wasp_Sim/build/vs2022/x64/Debug/Eriks_Wasp_Sim.exe) in the `/Eriks_Wasp_Sim/build/vs2022/x64/Debug/` directory. Do not move the executable to another folder, otherwise it will not work.
-Depending on your system, you might need to install Visual Studio C++ for Game Development if the executable tells you some .dll files are missing.
-
-If you want to build manually, use the Visual Studio Solution in the [vs2022](Eriks_Wasp_Sim/build/vs2022) folder. 
-You will also need to follow the instructions in the [Dependencies](#Dependencies) subsection before building.
+Clone the repository with a depth of 1 (or another small depth) to avoid an unnecessarily large download
+```
+git clone --depth 1 https://github.com/ErikSeewald/Eriks-Wasp-Sim.git
+```
 
 #### Linux
 1. Install the required libraries:
@@ -16,10 +13,10 @@ You will also need to follow the instructions in the [Dependencies](#Dependencie
     sudo apt install libgl1-mesa-dev libglew-dev freeglut3-dev libglfw3-dev libglm-dev libreadline-dev
     ```
 
-2. Follow the instructions in the [Dependencies](#Dependencies) subsection. Skip Skip glew, freeglut, and glm, as they were already installed in step 1.
-3. Open the [build/cmake](Eriks_Wasp_Sim/build/cmake) directory and run the following commands:
+2. Follow the instructions in the [Dependencies](#Dependencies) subsection.
+3. Open the [build](build) directory and run the following commands:
     ```
-    mkdir build; cd build; cmake ..
+    mkdir linux; cd linux; cmake ..
     ```
 
     ```
@@ -28,22 +25,19 @@ You will also need to follow the instructions in the [Dependencies](#Dependencie
 
 4. Run the executable:
     ```
-    ./Eriks_Wasp_Sim
+    ./EriksWaspSim
     ```
     (The executable needs to remain within the Eriks-Wasp-Sim project folder, otherwise it will not work)
 
 #### Dependencies
-Download the following dependencies and put them into `/Eriks_Wasp_Sim/dependencies` (create the directory if it doesn't already exist):
+Download the following dependencies and put them into `dependencies/` (create the directory if it doesn't already exist):
 
-- [tinyobjloader v1.0.6](https://github.com/tinyobjloader/tinyobjloader/releases/tag/v1.0.6): Put `tiny_obj_loader.h` into `/Eriks_Wasp_Sim/dependencies`
-- [nlohmann-json v3.11.3](https://github.com/nlohmann/json/releases): Download the `json.hpp` file and put it into `/Eriks_Wasp_Sim/dependencies`
-- [imgui-1.90.4](https://github.com/ocornut/imgui/releases/tag/v1.90.4): Download the `imgui` folder and put it into `/Eriks_Wasp_Sim/dependencies`
-- [glew-2.1.0](https://sourceforge.net/projects/glew/files/glew/2.1.0/): Put the `glew-2.1.0` directory into `/Eriks_Wasp_Sim/dependencies`
-- [freeglut](https://www.transmissionzero.co.uk/software/freeglut-devel/): Download the MinGW Package and then put the `freeglut` directory into `/Eriks_Wasp_Sim/dependencies`
-- [glm v1.0.0](https://github.com/g-truc/glm/releases): Download the `glm` folder and put it into `/Eriks_Wasp_Sim/dependencies`
+- [tinyobjloader v1.0.6](https://github.com/tinyobjloader/tinyobjloader/releases/tag/v1.0.6): Put `tiny_obj_loader.h` into `dependencies/`
+- [nlohmann-json v3.11.3](https://github.com/nlohmann/json/releases): Download the `json.hpp` file and put it into `dependencies/`
+- [imgui-1.90.4](https://github.com/ocornut/imgui/releases/tag/v1.90.4): Download the `imgui` folder and put it into `dependencies/`
 
 ## Commands
-The Wasp-Sim uses a CLI that opens alongside the OpenGL window at startup. Type 'help' to see a list of available commands or look through [commands.json](Assets/Commands/Commands.json) for more information.
+The Wasp-Sim uses a CLI that opens alongside the OpenGL window at startup. Type 'help' to see a list of available commands or look through [commands.json](assets/commands/Commands.json) for more information.
 
 Each command has the following attributes: 
 - Name and explanation, which are printed by the 'help' command
@@ -91,7 +85,7 @@ The Wasp-Sim makes use of multiple performance optimizations, some of which have
 * **Threading**: Not only does the OpenGL code run on a different thread than the simulation code, both of these threads also occasionally spawn more child threads.
   - The cpu needs to collect matrix information before sending it off to the gpu for hardware instancing. This is done with multiple threads looping over sections of the aforementioned localized entity vectors.
     Usually, dividing the task into 4 threads yields the best results, but that is highly situational.
-  - Threading is achieved using a custom [ThreadPool](Eriks_Wasp_Sim/include/util/ThreadPool.h) class. Instead of creating new threads each time they are used, a pool of threads is constantly waiting (BLOCKED) for new tasks
+  - Threading is achieved using a custom [ThreadPool](src/util/ThreadPool.h) class. Instead of creating new threads each time they are used, a pool of threads is constantly waiting (BLOCKED) for new tasks
     that can be enqueued
   - For now it seems that multithreading is hugely beneficial in the rendering loop but has mixed results in the simulation loop. Under most circumstances a multithreaded simulation loop is a tiny bit slower due to the
     overhead of the thread pool class. This is also made more noticable due to the demand for extra threads having an influence on the framerate of the render loop as well (whereas the single thread approach only results in slower
