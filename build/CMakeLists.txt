@@ -3,6 +3,10 @@ cmake_policy(SET CMP0072 NEW) # Use newer OpenGL instead of legacy
 set(CMAKE_CXX_STANDARD 17)
 
 
+# ---DEBUG---
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+
 # ---PROJECT---
 project(EriksWaspSim)
 set(PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/..")
