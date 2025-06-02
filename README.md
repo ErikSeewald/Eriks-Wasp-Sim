@@ -6,11 +6,6 @@ Clone the repository with a depth of 1 (or another small depth) to avoid an unne
 ```
 git clone --depth 1 https://github.com/ErikSeewald/Eriks-Wasp-Sim.git
 ```
-#### Windows
-If you just want to run the program, use the [executable](Eriks_Wasp_Sim/build/windows/Eriks_Wasp_Sim.exe) directory. Do not move the executable to another folder.
-
-If you want to build manually, use the Visual Studio files in the [build/windows](Eriks_Wasp_Sim/build/windows) directory. 
-You will also need to follow the instructions in the [Dependencies](#Dependencies) subsection before building.
 
 #### Linux
 1. Install the required libraries:
@@ -40,11 +35,6 @@ Download the following dependencies and put them into `dependencies/` (create th
 - [tinyobjloader v1.0.6](https://github.com/tinyobjloader/tinyobjloader/releases/tag/v1.0.6): Put `tiny_obj_loader.h` into `dependencies/`
 - [nlohmann-json v3.11.3](https://github.com/nlohmann/json/releases): Download the `json.hpp` file and put it into `dependencies/`
 - [imgui-1.90.4](https://github.com/ocornut/imgui/releases/tag/v1.90.4): Download the `imgui` folder and put it into `dependencies/`
-
-Windows only:
-- [glew-2.1.0](https://sourceforge.net/projects/glew/files/glew/2.1.0/): Put the `glew-2.1.0` directory into `dependencies/`
-- [freeglut](https://www.transmissionzero.co.uk/software/freeglut-devel/): Download the MinGW Package and then put the `freeglut` directory into `dependencies`
-- [glm v1.0.0](https://github.com/g-truc/glm/releases): Download the `glm` folder and put it into `dependencies`
 
 ## Commands
 The Wasp-Sim uses a CLI that opens alongside the OpenGL window at startup. Type 'help' to see a list of available commands or look through [commands.json](assets/commands/Commands.json) for more information.
