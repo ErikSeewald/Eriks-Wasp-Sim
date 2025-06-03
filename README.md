@@ -2,11 +2,6 @@
 This is an unrealistic wasp colony simulator that I mostly use to experiment with computational optimization.
 
 ## Build instructions
-Clone the repository with a depth of 1 (or another small depth) to avoid an unnecessarily large download
-```
-git clone --depth 1 https://github.com/ErikSeewald/Eriks-Wasp-Sim.git
-```
-
 #### Linux
 1. Install the required libraries:
     ```
