@@ -19,7 +19,6 @@ void ResourceSpawner::update(std::chrono::duration<double>* deltaTime)
 }
 
 
-#include <iostream>
 void ResourceSpawner::updateFood(std::chrono::duration<double>* deltaTime)
 {
     static double timeAccumulator = 0.0;
