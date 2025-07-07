@@ -16,6 +16,7 @@ using ResourceSpawner::ResourceSettings;
 //-------------------------------------
 //----------------SPAWN----------------
 //-------------------------------------
+
 void OtherCommandHandlers::commandSpawn(const std::string& subcommand)
 {
     std::string firstWord = StringUtil::getFirstWord(subcommand);
@@ -127,6 +128,7 @@ void OtherCommandHandlers::commandSpawn(const std::string& subcommand)
 //-------------------------------------
 //----------------KILL----------------
 //-------------------------------------
+
 void OtherCommandHandlers::commandKill(const std::string& subcommand)
 {
     KillStrategy strategy{};
@@ -205,6 +207,7 @@ void OtherCommandHandlers::commandKill(const std::string& subcommand)
 //-------------------------------------
 //----------RESOURCE SETTINGS----------
 //-------------------------------------
+
 static const std::set<std::string> floatValueSettings = {"foodSpawnedPerSecond", "foodSpawnRadius"};
 
 void OtherCommandHandlers::commandResourceSettings(const std::string& subcommand)

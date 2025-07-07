@@ -125,9 +125,10 @@ std::chrono::duration<double>* Simulation::getDeltaTime()
     return &deltaTime;
 }
 
-// TODO: Currently horribly inefficient. Fix this
 FoodEntity* Simulation::getFirstFoodInApproxRadius(glm::vec3 position, float radius)
 {
+    // TODO: Currently horribly inefficient. Fix this
+
     // Bounding box for radius approximation
     glm::vec3 minBound = position - glm::vec3(radius);
     glm::vec3 maxBound = position + glm::vec3(radius);

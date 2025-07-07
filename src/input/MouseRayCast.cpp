@@ -57,7 +57,6 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
 * @param camera the camera used for projection
 * @return the converted vec3 ray
 */
-#include <iostream>
 glm::vec3 MouseRayCast::_castClickRay(int x, int y, const Camera& camera)
 {
     //WINDOW SIZE AND CAMERA

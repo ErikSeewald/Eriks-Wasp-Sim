@@ -1,0 +1,207 @@
+[settings]
+target = "/home/erik/Desktop/Eriks-Wasp-Sim/src"
+match_extensions = [
+    "h",
+    "c",
+    "hpp",
+    "cc",
+    "cpp",
+]
+mode = "MATCH_FUNCTION_DOCS"
+ignore = []
+
+[[filegroup]]
+name = "othercommandhandlers"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/console/OtherCommandHandlers.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/console/OtherCommandHandlers.h",
+]
+
+[[filegroup]]
+name = "rng"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/RNG.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/RNG.cpp",
+]
+
+[[filegroup]]
+name = "foodrenderer"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/FoodRenderer.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/FoodRenderer.h",
+]
+
+[[filegroup]]
+name = "waspslots"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/simulation/Wasp/WaspSlots.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/simulation/Wasp/WaspSlots.cpp",
+]
+
+[[filegroup]]
+name = "directoryhandler"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/DirectoryHandler.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/DirectoryHandler.cpp",
+]
+
+[[filegroup]]
+name = "simvisualizer"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/SimVisualizer.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/SimVisualizer.h",
+]
+
+[[filegroup]]
+name = "ui"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/UI.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/UI.h",
+]
+
+[[filegroup]]
+name = "wasprenderer"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/WaspRenderer.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/WaspRenderer.h",
+]
+
+[[filegroup]]
+name = "instancedrendering"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/InstancedRendering.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/InstancedRendering.cpp",
+]
+
+[[filegroup]]
+name = "food"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/simulation/Resources/Food.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/simulation/Resources/Food.cpp",
+]
+
+[[filegroup]]
+name = "mousehandler"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/MouseHandler.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/MouseHandler.cpp",
+]
+
+[[filegroup]]
+name = "console"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/console/Console.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/console/Console.h",
+]
+
+[[filegroup]]
+name = "resourcespawner"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/simulation/Resources/ResourceSpawner.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/simulation/Resources/ResourceSpawner.cpp",
+]
+
+[[filegroup]]
+name = "eriks_wasp_sim"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/eriks_wasp_sim.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/eriks_wasp_sim.h",
+]
+
+[[filegroup]]
+name = "mouseraycast"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/MouseRayCast.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/MouseRayCast.h",
+]
+
+[[filegroup]]
+name = "metacommandhandlers"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/console/MetaCommandHandlers.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/console/MetaCommandHandlers.h",
+]
+
+[[filegroup]]
+name = "waspcommandhandlers"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/console/WaspCommandHandlers.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/console/WaspCommandHandlers.cpp",
+]
+
+[[filegroup]]
+name = "simulation"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/simulation/Simulation.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/simulation/Simulation.cpp",
+]
+
+[[filegroup]]
+name = "wasp"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/simulation/Wasp/Wasp.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/simulation/Wasp/Wasp.cpp",
+]
+
+[[filegroup]]
+name = "shaderhandler"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/ShaderHandler.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/ShaderHandler.h",
+]
+
+[[filegroup]]
+name = "jsonhandler"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/JsonHandler.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/JsonHandler.h",
+]
+
+[[filegroup]]
+name = "modelhandler"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/ModelHandler.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/ModelHandler.cpp",
+]
+
+[[filegroup]]
+name = "vectormath"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/VectorMath.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/VectorMath.h",
+]
+
+[[filegroup]]
+name = "threadpool"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/ThreadPool.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/ThreadPool.cpp",
+]
+
+[[filegroup]]
+name = "stringutil"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/StringUtil.h",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/util/StringUtil.cpp",
+]
+
+[[filegroup]]
+name = "keyboardhandler"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/KeyboardHandler.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/KeyboardHandler.h",
+]
+
+[[filegroup]]
+name = "debugrenderer"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/DebugRenderer.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/graphics/DebugRenderer.h",
+]
+
+[[filegroup]]
+name = "commandutil"
+files = [
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/console/CommandUtil.cpp",
+    "/home/erik/Desktop/Eriks-Wasp-Sim/src/input/console/CommandUtil.h",
+]

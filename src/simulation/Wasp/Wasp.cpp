@@ -123,7 +123,9 @@ void Wasp::updateSpeeds()
 	}
 }
 
+
 // POSITION
+
 /**
 * Updates the Wasp's position based on its current state
 */
@@ -148,7 +150,9 @@ void Wasp::updatePosition()
 	}
 }
 
+
 // MOVEMENT
+
 /**
 * Updates the Wasp's viewingVector based on its current state
 */
@@ -218,7 +222,9 @@ void Wasp::turnTowardsGoal()
 	
 }
 
+
 //HEALTH
+
 /**
 * Kills the wasp. Until this wasp is respawned, isAlive will be false.
 * Dead wasp objects are kept in memory but are no longer updated or rendered.
@@ -242,7 +248,9 @@ void Wasp::updateHP()
 	}
 }
 
+
 // HUNGER
+
 void Wasp::onFoodReached()
 {
 	if (Simulation::attemptEatFoodMutex(currentGoalFoodEntity))

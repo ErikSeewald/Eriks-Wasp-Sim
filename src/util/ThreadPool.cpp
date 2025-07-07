@@ -44,7 +44,7 @@ void ThreadPool::enqueue(std::function<void()> job)
 }
 
 
-/**S
+/**
 * Waits until all jobs in the queue are finished.
 */
 void ThreadPool::waitFinishAll()
@@ -68,8 +68,9 @@ void ThreadPool::_workerLoop()
     {
         // LOCKED ACQUIRE JOB LOGIC
         {
-            // Wait until new job or shutdown
             std::unique_lock<std::mutex> lock(queueMutex);
+
+            // Wait until new job or shutdown
             jobAvailableCond.wait(lock, [this]
             {
                 return !jobs.empty() || shutDown;

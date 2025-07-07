@@ -42,7 +42,9 @@ class Wasp : Updatable
 		*/
 		void updateGoal();
 
+
 		// ---MOVEMENT---
+
 		glm::vec3 position;
 		glm::vec3 viewingVector;
 
@@ -50,7 +52,9 @@ class Wasp : Updatable
 		float turnSpeed; // speed of rotating around the y axis
 		float ascendSpeed; // speed of movement along the y axis
 
+
 		// ---HEALTH---
+
 		bool isAlive;
 		int MAX_HP;
 		int hp;
@@ -61,7 +65,9 @@ class Wasp : Updatable
 		*/
 		void kill();
 
+
 		// ---HUNGER---
+
 		int MAX_HUNGER_SATURATION;
 		int hungerSaturation;
 
@@ -80,7 +86,9 @@ class Wasp : Updatable
 
 		void updateSpeeds();
 
+
 		// ---POSITION---
+
 		/**
 		* Updates the Wasp's position based on its current state
 		*/
@@ -95,10 +103,14 @@ class Wasp : Updatable
 
 		void turnTowardsGoal();
 
+
 		// ---HEALTH---
+
 		void updateHP();
 
+		
 		// ---HUNGER---
+
 		const double secondsBetweenHungerDecreases = 5.0;
 		steady_clock::time_point lastHungerDecrease;
 
