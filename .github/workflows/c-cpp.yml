@@ -13,6 +13,19 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install rust (for docwen)
+      uses: actions-rs/toolchain@v1
+      with:
+        tooolchain: stable
+        profile: minimal
+        override: true
+
+    - name: Install docwen and run check
+      run: |
+        cargo install --git https://github.com/ErikSeewald/docwen --force
+        docwen update
+        docwen check
+
     - name: Install dependencies
       run: |
         sudo apt-get update
