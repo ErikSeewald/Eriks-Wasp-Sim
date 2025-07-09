@@ -17,7 +17,7 @@ using Food::FoodEntity;
 namespace Simulation 
 {
 	/**
-	* Starts and runs the simulation loop.
+	* Mismatch test!
 	*/
 	void startLoop();
 
