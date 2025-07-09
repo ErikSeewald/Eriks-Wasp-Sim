@@ -16,7 +16,7 @@ jobs:
     - name: Install rust (for docwen)
       uses: actions-rs/toolchain@v1
       with:
-        tooolchain: stable
+        toolchain: stable
         profile: minimal
         override: true
 
