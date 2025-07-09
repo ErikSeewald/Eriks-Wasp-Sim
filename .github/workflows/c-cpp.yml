@@ -20,11 +20,11 @@ jobs:
         profile: minimal
         override: true
 
-    - name: Install docwen and run check
-      run: |
-        cargo install --git https://github.com/ErikSeewald/docwen --force
-        docwen update
-        docwen check
+    - name: Install docwen
+      run: cargo install --git https://github.com/ErikSeewald/docwen --force
+
+    - name: docwen check
+      run: docwen check
 
     - name: Install dependencies
       run: |
