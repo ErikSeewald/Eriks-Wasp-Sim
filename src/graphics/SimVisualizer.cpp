@@ -76,7 +76,7 @@ void SimVisualizer::init(int argc, char** argv)
 void SimVisualizer::timer(int value)
 {
     glutPostRedisplay();
-    glutTimerFunc(16, timer, 0);
+    glutTimerFunc(15, timer, 0);
 }
 
 /**

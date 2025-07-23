@@ -33,7 +33,7 @@ const glm::vec4 goalVecColor = glm::vec4(0.2f, 0.5f, 1.0f, 1.0f);
 //THREADED INSTANCE DATA
 std::vector<InstanceDataWasp> wasp_instanceData;
 std::mutex wasp_instanceDataMutex;
-static const int threadPoolSize = 4;
+static const int threadPoolSize = ThreadPool::choosePoolSize();
 static ThreadPool pool(threadPoolSize);
 
 /**
@@ -57,11 +57,15 @@ void WaspRenderer::init()
 */
 void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
 {
-    wasp_instanceData.clear();
     std::atomic<size_t> instanceIndex(0); // Thread safe index into wasp_instanceData
 
     int maxIndex = WaspSlots::getMaxIndex();
     wasp_instanceData.resize(maxIndex);
+
+    // Note: Updating wasp_instanceData like this every frame ends up being better than having it updated by
+    // the simulation threads whenever it changes and letting the shader check isAlive. 
+    // It only frees up some time on devices with dedicated GPUs, but not enough to be worth it. 
+    // On devices with integrated GPUs that approach is actually slower.
 
     // Use threads to collect the necessary data for hardware instancing and safely insert it into wasp_instanceData. 
     // A single thread works on section of the wasps vector defined by the start and end indices.

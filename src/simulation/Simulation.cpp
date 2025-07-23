@@ -16,14 +16,14 @@ std::chrono::duration<double> deltaTime;
 steady_clock::time_point previousTime;
 
 //THREADS
-static const int threadPoolSize = 4;
+static const int threadPoolSize = ThreadPool::choosePoolSize();
 static ThreadPool sim_pool(threadPoolSize);
 
 /**
 * Starts and runs the simulation loop.
 */
-void Simulation::startLoop() {
-
+void Simulation::startLoop() 
+{
     _loopInit();
 
     static const double secondsBetweenUpdates = 1.0 / 60.0;

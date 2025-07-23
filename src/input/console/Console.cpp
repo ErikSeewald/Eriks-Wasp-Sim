@@ -55,7 +55,7 @@ void Console::freeTerminal()
         rl_free_line_state();
 #endif
 
-        std::cout << std::endl;
+    std::cout << std::endl;
     
 }
 
@@ -66,6 +66,10 @@ void Console::_init()
     commands = JsonHandler::loadJson(commandsFilePath);
 
     std::cout << initPrint;
+
+#if defined(__linux__) || defined(__APPLE__)
+    rl_catch_signals = 0; // Disables readline's signal handlers
+#endif
 }
 
 /**
@@ -94,6 +98,8 @@ void Console::startLoop()
 
         processCommand(command, mainCommandHandlers);
     }
+
+    freeTerminal();
 }
 
 /**

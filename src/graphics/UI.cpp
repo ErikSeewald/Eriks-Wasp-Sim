@@ -111,7 +111,6 @@ void UI::_drawSelectedWaspUI()
 
 void UI::_drawPerformanceUI()
 {
-    // Fps counter
     static float fps = 0.0f;
     static int lastUpdateTime = 0;
 
@@ -123,7 +122,7 @@ void UI::_drawPerformanceUI()
 
     if (ImGui::Begin("Performance"))
     {
-        // only sample framerate every 500 ms
+        // only sample framerate/frametime every 500 ms
         int currentTime = glutGet(GLUT_ELAPSED_TIME);
         if (currentTime - lastUpdateTime > 500)
         {

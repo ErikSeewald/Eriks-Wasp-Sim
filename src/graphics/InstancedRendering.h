@@ -1,3 +1,5 @@
+#pragma once
+
 #include "SimVisualizer.h"
 #include <vector>
 

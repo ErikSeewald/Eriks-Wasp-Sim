@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Wasp.h"
 #include "Simulation.h"
 

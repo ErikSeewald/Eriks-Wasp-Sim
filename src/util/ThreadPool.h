@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <queue>
 #include <atomic>
@@ -32,7 +34,14 @@ class ThreadPool
         */
         void waitFinishAll();
 
+        /** 
+         * Chooses a decent pool size based on the number of available hardware threads.
+         * Never maxes out available hardware threads.
+         */
+        static inline size_t choosePoolSize() {return std::max((std::thread::hardware_concurrency() - hw_threads_assigned) / 2 - 1u, 1u);}
+
     private:
+        static inline unsigned int hw_threads_assigned;
 
         /**
         * The loop that is run by each worker thread. Waits for new jobs, takes care of them

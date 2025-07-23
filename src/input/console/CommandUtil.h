@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Simulation.h"
 
 #include "json.hpp"
