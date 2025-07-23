@@ -122,7 +122,7 @@ void UI::_drawPerformanceUI()
 
     if (ImGui::Begin("Performance"))
     {
-        // only sample framerate/frametime every 500 ms
+        // only sample framerate every 500 ms
         int currentTime = glutGet(GLUT_ELAPSED_TIME);
         if (currentTime - lastUpdateTime > 500)
         {
