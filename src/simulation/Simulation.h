@@ -32,12 +32,21 @@ namespace Simulation
 	
 	/**
 	* Returns the simulations's last delta time
-	* 
-	* @return the simulation's last delta time
 	*/
 	std::chrono::duration<double>* getDeltaTime();
 
-	FoodEntity* getFirstFoodInApproxRadius(glm::vec3 position, float radius);
+	/**
+	* Returns the last cached steady_clock::now() call.
+	* Updated every tick of the simulation.
+	* Useful for having one uniform time_point that all entities on on tick adhere too. 
+	* Also faster.
+	*/
+	std::chrono::steady_clock::time_point* getCachedTimePoint();
+
+	/**
+	* Returns a random food entity that has not been eaten. Returns nullptr if no such entity exists.
+	*/
+	FoodEntity* getRandomAvailableFood();
 
 	/**
 	* Synchronous function that locks the food mutex and checks whether the given FoodEntity has been eaten.

@@ -4,6 +4,8 @@
 #include "VectorMath.h"
 #include "WaspSlots.h"
 
+
+
 /**
 * Constructs the wasp object and assigns it the given w_Index (which indicates its position in the wasp vector).
 * By default the wasp is constructed with isAlive = false.
@@ -23,8 +25,6 @@ Wasp::Wasp() : w_Index(-1)
 
 void Wasp::initialize()
 {
-	deltaTime = Simulation::getDeltaTime();
-
 	// POSITION
 	position = glm::vec3(0, 0, 0);
 
@@ -45,7 +45,6 @@ void Wasp::initialize()
 	// HUNGER
 	MAX_HUNGER_SATURATION = 100;
 	hungerSaturation = MAX_HUNGER_SATURATION;
-	lastHungerDecrease = steady_clock::now();
 }
 
 /**
@@ -58,81 +57,92 @@ void Wasp::respawn()
 }
 
 /**
+* Kills the wasp. Until this wasp is respawned, isAlive will be false.
+* Dead wasp objects are kept in memory but are no longer updated or rendered.
+*/
+void Wasp::kill()
+{
+	hp = 0;
+	isAlive = false;
+}
+
+
+void Wasp::onFoodReached()
+{
+	if (Simulation::attemptEatFoodMutex(currentGoalFoodEntity))
+	{
+		hungerSaturation += currentGoalFoodEntity->hungerPoints;
+
+		if (hungerSaturation > 100)
+		{
+			hungerSaturation = 100;
+		}
+	}
+
+	currentGoalFoodEntity = nullptr;
+}
+
+/**
 * Implementation/Override of the 'Updatable' class update method. Updates the wasps state in the simulation.
 */
 void Wasp::update()
 {
-	if (!isAlive)
-	{
-		return;
-	}
+	// Note: Instead of breaking up a lot of this code into smaller, more focused functions and using the 'inline' keyword,
+	// I chose to actually inline them to have tighter control, since this update logic is one of the most performance
+	// critial parts of the simulation. This does come at a cost of 'cleanliness' of course, but oh well.
 
+	if (!isAlive) { return; }
 	if (hp <= 0)
 	{
 		isAlive = false;
 		WaspSlots::registerDeath();
 		return;
 	}
+	double deltaTime = Simulation::getDeltaTime()->count();
 
-	deltaTime = Simulation::getDeltaTime();
 
-	updateSpeeds();
-	updatePosition();
-	updateViewingVector();
-
-	updateHunger();
-	updateHP();
-
-	updateGoal();
-}
-
-/**
-* Subroutine of the udpate() function responsible for updating the current goal.
-*/
-void Wasp::updateGoal()
-{
-	// FOOD GOAL JUST EATEN
+	// --- GOAL ---
+	// Food goal has been eaten
 	if (currentGoalFoodEntity != nullptr && currentGoalFoodEntity->eaten)
 	{
 		currentGoalFoodEntity = nullptr;
 		currentGoal = nullptr;
 	}
 
-	// RANDOM UPDATE
-	if (hungerSaturation < MAX_HUNGER_SATURATION && RNG::randMod(120) == 0)
+	// Random chance to check for food goal
+	if (hungerSaturation < MAX_HUNGER_SATURATION && RNG::randMod(50) == 1)
 	{
-		FoodEntity* food = Simulation::getFirstFoodInApproxRadius(position, 5);
-		currentGoalFoodEntity = food;
+		// Randomly target goal. If it is closer than the current goal, switch to it.
+		// Not realistic behaviour but interesting and much more performance efficient than
+		// having all wasps constantly check all food.
+		FoodEntity* food = Simulation::getRandomAvailableFood();
 		if (food != nullptr)
 		{
-			currentGoal = &food->position;
+			if (currentGoal == nullptr || glm::length(position - food->position) < glm::length(position - *currentGoal))
+			{
+				currentGoalFoodEntity = food;
+				currentGoal = &food->position;
+			}
 		}
 	}
-}
-
-void Wasp::updateSpeeds()
-{
-	if (currentGoal != nullptr)
-	{
-		turnTowardsGoal();
-	}
-
-	else
-	{
-		lookAroundRandomly();
-	}
-}
 
 
-// POSITION
+	// --- SPEEDS ---
+	if (currentGoal != nullptr) { turnTowardsGoal(); }
+	else { lookAroundRandomly(deltaTime); }
 
-/**
-* Updates the Wasp's position based on its current state
-*/
-void Wasp::updatePosition()
-{
-	float speedMultiplier = flyingSpeed * deltaTime->count();
 
+	// --- VIEWING VECTOR ---
+	float theta = turnSpeed * deltaTime; // Rotate around y axis
+	glm::vec3 tempVV = viewingVector;
+	viewingVector.x = tempVV.x * cos(theta) + tempVV.z * sin(theta);
+	viewingVector.z = -tempVV.x * sin(theta) + tempVV.z * cos(theta);
+
+	viewingVector.y = ascendSpeed; // Fly up or down
+
+
+	// --- POSITION ---
+	float speedMultiplier = flyingSpeed * deltaTime;
 	position.x += viewingVector.x * speedMultiplier;
 	position.y += viewingVector.y * speedMultiplier;
 	position.z += viewingVector.z * speedMultiplier;
@@ -141,40 +151,31 @@ void Wasp::updatePosition()
 	if (currentGoal != nullptr && glm::length(*currentGoal - position) < 1.5)
 	{
 		currentGoal = nullptr; 
-
-		//FOOD
 		if (currentGoalFoodEntity != nullptr)
 		{
 			onFoodReached();
 		}
 	}
+
+
+	// --- RESOURCES ---
+	std::chrono::steady_clock::time_point* now = Simulation::getCachedTimePoint();
+
+	if (*now - lastResourceTick >= RESOURCE_TICK_INTERVAL)
+	{
+		lastResourceTick = *now;
+
+		if (hungerSaturation > 0) { hungerSaturation--; }
+		else if (hp >0) { hp--; }
+	}
 }
 
-
-// MOVEMENT
-
-/**
-* Updates the Wasp's viewingVector based on its current state
-*/
-void Wasp::updateViewingVector()
-{
-	// ROTATE AROUND Y AXIS
-	float theta = turnSpeed * deltaTime->count();
-
-	glm::vec3 tempVV = viewingVector;
-	viewingVector.x = tempVV.x * cos(theta) + tempVV.z * sin(theta);
-	viewingVector.z = -tempVV.x * sin(theta) + tempVV.z * cos(theta);
-
-	// FLY UP OR DOWN
-	viewingVector.y = ascendSpeed;
-}
-
-void Wasp::lookAroundRandomly()
+inline void Wasp::lookAroundRandomly(double deltaTime)
 {
 	static const double directionSwitchSeconds = 3;
 	static double secondsUntilDirectionSwitch = 0;
 
-	secondsUntilDirectionSwitch -= deltaTime->count();
+	secondsUntilDirectionSwitch -= deltaTime;
 
 	if (secondsUntilDirectionSwitch < 0.0)
 	{
@@ -201,7 +202,7 @@ void Wasp::lookAroundRandomly()
 	}
 }
 
-void Wasp::turnTowardsGoal()
+inline void Wasp::turnTowardsGoal()
 {
 	float heightDifference = currentGoal->y - position.y;
 
@@ -219,65 +220,4 @@ void Wasp::turnTowardsGoal()
 
 	float speed = angle / 2;
 	turnSpeed = angle > 0 ? -speed : speed;
-	
-}
-
-
-//HEALTH
-
-/**
-* Kills the wasp. Until this wasp is respawned, isAlive will be false.
-* Dead wasp objects are kept in memory but are no longer updated or rendered.
-*/
-void Wasp::kill()
-{
-	hp = 0;
-	isAlive = false;
-}
-
-void Wasp::updateHP()
-{
-	if (hp <= 0)
-	{
-		return;
-	}
-
-	if (hungerSaturation <= 0 && RNG::randMod(20) == 0)
-	{
-		hp--;
-	}
-}
-
-
-// HUNGER
-
-void Wasp::onFoodReached()
-{
-	if (Simulation::attemptEatFoodMutex(currentGoalFoodEntity))
-	{
-		hungerSaturation += currentGoalFoodEntity->hungerPoints;
-
-		if (hungerSaturation > 100)
-		{
-			hungerSaturation = 100;
-		}
-	}
-
-	currentGoalFoodEntity = nullptr;
-}
-
-void Wasp::updateHunger()
-{
-	if (hungerSaturation <= 0)
-	{
-		return;
-	}
-
-	steady_clock::time_point now = steady_clock::now();
-	duration<double> timeElapsed = duration_cast<std::chrono::seconds>(now - lastHungerDecrease);
-	if (timeElapsed.count() >= secondsBetweenHungerDecreases)
-	{
-		hungerSaturation--;
-		lastHungerDecrease = now;
-	}
 }

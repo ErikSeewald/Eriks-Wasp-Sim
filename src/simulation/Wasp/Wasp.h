@@ -5,8 +5,6 @@
 #include <chrono>
 #include <glm/glm.hpp>
 
-using namespace std::chrono;
-
 /**
 * @class Wasp
 * @brief A single wasp within the simulation.
@@ -14,6 +12,9 @@ using namespace std::chrono;
 class Wasp : Updatable
 {
 	public:
+		// CONSTANTS
+		static constexpr int VIEW_RANGE = 10; // How far the wasp can see other entities
+		static constexpr std::chrono::milliseconds RESOURCE_TICK_INTERVAL{2000}; // How often do resource attributes like hp and hunger get ticked
 
 		// Position in the wasp vector
 		const int w_Index;
@@ -37,14 +38,8 @@ class Wasp : Updatable
 		*/
 		void update();
 
-		/**
-		* Subroutine of the udpate() function responsible for updating the current goal.
-		*/
-		void updateGoal();
-
 
 		// ---MOVEMENT---
-
 		glm::vec3 position;
 		glm::vec3 viewingVector;
 
@@ -54,7 +49,6 @@ class Wasp : Updatable
 
 
 		// ---HEALTH---
-
 		bool isAlive;
 		int MAX_HP;
 		int hp;
@@ -67,7 +61,6 @@ class Wasp : Updatable
 
 
 		// ---HUNGER---
-
 		int MAX_HUNGER_SATURATION;
 		int hungerSaturation;
 
@@ -80,39 +73,11 @@ class Wasp : Updatable
 	// Note: While I would prefer more attributes to be private, the overhead of getter functions
 	// is just not worth it at very high wasp counts
 	private:
-		std::chrono::duration<double>* deltaTime;
+		std::chrono::steady_clock::time_point lastResourceTick;
 
 		void initialize();
 
-		void updateSpeeds();
+		inline void lookAroundRandomly(double deltaTime);
 
-
-		// ---POSITION---
-
-		/**
-		* Updates the Wasp's position based on its current state
-		*/
-		void updatePosition();
-
-		/**
-		* Updates the Wasp's viewingVector based on its current state
-		*/
-		void updateViewingVector();
-
-		void lookAroundRandomly();
-
-		void turnTowardsGoal();
-
-
-		// ---HEALTH---
-
-		void updateHP();
-
-		
-		// ---HUNGER---
-
-		const double secondsBetweenHungerDecreases = 5.0;
-		steady_clock::time_point lastHungerDecrease;
-
-		void updateHunger();
+		inline void turnTowardsGoal();
 };

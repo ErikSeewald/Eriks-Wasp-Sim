@@ -3,6 +3,7 @@
 #include "WaspSlots.h"
 #include "ResourceSpawner.h"
 #include "ThreadPool.h"
+#include "RNG.h"
 #include <thread>
 #include <mutex>
 #include <iostream>
@@ -14,6 +15,7 @@ using Food::FoodEntity;
 //DELTA TIME
 std::chrono::duration<double> deltaTime;
 steady_clock::time_point previousTime;
+steady_clock::time_point currentTime;
 
 //THREADS
 static const int threadPoolSize = ThreadPool::choosePoolSize();
@@ -95,7 +97,7 @@ void Simulation::updateWasps()
 
 void Simulation::updateDeltaTime()
 {
-    steady_clock::time_point currentTime = steady_clock::now();
+    currentTime = steady_clock::now();
     deltaTime = duration_cast<duration<double>>(currentTime - previousTime);
     previousTime = currentTime;
 }
@@ -111,47 +113,59 @@ void Simulation::_loopInit()
     //SETUP WASPS
     WaspSlots::init();
 
-    static const int initWaspCount = 250;
-    WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM, 10);
+    static const int initWaspCount = 10000;
+    WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM, 50);
 }
 
 /**
 * Returns the simulations's last delta time
-*
-* @return the simulation's last delta time
 */
 std::chrono::duration<double>* Simulation::getDeltaTime()
 {
     return &deltaTime;
 }
 
-FoodEntity* Simulation::getFirstFoodInApproxRadius(glm::vec3 position, float radius)
+/**
+* Returns the last cached steady_clock::now() call.
+* Updated every tick of the simulation.
+* Useful for having one uniform time_point that all entities on on tick adhere too. 
+* Also faster.
+*/
+std::chrono::steady_clock::time_point* Simulation::getCachedTimePoint()
 {
-    // TODO: Currently horribly inefficient. Fix this
-
-    // Bounding box for radius approximation
-    glm::vec3 minBound = position - glm::vec3(radius);
-    glm::vec3 maxBound = position + glm::vec3(radius);
-
-    std::vector<FoodEntity>* foodEntities = Food::getFoodEntities();
-    int maxIndex = Food::getMaxIndex();
-    for (int i = 0; i < maxIndex; ++i)
-    {
-        FoodEntity* food = &(*foodEntities)[i];
-        if (food->eaten) { continue; }
-
-        // Is the food within the bounding box
-        if (food->position.x >= minBound.x && food->position.x <= maxBound.x &&
-            food->position.y >= minBound.y && food->position.y <= maxBound.y &&
-            food->position.z >= minBound.z && food->position.z <= maxBound.z)
-        {
-            return food;
-        }
-    }
-
-    return nullptr;
+ return &currentTime;
 }
 
+/**
+* Returns a random food entity that has not been eaten. Returns nullptr if no such entity exists.
+*/
+FoodEntity* Simulation::getRandomAvailableFood()
+{
+    int maxIndex = Food::getMaxIndex();
+    if (maxIndex == 0) { return nullptr; }
+
+    std::vector<FoodEntity>* foodEntities = Food::getFoodEntities();
+    int randIndex = RNG::randBetween(0, maxIndex);
+    FoodEntity* entity = &(*foodEntities)[randIndex];
+
+    // If the randomly selected one has been eaten, search left and then right for uneaten neighbors
+    if (entity->eaten)
+    {
+        for (int i = randIndex - 1; i >= 0; i--)
+        {
+            entity = &(*foodEntities)[i];
+            if (!entity->eaten) { return entity; }
+        }
+
+        for (int i = randIndex + 1; i < maxIndex; i++)
+        {
+            entity = &(*foodEntities)[i];
+            if (!entity->eaten) { return entity; }
+        }
+        return nullptr;
+    }
+    return entity;
+}
 
 /**
 * Synchronous function that locks the food mutex and checks whether the given FoodEntity has been eaten.
