@@ -8,7 +8,7 @@ match_extensions = [
     "cpp",
 ]
 mode = "MATCH_FUNCTION_DOCS"
-ignore = []
+manual = []
 
 [[filegroup]]
 name = "commandutil"
