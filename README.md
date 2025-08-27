@@ -95,5 +95,4 @@ The Wasp-Sim makes use of multiple performance optimizations, some of which have
   - If thousands of entities left their chunk at the same time (not very rare) and thereby caused the chunks' data structures to be updated, the simulation ended up coming to a screeching halt until all chunks had been updated.
   - Performance would be way too dependant on how many entities are in the same chunk.
   - While accessing a chunk based on coordinates using an unordered map should theoretically be very fast, the reality of having to add and remove chunks from the map all the time prevents hashed access from reaching its full potential.
-    Using a static set of chunks instead of dynamically growing and shrinking the map might lead to a small improvement in this aspect, but it would also severely limit how dynamic the simulation can be.
-  - Erasing the benefits of locality and performance consistency for a small increase in performance in the best 
+    Using a static set of chunks instead of dynamically growing and shrinking the map might lead to a small improvement in this aspect, but it would also severely limit how dynamic the simulation can be. 
