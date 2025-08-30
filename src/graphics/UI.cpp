@@ -114,7 +114,6 @@ void UI::_drawPerformanceUI()
     static float fps = 0.0f;
     static int lastUpdateTime = 0;
 
-    // Initial size and position
     const static ImVec2 initSize(150, 85);
     const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 10);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
@@ -140,7 +139,6 @@ void UI::_drawPerformanceUI()
 
 void UI::_drawHiveUI()
 {
-    // Initial size and position
     const static ImVec2 initSize(150, 85);
     const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 105);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
@@ -161,7 +159,6 @@ void UI::_drawHiveUI()
 
 void UI::_drawCameraUI()
 {
-    // Initial size and position
     const static ImVec2 initSize(150, 190);
     const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 200);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
@@ -187,7 +184,6 @@ void UI::_drawCameraUI()
 
 void UI::_drawOptionsUI()
 {
-    // Initial size and position
     const static ImVec2 initSize(150, 80);
     const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 400);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);

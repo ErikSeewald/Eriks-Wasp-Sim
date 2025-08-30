@@ -51,7 +51,6 @@ void DirectoryHandler::init()
         }
     }
 
-    // Still not found
     std::cerr << "Failed to find project source directory '" << ROOT_NAME << "'" << std::endl;
     exit(EXIT_FAILURE);
 }

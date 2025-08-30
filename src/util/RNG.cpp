@@ -6,7 +6,6 @@
 */
 float RNG::randBetween(float lower, float upper)
 {
-	// Just swap lower and upper if they passed to the function in reverse order
 	if (lower > upper)
 	{
 		float temp = lower;

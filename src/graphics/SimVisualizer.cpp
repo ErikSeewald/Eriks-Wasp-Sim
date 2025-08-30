@@ -42,7 +42,7 @@ void SimVisualizer::init(int argc, char** argv)
     UI::getUIState()->drawGrid = true;
 
     //EVENT HANDLERS
-    //(Overwrite the ones previously installed by ImGui_ImplGLUT_InstallFuncs().
+    // (Overwrite the ones previously installed by ImGui_ImplGLUT_InstallFuncs().
     // If the ImGui_ImplGLUT function is also needed they need to call it themselves)
     glutKeyboardFunc(KeyboardHandler::keyboardDown);
     glutKeyboardUpFunc(KeyboardHandler::keyboardUp);

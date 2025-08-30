@@ -102,15 +102,12 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
 */
 void WaspRenderer::drawSelectedWasp() 
 {
-    //GET SELECTED WASP
     UI::UI_STATE* uiState = UI::getUIState();
     Wasp* wasp = uiState->selectedWasp;
     if (wasp == nullptr)
     {
         return;
     }
-
-    // SINGLE INSTANCE DATA
     std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp{ wasp->position, wasp->viewingVector });
 
     // DRAW WIREFRAME WITH DEPTH TESTING DISABLED

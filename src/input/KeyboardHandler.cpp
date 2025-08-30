@@ -71,7 +71,6 @@ void KeyboardHandler::keyboardDown(unsigned char key, int x, int y)
 {
     key = std::tolower(key);
 
-    // PAUSE/UNPAUSE
     if (key == 'p')
     {
         UI::getUIState()->isPaused = !UI::getUIState()->isPaused;

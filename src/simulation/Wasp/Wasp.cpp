@@ -102,14 +102,12 @@ void Wasp::update()
 
 
 	// --- GOAL ---
-	// Food goal has been eaten
 	if (currentGoalFoodEntity != nullptr && currentGoalFoodEntity->eaten)
 	{
 		currentGoalFoodEntity = nullptr;
 		currentGoal = nullptr;
 	}
 
-	// Random chance to check for food goal
 	if (hungerSaturation < MAX_HUNGER_SATURATION && RNG::randMod(50) == 1)
 	{
 		// Randomly target goal. If it is closer than the current goal, switch to it.
@@ -147,7 +145,6 @@ void Wasp::update()
 	position.y += viewingVector.y * speedMultiplier;
 	position.z += viewingVector.z * speedMultiplier;
 
-	//Reached goal
 	if (currentGoal != nullptr && glm::length(*currentGoal - position) < 1.5)
 	{
 		currentGoal = nullptr; 

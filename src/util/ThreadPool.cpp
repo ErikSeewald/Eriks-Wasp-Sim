@@ -17,13 +17,11 @@ ThreadPool::ThreadPool(size_t numThreads)
 
 ThreadPool::~ThreadPool() 
 {
-    // LOCKED SIGNAL THREADS SHUTDOWN
     {
         std::unique_lock<std::mutex> lock(queueMutex);
         shutDown = true;
     }
 
-    // Wake all theads so they can exit and then join them
     jobAvailableCond.notify_all();
     for (auto& t : workers) 
     {
@@ -67,11 +65,9 @@ void ThreadPool::_workerLoop()
     std::function<void()> job;
     while (true)
     {
-        // LOCKED ACQUIRE JOB LOGIC
         {
             std::unique_lock<std::mutex> lock(queueMutex);
 
-            // Wait until new job or shutdown
             jobAvailableCond.wait(lock, [this]
             {
                 return !jobs.empty() || shutDown;
@@ -79,16 +75,13 @@ void ThreadPool::_workerLoop()
 
             if (shutDown && jobs.empty()) { return; }
 
-            // Get next job
             job = std::move(jobs.front());
             jobs.pop();
             ++activeThreads;
         }
 
-        // RUN JOB
         job();
 
-        // LOCKED POST JOB LOGIC
         {
             std::unique_lock<std::mutex> lock(queueMutex);
             --activeThreads;

@@ -60,7 +60,6 @@ class ThreadPool
         std::queue<std::function<void()>> jobs;
         std::mutex queueMutex;
 
-
         // WORKER COUNTING
         std::condition_variable jobsFinishedCond;
         std::atomic<size_t> activeThreads;      

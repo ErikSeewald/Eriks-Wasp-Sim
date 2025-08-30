@@ -90,7 +90,6 @@ void Simulation::updateWasps()
     Wasp* selectedWasp = uiState->selectedWasp;
     if (selectedWasp != nullptr && !selectedWasp->isAlive)
     {
-        // deselect selectedWasp if it has died
         uiState->selectedWasp = nullptr;
     }
 }
@@ -107,12 +106,9 @@ void Simulation::updateDeltaTime()
 */
 void Simulation::_loopInit()
 {
-    //SETUP DELTA TIME
     previousTime = steady_clock::now();
 
-    //SETUP WASPS
     WaspSlots::init();
-
     static const int initWaspCount = 10000;
     WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM, 50);
 }
@@ -148,7 +144,8 @@ FoodEntity* Simulation::getRandomAvailableFood()
     int randIndex = RNG::randBetween(0, maxIndex);
     FoodEntity* entity = &(*foodEntities)[randIndex];
 
-    // If the randomly selected one has been eaten, search left and then right for uneaten neighbors
+    // If the randomly selected one has been eaten, search left and then right for uneaten neighbors.
+    // When food is spawned randomly this should preserve the location related randomness.
     if (entity->eaten)
     {
         for (int i = randIndex - 1; i >= 0; i--)
