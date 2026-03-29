@@ -53,7 +53,10 @@ By using the 'element' command (e.g., ```element position```) you can print that
 - Press 'p' to pause/unpause the simulation loop
 
 ## Performance notes
-The Wasp-Sim makes use of multiple performance optimizations, some of which have a difficult tradeoff balance. Here are a few of them along with some notes:
+The Wasp-Sim makes use of multiple performance optimizations, some of which have a difficult tradeoff balance.
+
+(This approach is limited by its stateful, CPU-in-loop nature. For even larger entity counts, check out [Pronicula-Splesh](https://github.com/ErikSeewald/Pronicula?tab=readme-ov-file#splesh)) 
+
 * **Hardware Instancing** for rendering wasp and food entities.
   - Additionally, some computations (e.g., transforming the wasp model based on position and viewing vector) are also only performed in the shader code on the GPU. This 
     gives a massive performance boost to computations that are well suited for the GPU and do not need to return anything to the CPU (e.g., rendering transformations for thousands of instanced wasps).
