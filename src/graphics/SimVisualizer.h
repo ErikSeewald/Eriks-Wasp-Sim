@@ -49,5 +49,10 @@ namespace SimVisualizer
     */
     void updateCamera();
 
+    /**
+    * Jumps the camera close to and turns it to look at the given position.
+    */
+    void jumpToAndLookAt(const glm::vec3& position);
+
     const Camera& getCamera();
 };

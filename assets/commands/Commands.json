@@ -66,8 +66,8 @@
 
 			{
 				"name": "select",
-				"description": "Selects the wasp at the given index in the wasp list.",
-				"syntax": "wasp select <index>",
+				"description": "Selects the queen or the wasp at the given index in the wasp list.",
+				"syntax": "wasp select [<index> | queen]",
 				"subcommands": []
 			},
 

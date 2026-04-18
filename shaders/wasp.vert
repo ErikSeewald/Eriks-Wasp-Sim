@@ -7,9 +7,12 @@ layout (location = 1) in vec3 aNormal;	// Vertex normal
 // Instance Data
 layout (location = 2) in vec3 iPosition;
 layout (location = 3) in vec3 iViewingVector;
+layout (location = 4) in int w_Index;
+layout (location = 5) in uint waspBitmap;
 
 uniform mat4 uViewProj;
 
+flat out int w_IndexFlat;
 out vec3 vNormal;
 
 // Vert shader for drawing a instanced wasp entity.
@@ -17,14 +20,18 @@ out vec3 vNormal;
 // Passes the normal to the frag shader.
 void main()
 {
+	// Scale if queen
+	bool isQueen = waspBitmap == 0x1u;
+	vec3 scaledPos = isQueen ? aPos * 5.0 : aPos;
+
 	float sinAngle = iViewingVector.x;
 	float cosAngle = iViewingVector.z;
 
 	// Rotate around Y
 	vec3 rotatedPos;
-	rotatedPos.x = aPos.x * cosAngle + aPos.z * sinAngle;
-	rotatedPos.y = aPos.y;
-	rotatedPos.z = -aPos.x * sinAngle + aPos.z * cosAngle;
+	rotatedPos.x = scaledPos.x * cosAngle + scaledPos.z * sinAngle;
+	rotatedPos.y = scaledPos.y;
+	rotatedPos.z = -scaledPos.x * sinAngle + scaledPos.z * cosAngle;
 
 	// Translate
 	rotatedPos += iPosition;
@@ -36,4 +43,7 @@ void main()
 	vNormal.x = aNormal.x * cosAngle + aNormal.z * sinAngle;
 	vNormal.y = aNormal.y;
 	vNormal.z = -aNormal.x * sinAngle + aNormal.z * cosAngle;
+
+	// Pass the index to the frag shader without interpolation
+	w_IndexFlat = w_Index;
 }

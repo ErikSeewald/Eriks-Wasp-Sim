@@ -1,4 +1,5 @@
 #include "WaspRenderer.h"
+#include "Queen.h"
 #include <iostream>
 #include "SimVisualizer.h"
 #include "ModelHandler.h"
@@ -74,6 +75,8 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
     for (int t = 0; t < threadPoolSize; ++t)
     {
         int start = sectionSize * t;
+        if (start == Queen::W_INDEX) { start = Queen::W_INDEX + 1; } // Queen is done separately
+
         int end = t < threadPoolSize - 1 ? sectionSize * (t + 1) : maxIndex;
 
         pool.enqueue([&, start, end]() {
@@ -82,14 +85,23 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
                 const Wasp& w = wasps[i];
                 if (!w.isAlive) { continue; }
 
+                unsigned int waspBitmap = 0b0; // Nothing on by default;
+
                 // weakest memory ordering that still guarantees atomicity
-                size_t idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
-                wasp_instanceData[idx] = InstanceDataWasp{ w.position, w.viewingVector };
+                int idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
+                wasp_instanceData[idx] = InstanceDataWasp{ w.position, w.viewingVector, i, waspBitmap};
             }
         });
     }
 
     pool.waitFinishAll();
+
+    // Do the queen separately from all others so threads do not need to waste time checking if they are working on the queenQ
+    const Wasp& queen = wasps[Queen::W_INDEX];
+    unsigned int queenBitmap = 0b1;
+    int idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
+    wasp_instanceData[idx] = InstanceDataWasp{ queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap};
+
 
     // Shrink to size of added instances
     wasp_instanceData.resize(instanceIndex.load(std::memory_order_relaxed));

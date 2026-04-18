@@ -43,12 +43,15 @@ namespace InstancedRendering
     };
 
     /**
-    * Small instance data struct with only position and viewing vector attributes.
+    * Instance data representing a single wasp entity.
     * Designed for wasp instances that get rotated based on the viewing vector by the shader.
+    * Besides these vectors and the wasp's index in the wasp array, it also contains a bitmap with more information.
     */
     struct InstanceDataWasp
     {
         glm::vec3 position;
         glm::vec3 viewingVector;
+        int w_Index;
+        unsigned int waspBitmap;
     };
 }

@@ -5,6 +5,8 @@
 #include "CommandUtil.h"
 #include "UI.h"
 #include "WaspSlots.h"
+#include "Queen.h"
+#include "SimVisualizer.h"
 
 static const std::string waspCommandName = "wasp";
 CommandHandlerMap waspCommandHandlers =
@@ -38,12 +40,21 @@ void WaspCommandHandlers::commandWaspSelect(const std::string& subcommand)
     // INDEX STRING
     std::string indexString = StringUtil::getFirstWord(subcommand);
 
-    int index = CommandUtil::convertToInt(indexString);
-    int maxIndex = WaspSlots::getMaxIndex();
-    if (index < 0 || index >= maxIndex)
+    int index;
+    if (indexString == "queen")
     {
-        CommandUtil::printError("Index must be greater than 0 and less than the max w_Index");
-        return;
+        index = Queen::W_INDEX;;
+    }
+
+    else
+    {
+        index = CommandUtil::convertToInt(indexString);
+        int maxIndex = WaspSlots::getMaxIndex();
+        if (index < 0 || index >= maxIndex)
+        {
+            CommandUtil::printError("Index must be 'queen' or a number greater than 0 and less than the max w_Index");
+            return;
+        }
     }
 
     std::string cutCommand = StringUtil::cutFirstWord(subcommand);
@@ -62,6 +73,7 @@ void WaspCommandHandlers::commandWaspSelect(const std::string& subcommand)
     }
 
     UI::getUIState()->selectedWasp = wasp;
+    SimVisualizer::jumpToAndLookAt(wasp->position);
     std::cout << "Selected wasp at index " << index;
 }
 

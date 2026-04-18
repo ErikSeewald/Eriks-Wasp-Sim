@@ -158,5 +158,28 @@ void InstancedRendering::setupInstancing<InstanceDataWasp>(GLuint VAO, GLuint* i
     );
     glVertexAttribDivisor(3, 1);
 
+    // w_index attribute at location 4
+    glEnableVertexAttribArray(4);
+    glVertexAttribIPointer(         // Needs to be IPointer!!
+        4,          // location
+        1,          // one integer
+        GL_INT,     // data type
+        sizeof(InstanceDataWasp), // Offset between consecutive instances
+        (void*) offsetof(InstanceDataWasp, w_Index)
+    );
+    glVertexAttribDivisor(4, 1);
+
+    // waspBitmap attribute at location 5
+    glEnableVertexAttribArray(5);
+    glVertexAttribIPointer(         // Needs to be IPointer!!
+        5,          // location
+        1,          // one integer
+        GL_UNSIGNED_INT,     // data type
+        sizeof(InstanceDataWasp), // Offset between consecutive instances
+        (void*) offsetof(InstanceDataWasp, waspBitmap)
+    );
+    glVertexAttribDivisor(5, 1);
+
+
     glBindVertexArray(0);
 }

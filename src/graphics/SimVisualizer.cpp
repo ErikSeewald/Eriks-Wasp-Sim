@@ -153,6 +153,18 @@ void SimVisualizer::updateCamera()
     );
 }
 
+/**
+* Jumps the camera close to and turns it to look at the given position.
+*/
+void SimVisualizer::jumpToAndLookAt(const glm::vec3& position)
+{
+    camera.position = position - glm::vec3(0.0, 0.0, 5.0);
+
+    glm::vec3 dir = glm::normalize(position - camera.position);
+    camera.pitchRad = asin(dir.y);
+    camera.yawRad   = atan2(dir.z, dir.x);
+}
+
 const Camera& SimVisualizer::getCamera()
 {
     return camera;
