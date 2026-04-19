@@ -37,35 +37,36 @@ void WaspCommandHandlers::commandWaspHelp(const std::string& subcommand)
 
 void WaspCommandHandlers::commandWaspSelect(const std::string& subcommand)
 {
-    // INDEX STRING
+    Wasp* wasp;
+    int index;
     std::string indexString = StringUtil::getFirstWord(subcommand);
 
-    int index;
     if (indexString == "queen")
     {
-        index = Queen::W_INDEX;;
+        wasp = (Wasp*) &WaspSlots::getQueen();
+        index = Queen::W_INDEX;
     }
 
     else
     {
-        index = CommandUtil::convertToInt(indexString);
+        int index = CommandUtil::convertToInt(indexString);
         int maxIndex = WaspSlots::getMaxIndex();
         if (index < 0 || index >= maxIndex)
         {
             CommandUtil::printError("Index must be 'queen' or a number greater than 0 and less than the max w_Index");
             return;
         }
+
+        std::string cutCommand = StringUtil::cutFirstWord(subcommand);
+        if (!StringUtil::isBlank(cutCommand) && StringUtil::trimLeadingWhitespace(cutCommand) != "all")
+        {
+            CommandUtil::printInvalidSyntaxError();
+            return;
+        }
+
+        wasp = &(*WaspSlots::getWasps())[index];
     }
 
-    std::string cutCommand = StringUtil::cutFirstWord(subcommand);
-    if (!StringUtil::isBlank(cutCommand) && StringUtil::trimLeadingWhitespace(cutCommand) != "all")
-    {
-        CommandUtil::printInvalidSyntaxError();
-        return;
-    }
-
-    // SELECT WASP
-    Wasp* wasp = &(*WaspSlots::getWasps())[index];
     if (!wasp->isAlive)
     {
         CommandUtil::printError("That wasp is not alive");

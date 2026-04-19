@@ -16,13 +16,6 @@ Wasp::Wasp(const int w_Index) : w_Index(w_Index)
 	isAlive = false;
 }
 
-// Default constructor, only exists for the compiler
-Wasp::Wasp() : w_Index(-1)
-{
-	initialize();
-	isAlive = false;
-}
-
 void Wasp::initialize()
 {
 	// POSITION

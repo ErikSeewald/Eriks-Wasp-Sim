@@ -20,18 +20,14 @@ out vec3 vNormal;
 // Passes the normal to the frag shader.
 void main()
 {
-	// Scale if queen
-	bool isQueen = waspBitmap == 0x1u;
-	vec3 scaledPos = isQueen ? aPos * 5.0 : aPos;
-
 	float sinAngle = iViewingVector.x;
 	float cosAngle = iViewingVector.z;
 
 	// Rotate around Y
 	vec3 rotatedPos;
-	rotatedPos.x = scaledPos.x * cosAngle + scaledPos.z * sinAngle;
-	rotatedPos.y = scaledPos.y;
-	rotatedPos.z = -scaledPos.x * sinAngle + scaledPos.z * cosAngle;
+	rotatedPos.x = aPos.x * cosAngle + aPos.z * sinAngle;
+	rotatedPos.y = aPos.y;
+	rotatedPos.z = -aPos.x * sinAngle + aPos.z * cosAngle;
 
 	// Translate
 	rotatedPos += iPosition;

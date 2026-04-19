@@ -25,9 +25,6 @@ class Wasp : Updatable
 		*/
 		Wasp(const int w_Index);
 
-		// Default constructor, only exists for the compiler
-		Wasp();
-
 		/**
 		* Respawns the wasp and resets its attributes. Both living and dead wasps can be respawned.
 		*/

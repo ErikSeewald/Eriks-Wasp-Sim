@@ -4,6 +4,8 @@
 using Strategies::SpawnStrategy;
 using Strategies::KillStrategy;
 
+Queen queen = Queen(); // Does not get a slot in the wasps vector but still handled by WaspSlots for consistency.
+
 // Total number of wasp slots
 const static int SLOT_COUNT = 100000;
 
@@ -27,6 +29,11 @@ std::vector<Wasp> wasps{};
 std::vector<Wasp>* WaspSlots::getWasps()
 {
     return &wasps;
+}
+
+Queen& WaspSlots::getQueen()
+{
+    return queen;
 }
 
 /**

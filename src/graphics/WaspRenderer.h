@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Wasp.h"
-#include "WaspSlots.h"
+#include "Queen.h"
 #include <list>
 
  /**
@@ -11,9 +11,14 @@
 namespace WaspRenderer
 {
     /**
-    * Renders the given wasps. Assumes glut, glew, etc. are preinitialized.
+    * Renders the given wasps.
     */
     void drawWasps(const std::vector<Wasp>& wasps);
+
+    /**
+    * Draws the given queen.
+    */
+    void drawQueen(const Queen& queen);
 
     /**
     * Visualizes the wasp selected by the user, provided it exists.

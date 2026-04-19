@@ -7,7 +7,7 @@ out vec4 FragColor;
 
 float hash(int x)
 {
-    return fract(sin(float(x)) * 42678.9123456);
+    return fract(sin(float(x)) * 45678.9123456);
 }
 
 // Frag shader for a wasp entity. S

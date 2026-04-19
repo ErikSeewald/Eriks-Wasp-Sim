@@ -92,6 +92,9 @@ void Simulation::updateWasps()
     {
         uiState->selectedWasp = nullptr;
     }
+
+    //QUEEN
+    WaspSlots::getQueen().update();
 }
 
 void Simulation::updateDeltaTime()
@@ -111,6 +114,8 @@ void Simulation::_loopInit()
     WaspSlots::init();
     static const int initWaspCount = 10000;
     WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM, 50);
+
+    WaspSlots::getQueen().isAlive = true;
 }
 
 /**

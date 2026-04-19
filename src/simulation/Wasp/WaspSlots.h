@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Wasp.h"
+#include "Queen.h"
 #include "Simulation.h"
 
 using Strategies::SpawnStrategy;
@@ -13,6 +14,8 @@ using Strategies::KillStrategy;
 namespace WaspSlots
 { 
 	std::vector<Wasp>* getWasps();
+
+	Queen& getQueen();
 
 	/**
 	* Initializes all wasp slots.

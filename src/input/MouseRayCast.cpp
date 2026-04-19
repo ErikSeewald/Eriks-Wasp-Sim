@@ -45,6 +45,18 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
         }
     }
 
+    // Check the queen last
+    Queen& queen = WaspSlots::getQueen();
+    if (queen.isAlive)
+    {
+        glm::vec3 camToQueen = camera.position - queen.position;
+        glm::vec3 crossProduct = glm::cross(camToQueen, clickRay);
+        if (glm::length(crossProduct) < 0.5*Queen::SCALE_FACTOR)
+        {
+            if (glm::length(camToQueen) < shortestDistance) { selectedWasp = (Wasp*) &queen; }
+        }
+    }
+
     return selectedWasp;
 }
 

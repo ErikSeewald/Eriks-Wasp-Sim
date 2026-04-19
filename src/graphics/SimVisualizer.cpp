@@ -1,4 +1,5 @@
 #include "SimVisualizer.h"
+#include "WaspSlots.h"
 #include "KeyboardHandler.h"
 #include "MouseHandler.h"
 #include "WaspRenderer.h"
@@ -116,6 +117,7 @@ void SimVisualizer::render()
 
     FoodRenderer::drawFood(*Food::getFoodEntities());
     WaspRenderer::drawWasps(*WaspSlots::getWasps());
+    WaspRenderer::drawQueen(WaspSlots::getQueen());
     WaspRenderer::drawSelectedWasp();
 
     DebugRenderer::drawScheduledLines();
@@ -162,7 +164,7 @@ void SimVisualizer::jumpToAndLookAt(const glm::vec3& position)
 
     glm::vec3 dir = glm::normalize(position - camera.position);
     camera.pitchRad = asin(dir.y);
-    camera.yawRad   = atan2(dir.z, dir.x);
+    camera.yawRad = atan2(dir.z, dir.x);
 }
 
 const Camera& SimVisualizer::getCamera()

@@ -1,5 +1,5 @@
 #include "WaspRenderer.h"
-#include "Queen.h"
+#include "WaspSlots.h"
 #include <iostream>
 #include "SimVisualizer.h"
 #include "ModelHandler.h"
@@ -20,7 +20,14 @@ GLuint wasp_VBO;
 GLuint wasp_EBO;
 GLuint wasp_instanceVBO;
 int wasp_vertexCount;
-const std::string modelFile = "wasp/Wasp.obj";
+const std::string waspModelFile = "wasp/Wasp.obj";
+
+GLuint queen_VAO;
+GLuint queen_VBO;
+GLuint queen_EBO;
+GLuint queen_instanceVBO;
+int queen_vertexCount;
+const std::string queenModelFile = "wasp/Queen.obj";
 
 //SHADER
 GLuint waspShaderProgram;
@@ -42,19 +49,26 @@ static ThreadPool pool(threadPoolSize);
 */
 void WaspRenderer::init()
 {
-    if (!ModelHandler::loadModel(modelFile, &wasp_VAO, &wasp_VBO, &wasp_EBO, &wasp_vertexCount))
+    if (!ModelHandler::loadModel(waspModelFile, &wasp_VAO, &wasp_VBO, &wasp_EBO, &wasp_vertexCount))
     {
         std::cerr << "Failed to load wasp model" << std::endl;
         exit(EXIT_FAILURE);
     }
     InstancedRendering::setupInstancing<InstanceDataWasp>(wasp_VAO, &wasp_instanceVBO);
 
+    if (!ModelHandler::loadModel(queenModelFile, &queen_VAO, &queen_VBO, &queen_EBO, &queen_vertexCount))
+    {
+        std::cerr << "Failed to load queen model" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    InstancedRendering::setupInstancing<InstanceDataWasp>(queen_VAO, &queen_instanceVBO);
+
     waspShaderProgram = ShaderHandler::buildShaderProgram(waspVertShaderFile, waspFragShaderFile);
     selectedWaspShaderProgram = ShaderHandler::buildShaderProgram(waspVertShaderFile, selectedWaspFragShaderFile);
 }
 
 /**
-* Renders the given wasps. Assumes glut, glew, etc. are preinitialized.
+* Renders the given wasps.
 */
 void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
 {
@@ -75,8 +89,6 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
     for (int t = 0; t < threadPoolSize; ++t)
     {
         int start = sectionSize * t;
-        if (start == Queen::W_INDEX) { start = Queen::W_INDEX + 1; } // Queen is done separately
-
         int end = t < threadPoolSize - 1 ? sectionSize * (t + 1) : maxIndex;
 
         pool.enqueue([&, start, end]() {
@@ -85,7 +97,7 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
                 const Wasp& w = wasps[i];
                 if (!w.isAlive) { continue; }
 
-                unsigned int waspBitmap = 0b0; // Nothing on by default;
+                unsigned int waspBitmap = 0b0; // Nothing on by default (TODO: More non-queen bitmap info)
 
                 // weakest memory ordering that still guarantees atomicity
                 int idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
@@ -96,17 +108,20 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
 
     pool.waitFinishAll();
 
-    // Do the queen separately from all others so threads do not need to waste time checking if they are working on the queenQ
-    const Wasp& queen = wasps[Queen::W_INDEX];
-    unsigned int queenBitmap = 0b1;
-    int idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
-    wasp_instanceData[idx] = InstanceDataWasp{ queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap};
-
-
     // Shrink to size of added instances
     wasp_instanceData.resize(instanceIndex.load(std::memory_order_relaxed));
 
     InstancedRendering::drawInstanceData(wasp_instanceData, wasp_VAO, wasp_instanceVBO, wasp_vertexCount, waspShaderProgram);
+}
+
+/**
+* Draws the given queen.
+*/
+void WaspRenderer::drawQueen(const Queen& queen)
+{
+    unsigned int queenBitmap = 0b1;
+    std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp{ queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap });
+    InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, waspShaderProgram);
 }
 
 /**
@@ -125,7 +140,13 @@ void WaspRenderer::drawSelectedWasp()
     // DRAW WIREFRAME WITH DEPTH TESTING DISABLED
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    InstancedRendering::drawInstanceData(singleInstanceData, wasp_VAO, wasp_instanceVBO, wasp_vertexCount, selectedWaspShaderProgram);
+
+    if (wasp == &WaspSlots::getQueen())
+    { InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, selectedWaspShaderProgram); }
+    
+    else
+    { InstancedRendering::drawInstanceData(singleInstanceData, wasp_VAO, wasp_instanceVBO, wasp_vertexCount, selectedWaspShaderProgram); }
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_DEPTH_TEST);
 
