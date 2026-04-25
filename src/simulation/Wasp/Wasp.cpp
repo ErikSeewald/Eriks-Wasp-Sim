@@ -1,17 +1,20 @@
 #include "Wasp.h"
+#include "Queen.h"
 #include "Simulation.h"
 #include "RNG.h"
 #include "VectorMath.h"
 #include "WaspSlots.h"
 
-
+inline Queen* asQueen(Wasp* queenRef) { return (Queen*) queenRef; }
 
 /**
 * Constructs the wasp object and assigns it the given w_Index (which indicates its position in the wasp vector).
+* Every wasp knows its queen. It will try to parse whatever it is given here to a queen. Make of that what you will.
 * By default the wasp is constructed with isAlive = false.
 */
-Wasp::Wasp(const int w_Index) : w_Index(w_Index)
+Wasp::Wasp(const int w_Index, Wasp* queen) : w_Index(w_Index)
 {
+	this->queen = queen;
 	initialize();
 	isAlive = false;
 }
@@ -158,6 +161,22 @@ void Wasp::update()
 		if (hungerSaturation > 0) { hungerSaturation--; }
 		else if (hp >0) { hp--; }
 	}
+
+	// --- QUEEN INTERACTION ---
+	if (queen != nullptr)
+	{
+		if (queenInteractionCountdown > 0) { queenInteractionCountdown--; }
+
+		else
+		{
+			float distToQueen = glm::distance(position, queen->position);
+			if (distToQueen < Queen::INTERACTION_RADIUS)
+			{
+				giveFoodToQueen(hungerSaturation * 0.5);
+				queenInteractionCountdown = QUEEN_INTERACTION_TIMEOUT;
+			}
+		}
+	}
 }
 
 inline void Wasp::lookAroundRandomly(double deltaTime)
@@ -210,4 +229,16 @@ inline void Wasp::turnTowardsGoal()
 
 	float speed = angle / 2;
 	turnSpeed = angle > 0 ? -speed : speed;
+}
+
+/**
+* Gives the given amount of food to the queen and thereby decreases the wasp's own hungerSaturation.
+* Does not check food availability or distance to the queen.
+*/
+void Wasp::giveFoodToQueen(int amount)
+{
+	Queen::InteractionResponse response = asQueen(queen)->receiveFood(amount, this->w_Index);
+	if (response == Queen::InteractionResponse::Denied) { return; }
+
+	hungerSaturation -= amount;
 }

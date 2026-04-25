@@ -37,6 +37,11 @@ namespace WaspSlots
 	void updateMaxIndex();
 
 	/**
+ 	* Use this instead of getWasps()->size() to avoid cases where the wasp vector has not yet been filled up.
+	*/
+	int getSlotCount();
+
+	/**
 	* Returns wether there are enough wasp slots available to accommodate waspAddAmount.
 	*/
 	bool spaceAvailable(int waspAddAmount);

@@ -5,6 +5,7 @@
 #include <chrono>
 #include <glm/glm.hpp>
 
+
 /**
 * @class Wasp
 * @brief A single wasp within the simulation.
@@ -21,9 +22,10 @@ class Wasp : Updatable
 
 		/**
 		* Constructs the wasp object and assigns it the given w_Index (which indicates its position in the wasp vector).
+		* Every wasp knows its queen. It will try to parse whatever it is given here to a queen. Make of that what you will.
 		* By default the wasp is constructed with isAlive = false.
 		*/
-		Wasp(const int w_Index);
+		Wasp(const int w_Index, Wasp* queen);
 
 		/**
 		* Respawns the wasp and resets its attributes. Both living and dead wasps can be respawned.
@@ -70,6 +72,11 @@ class Wasp : Updatable
 	// Note: While I would prefer more attributes to be private, the overhead of getter functions
 	// is just not worth it at very high wasp counts
 	private:
+		Wasp* queen; // Every wasp knows its queen. Will cast this to a (Queen*) at will. Beware.
+
+		const int QUEEN_INTERACTION_TIMEOUT = 1000; 
+		int queenInteractionCountdown;
+		
 		std::chrono::steady_clock::time_point lastResourceTick;
 
 		void initialize();
@@ -77,4 +84,10 @@ class Wasp : Updatable
 		inline void lookAroundRandomly(double deltaTime);
 
 		inline void turnTowardsGoal();
+
+		/**
+		* Gives the given amount of food to the queen and thereby decreases the wasp's own hungerSaturation.
+		* Does not check food availability or distance to the queen.
+		*/
+		void giveFoodToQueen(int amount);
 };

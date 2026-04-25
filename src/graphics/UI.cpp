@@ -38,14 +38,16 @@ void UI::_drawSelectedWaspUI()
     }
 
     // Initial size and position
-    const static ImVec2 initSize(250, 420);
+    const static ImVec2 initSize(250, 440);
     const static ImVec2 initPos(10,10);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
     if (ImGui::Begin("Selected Wasp"))
     {
-        ImGui::Text("w_Index: %i", wasp->w_Index);
+        int w_Index = wasp->w_Index;
+        ImGui::Text("w_Index: %i", w_Index);
+        ImGui::Text("workerScore: %i", WaspSlots::getQueen().getWorkerScore(w_Index));
 
         // POSITION
         if (ImGui::CollapsingHeader("Position", ImGuiTreeNodeFlags_DefaultOpen))
