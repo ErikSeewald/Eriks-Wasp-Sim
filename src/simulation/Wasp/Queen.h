@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Wasp.h"
+#include <vector>
 
 /**
 * @class Queen

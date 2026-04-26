@@ -97,7 +97,6 @@ void WaspCommandHandlers::commandWaspKill(const std::string& subcommand)
     if (selectedWasp != NULL)
     {
         selectedWasp->kill();
-        WaspSlots::registerDeath();
         WaspSlots::updateMaxIndex();
         std::cout << successfulKillPrint;
     }

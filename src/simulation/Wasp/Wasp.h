@@ -22,10 +22,9 @@ class Wasp : Updatable
 
 		/**
 		* Constructs the wasp object and assigns it the given w_Index (which indicates its position in the wasp vector).
-		* Every wasp knows its queen. It will try to parse whatever it is given here to a queen. Make of that what you will.
 		* By default the wasp is constructed with isAlive = false.
 		*/
-		Wasp(const int w_Index, Wasp* queen);
+		Wasp(const int w_Index);
 
 		/**
 		* Respawns the wasp and resets its attributes. Both living and dead wasps can be respawned.
@@ -72,8 +71,6 @@ class Wasp : Updatable
 	// Note: While I would prefer more attributes to be private, the overhead of getter functions
 	// is just not worth it at very high wasp counts
 	private:
-		Wasp* queen; // Every wasp knows its queen. Will cast this to a (Queen*) at will. Beware.
-
 		const int QUEEN_INTERACTION_TIMEOUT = 1000; 
 		int queenInteractionCountdown;
 		
@@ -90,4 +87,9 @@ class Wasp : Updatable
 		* Does not check food availability or distance to the queen.
 		*/
 		void giveFoodToQueen(int amount);
+
+		/**
+		* Shared death logic between all different ways that a wasp can die.
+		*/
+		inline void die();
 };

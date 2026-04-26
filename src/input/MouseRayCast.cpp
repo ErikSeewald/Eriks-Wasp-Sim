@@ -46,7 +46,7 @@ Wasp* MouseRayCast::selectWasp(int x, int y)
     }
 
     // Check the queen last
-    Queen& queen = WaspSlots::getQueen();
+    const Queen& queen = WaspSlots::getQueen();
     if (queen.isAlive)
     {
         glm::vec3 camToQueen = camera.position - queen.position;

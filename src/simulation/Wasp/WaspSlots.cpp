@@ -47,7 +47,7 @@ void WaspSlots::init()
     // emplace_back() can safely be used at allocation time without risk of breaking locality.
     for (int i = 0; i < SLOT_COUNT; i++)
     {
-        wasps.emplace_back(Wasp(i, &queen));
+        wasps.emplace_back(Wasp(i));
     }
 }
 
@@ -183,8 +183,5 @@ int WaspSlots::killWasps(int amountToKill, KillStrategy strategy)
     }
 
     updateMaxIndex();
-
-    aliveCount -= killedAmount;
-    deadCount += killedAmount;
     return killedAmount;
 }

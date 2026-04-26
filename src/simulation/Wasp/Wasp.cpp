@@ -5,16 +5,14 @@
 #include "VectorMath.h"
 #include "WaspSlots.h"
 
-inline Queen* asQueen(Wasp* queenRef) { return (Queen*) queenRef; }
+using WaspSlots::getQueen;
 
 /**
 * Constructs the wasp object and assigns it the given w_Index (which indicates its position in the wasp vector).
-* Every wasp knows its queen. It will try to parse whatever it is given here to a queen. Make of that what you will.
 * By default the wasp is constructed with isAlive = false.
 */
-Wasp::Wasp(const int w_Index, Wasp* queen) : w_Index(w_Index)
+Wasp::Wasp(const int w_Index) : w_Index(w_Index)
 {
-	this->queen = queen;
 	initialize();
 	isAlive = false;
 }
@@ -58,8 +56,7 @@ void Wasp::respawn()
 */
 void Wasp::kill()
 {
-	hp = 0;
-	isAlive = false;
+	die();
 }
 
 
@@ -90,8 +87,7 @@ void Wasp::update()
 	if (!isAlive) { return; }
 	if (hp <= 0)
 	{
-		isAlive = false;
-		WaspSlots::registerDeath();
+		die();
 		return;
 	}
 	double deltaTime = Simulation::getDeltaTime()->count();
@@ -163,16 +159,16 @@ void Wasp::update()
 	}
 
 	// --- QUEEN INTERACTION ---
-	if (queen != nullptr)
+	if (w_Index != Queen::W_INDEX)
 	{
 		if (queenInteractionCountdown > 0) { queenInteractionCountdown--; }
 
 		else
 		{
-			float distToQueen = glm::distance(position, queen->position);
+			float distToQueen = glm::distance(position, getQueen().position);
 			if (distToQueen < Queen::INTERACTION_RADIUS)
 			{
-				giveFoodToQueen(hungerSaturation * 0.5);
+				giveFoodToQueen(RNG::randBetween(0, hungerSaturation));
 				queenInteractionCountdown = QUEEN_INTERACTION_TIMEOUT;
 			}
 		}
@@ -237,8 +233,19 @@ inline void Wasp::turnTowardsGoal()
 */
 void Wasp::giveFoodToQueen(int amount)
 {
-	Queen::InteractionResponse response = asQueen(queen)->receiveFood(amount, this->w_Index);
+	Queen::InteractionResponse response = getQueen().receiveFood(amount, this->w_Index);
 	if (response == Queen::InteractionResponse::Denied) { return; }
 
 	hungerSaturation -= amount;
+}
+
+/**
+* Shared death logic between all different ways that a wasp can die.
+*/
+inline void Wasp::die()
+{
+	hp = 0;
+	isAlive = false;
+	getQueen().resetWorkerDossier(w_Index);
+	WaspSlots::registerDeath();
 }

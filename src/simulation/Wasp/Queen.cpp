@@ -1,8 +1,7 @@
 #include "Queen.h"
 #include "WaspSlots.h"
-#include <vector>
 
-Queen::Queen() : Wasp(W_INDEX, nullptr) // The queen serves no other queen -> nullptr. 
+Queen::Queen() : Wasp(W_INDEX)
 {
     // All workers start with a score of 0
     for (int i = 0; i < WaspSlots::getSlotCount(); i++)
