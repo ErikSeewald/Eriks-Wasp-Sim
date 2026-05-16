@@ -205,3 +205,17 @@ files = [
     "graphics/SimVisualizer.cpp",
     "graphics/SimVisualizer.h",
 ]
+
+[[filegroup]]
+name = "queen"
+files = [
+    "simulation/Wasp/Queen.h",
+    "simulation/Wasp/Queen.cpp",
+]
+
+[[filegroup]]
+name = "waspgenes"
+files = [
+    "simulation/Wasp/WaspGenes.cpp",
+    "simulation/Wasp/WaspGenes.h",
+]

@@ -28,17 +28,12 @@ void Wasp::initialize()
 
 	// MOVEMENT
 	viewingVector = glm::vec3(0, 0, 1);
-	flyingSpeed = 0.8;
 	turnSpeed = 0;
 	ascendSpeed = 0;
 
-	// HEALTH
-	MAX_HP = 100;
-	hp = MAX_HP;
-
-	// HUNGER
-	MAX_HUNGER_SATURATION = 100;
-	hungerSaturation = MAX_HUNGER_SATURATION;
+	// GENES
+	hp = balancedGenes.maxHP;
+	hungerSaturation = balancedGenes.maxHungerSaturation;
 }
 
 /**
@@ -100,7 +95,7 @@ void Wasp::update()
 		currentGoal = nullptr;
 	}
 
-	if (hungerSaturation < MAX_HUNGER_SATURATION && RNG::randMod(50) == 1)
+	if (hungerSaturation < balancedGenes.maxHungerSaturation && RNG::randMod(50) == 1)
 	{
 		// Randomly target goal. If it is closer than the current goal, switch to it.
 		// Not realistic behaviour but interesting and much more performance efficient than
@@ -132,7 +127,7 @@ void Wasp::update()
 
 
 	// --- POSITION ---
-	float speedMultiplier = flyingSpeed * deltaTime;
+	float speedMultiplier = balancedGenes.flyingSpeed * deltaTime;
 	position.x += viewingVector.x * speedMultiplier;
 	position.y += viewingVector.y * speedMultiplier;
 	position.z += viewingVector.z * speedMultiplier;

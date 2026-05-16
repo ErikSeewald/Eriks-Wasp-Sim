@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Updatable.h"
+#include "WaspGenes.h"
 #include "Food.h"
 #include <chrono>
 #include <glm/glm.hpp>
@@ -16,9 +17,7 @@ class Wasp : Updatable
 		// CONSTANTS
 		static constexpr int VIEW_RANGE = 10; // How far the wasp can see other entities
 		static constexpr std::chrono::milliseconds RESOURCE_TICK_INTERVAL{2000}; // How often do resource attributes like hp and hunger get ticked
-
-		// Position in the wasp vector
-		const int w_Index;
+		const int w_Index; // Position in the wasp vector
 
 		/**
 		* Constructs the wasp object and assigns it the given w_Index (which indicates its position in the wasp vector).
@@ -36,19 +35,19 @@ class Wasp : Updatable
 		*/
 		void update();
 
+		// ---GENES---
+		WaspGenes::UnboundGenes unboundGenes;
+		WaspGenes::BalancedGenes balancedGenes;
 
 		// ---MOVEMENT---
 		glm::vec3 position;
 		glm::vec3 viewingVector;
 
-		float flyingSpeed;
-		float turnSpeed; // speed of rotating around the y axis
-		float ascendSpeed; // speed of movement along the y axis
-
+		float turnSpeed; // Speed of rotating around the y axis
+		float ascendSpeed; // Speed of movement along the y axis
 
 		// ---HEALTH---
 		bool isAlive;
-		int MAX_HP;
 		int hp;
 
 		/**
@@ -59,7 +58,6 @@ class Wasp : Updatable
 
 
 		// ---HUNGER---
-		int MAX_HUNGER_SATURATION;
 		int hungerSaturation;
 
 		void onFoodReached();

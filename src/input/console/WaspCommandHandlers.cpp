@@ -189,7 +189,7 @@ void WaspCommandHandlers::commandWaspSetHp(const std::string& subcommand)
             Wasp* wasp = &(*wasps)[i];
             if (!wasp->isAlive) { continue; }
 
-            int maxHp = wasp->MAX_HP;
+            int maxHp = wasp->balancedGenes.maxHP;
             int curNewHp = newHp;
             if (newHp > maxHp)
             {
@@ -209,7 +209,7 @@ void WaspCommandHandlers::commandWaspSetHp(const std::string& subcommand)
             return;
         }
 
-        int maxHp = selectedWasp->MAX_HP;
+        int maxHp = selectedWasp->balancedGenes.maxHP;
         if (newHp > maxHp)
         {
             std::cout << "Desired hp had to be limited to the wasp's max hp" << std::endl;
@@ -252,7 +252,7 @@ void WaspCommandHandlers::commandWaspSetHunger(const std::string& subcommand)
             Wasp* wasp = &(*wasps)[i];
             if (!wasp->isAlive) { continue; }
 
-            int maxSaturation = wasp->MAX_HUNGER_SATURATION;
+            int maxSaturation = wasp->balancedGenes.maxHungerSaturation;
             int curNewSaturation = newSaturation;
             if (newSaturation > maxSaturation)
             {
@@ -272,7 +272,7 @@ void WaspCommandHandlers::commandWaspSetHunger(const std::string& subcommand)
             return;
         }
 
-        int maxSaturation = selectedWasp->MAX_HUNGER_SATURATION;
+        int maxSaturation = selectedWasp->balancedGenes.maxHungerSaturation;
         if (newSaturation > maxSaturation)
         {
             std::cout << "Desired hunger saturation had to be limited to the wasp's max hunger saturation" << std::endl;

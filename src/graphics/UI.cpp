@@ -90,7 +90,7 @@ void UI::_drawSelectedWaspUI()
 
             // HP BAR
             int hp = wasp->hp;
-            int maxHP = wasp->MAX_HP;
+            int maxHP = wasp->balancedGenes.maxHP;
             ImGui::Text("HP: %d/%d", hp, maxHP);
 
             _drawPercentageBar(hp, maxHP, ImVec4(0.0f, 1.0f, 0.0f, 0.2f));
@@ -101,7 +101,7 @@ void UI::_drawSelectedWaspUI()
         {
             // HUNGER BAR
             int hungerSaturation = wasp->hungerSaturation;
-            int maxSaturation = wasp->MAX_HUNGER_SATURATION;
+            int maxSaturation = wasp->balancedGenes.maxHungerSaturation;
             ImGui::Text("Hunger saturation: %d/%d", hungerSaturation, maxSaturation);
 
             _drawPercentageBar(hungerSaturation, maxSaturation, ImVec4(1.0f, 0.3f, 0.0f, 0.3f));
