@@ -5,6 +5,11 @@
 using WaspGenes::UnboundGenes;
 using WaspGenes::BalancedGenes;
 
+
+
+// ########################
+// #### BALANCED GENES ####
+// ########################
 using BGenePointer = float BalancedGenes::*;
 const int NUM_B_GENE_POINTERS = 3;
 
@@ -21,6 +26,7 @@ constexpr std::array<BGenePointer, NUM_B_GENE_POINTERS> B_GENE_POINTERS =
 // Uses the BalancedGenes struct as a map.
 // The value of a given gene represents its relative weight in the balancing function.
 // If geneA: 1.0 and geneB: 20.0 then a change in geneB needs to be balanced by change 20x as strong in geneA.
+// The value is also used to determine the mutation range/strength for the gene.
 const BalancedGenes B_GENE_COSTS = 
 {
     .maxHP = 1.0,
@@ -88,6 +94,49 @@ BalancedGenes WaspGenes::mutate(BalancedGenes genes)
         float balanceMutation = balanceGeneMutation(mutateTarget, mutation, balancingTarget);
         mutated.*mutateTarget += mutation;
         mutated.*balancingTarget += balanceMutation;
+    }
+    return mutated;
+}
+
+
+
+// #######################
+// #### UNBOUND GENES ####
+// #######################
+using UGenePointer = float UnboundGenes::*;
+const int NUM_U_GENE_POINTERS = 1;
+
+// Vector of pointers to all attributes of UnboundGenes to use for non-named access.
+// Leaving a pointer out of this vector means it will not be considered by functions like mutate().
+constexpr std::array<UGenePointer, NUM_U_GENE_POINTERS> U_GENE_POINTERS =
+{
+    &UnboundGenes::queenLoyalty
+};
+
+// Uses the UnboundGenes struct as a map.
+// The value of a given gene represents the range in which it can mutate in one mutation round.
+const UnboundGenes U_GENE_RANGES = 
+{
+    .queenLoyalty = 100.0
+};
+
+/**
+* Mutates the given Unbound randomly and returns a new set of genes.
+*/
+UnboundGenes WaspGenes::mutate(UnboundGenes genes)
+{
+    static constexpr int MAX_MUTATION_ROUNDS = 4 * NUM_U_GENE_POINTERS;
+    int mutationRounds = RNG::randMod(MAX_MUTATION_ROUNDS);
+
+    UnboundGenes mutated = genes;
+    for (int i = 0; i < mutationRounds; i++)
+    {
+        int mutateTargetIdx = RNG::randMod(NUM_U_GENE_POINTERS);
+        UGenePointer mutateTarget = U_GENE_POINTERS[mutateTargetIdx];
+
+        float mutationRange = U_GENE_RANGES.*mutateTarget;
+        float mutation = RNG::randBetween(-mutationRange, mutationRange);
+        mutated.*mutateTarget += mutation;
     }
     return mutated;
 }

@@ -31,6 +31,7 @@ void Wasp::initialize()
 	ascendSpeed = 0;
 
 	// GENES
+	unboundGenes = WaspGenes::mutate(unboundGenes);
 	balancedGenes = WaspGenes::mutate(balancedGenes);
 	hp = balancedGenes.maxHP;
 	hungerSaturation = balancedGenes.maxHungerSaturation;

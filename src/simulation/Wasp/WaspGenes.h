@@ -19,6 +19,13 @@ namespace WaspGenes
     };
 
     /**
+    * Mutates the given Unbound randomly and returns a new set of genes.
+    */
+    UnboundGenes mutate(UnboundGenes genes);
+
+
+
+    /**
     * @struct BalancedGenes
     * @brief A collection of traits posessed by a specific wasp. These genes are 'balanced' because they can be mutated only through a trade-off mutation in another gene.
     */

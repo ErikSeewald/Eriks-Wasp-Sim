@@ -38,7 +38,7 @@ void UI::_drawSelectedWaspUI()
     }
 
     // Initial size and position
-    const static ImVec2 initSize(250, 440);
+    const static ImVec2 initSize(250, 700);
     const static ImVec2 initPos(10,10);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
@@ -105,6 +105,22 @@ void UI::_drawSelectedWaspUI()
             ImGui::Text("Hunger saturation: %d/%d", hungerSaturation, maxSaturation);
 
             _drawPercentageBar(hungerSaturation, maxSaturation, ImVec4(1.0f, 0.3f, 0.0f, 0.3f));
+        }
+
+        // GENES
+        if (ImGui::CollapsingHeader("Genes", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            if (ImGui::CollapsingHeader("Unbound Genes"))
+            {
+                ImGui::Text("Queen loyalty: %f", wasp->unboundGenes.queenLoyalty);
+            }
+
+            if (ImGui::CollapsingHeader("Balanced Genes"))
+            {
+                ImGui::Text("Max HP: %f", wasp->balancedGenes.maxHP);
+                ImGui::Text("Max Hunger Saturation: %f", wasp->balancedGenes.maxHungerSaturation);
+                ImGui::Text("Flying speed: %f", wasp->balancedGenes.flyingSpeed);
+            }
         }
     }
 
