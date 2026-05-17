@@ -119,6 +119,7 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
 */
 void WaspRenderer::drawQueen(const Queen& queen)
 {
+    if (!queen.isAlive) { return; }
     unsigned int queenBitmap = 0b1;
     std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp{ queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap });
     InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, waspShaderProgram);

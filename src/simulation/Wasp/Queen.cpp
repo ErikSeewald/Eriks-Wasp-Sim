@@ -1,7 +1,8 @@
 #include "Queen.h"
 #include "WaspSlots.h"
+#include <stdexcept>
 
-Queen::Queen() : Wasp(W_INDEX)
+Queen::Queen() : Wasp(W_INDEX, *this) // The queen has no queen.. But she is her own queen.
 {
     // All workers start with a score of 0
     for (int i = 0; i < WaspSlots::getSlotCount(); i++)
@@ -25,6 +26,7 @@ void Queen::update()
 */
 Queen::InteractionResponse Queen::receiveFood(int amount, int w_Index)
 {
+    if (!isAlive) { throw std::runtime_error("Wasp " + std::to_string(w_Index) + " tried to give food to a dead queen."); } 
     if (interactionsLeft <= 0) { return InteractionResponse::Denied; }
 
     hungerSaturation += amount;

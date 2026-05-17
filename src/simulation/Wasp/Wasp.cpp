@@ -5,13 +5,12 @@
 #include "VectorMath.h"
 #include "WaspSlots.h"
 
-using WaspSlots::getQueen;
-
 /**
 * Constructs the wasp object and assigns it the given w_Index (which indicates its position in the wasp vector).
+* Also assigns the reference to the queen. Every wasp knows its queen.
 * By default the wasp is constructed with isAlive = false.
 */
-Wasp::Wasp(const int w_Index) : w_Index(w_Index)
+Wasp::Wasp(const int w_Index, Queen& queen) : w_Index(w_Index), queen(queen)
 {
 	initialize();
 	isAlive = false;
@@ -155,13 +154,13 @@ void Wasp::update()
 	}
 
 	// --- QUEEN INTERACTION ---
-	if (w_Index != Queen::W_INDEX)
+	if (w_Index != Queen::W_INDEX && queen.isAlive)
 	{
 		if (queenInteractionCountdown > 0) { queenInteractionCountdown--; }
 
 		else
 		{
-			float distToQueen = glm::distance(position, getQueen().position);
+			float distToQueen = glm::distance(position, queen.position);
 			if (distToQueen < Queen::INTERACTION_RADIUS)
 			{
 				giveFoodToQueen(RNG::randBetween(0, hungerSaturation));
@@ -229,7 +228,7 @@ inline void Wasp::turnTowardsGoal()
 */
 void Wasp::giveFoodToQueen(int amount)
 {
-	Queen::InteractionResponse response = getQueen().receiveFood(amount, this->w_Index);
+	Queen::InteractionResponse response = queen.receiveFood(amount, this->w_Index);
 	if (response == Queen::InteractionResponse::Denied) { return; }
 
 	hungerSaturation -= amount;
@@ -242,6 +241,6 @@ inline void Wasp::die()
 {
 	hp = 0;
 	isAlive = false;
-	getQueen().resetWorkerDossier(w_Index);
+	if (queen.isAlive) { queen.resetWorkerDossier(w_Index); }
 	WaspSlots::registerDeath();
 }

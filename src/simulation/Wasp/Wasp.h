@@ -6,6 +6,7 @@
 #include <chrono>
 #include <glm/glm.hpp>
 
+class Queen; // Forward declaration so the queen can be referenced here
 
 /**
 * @class Wasp
@@ -21,9 +22,10 @@ class Wasp : Updatable
 
 		/**
 		* Constructs the wasp object and assigns it the given w_Index (which indicates its position in the wasp vector).
+		* Also assigns the reference to the queen. Every wasp knows its queen.
 		* By default the wasp is constructed with isAlive = false.
 		*/
-		Wasp(const int w_Index);
+		Wasp(const int w_Index, Queen& queen);
 
 		/**
 		* Respawns the wasp and resets its attributes. Both living and dead wasps can be respawned.
@@ -69,6 +71,7 @@ class Wasp : Updatable
 	// Note: While I would prefer more attributes to be private, the overhead of getter functions
 	// is just not worth it at very high wasp counts
 	private:
+		Queen& queen;
 		const int QUEEN_INTERACTION_TIMEOUT = 1000; 
 		int queenInteractionCountdown;
 		
