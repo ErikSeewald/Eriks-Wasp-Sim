@@ -49,7 +49,7 @@ void WaspCommandHandlers::commandWaspSelect(const std::string& subcommand)
 
     else
     {
-        int index = CommandUtil::convertToInt(indexString);
+        index = CommandUtil::convertToInt(indexString);
         int maxIndex = WaspSlots::getMaxIndex();
         if (index < 0 || index >= maxIndex)
         {
