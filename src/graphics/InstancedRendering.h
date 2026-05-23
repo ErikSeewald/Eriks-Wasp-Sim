@@ -2,6 +2,7 @@
 
 #include "SimVisualizer.h"
 #include <vector>
+#include <cstdintyy>
 
 /**
 * @namespace InstancedRendering
@@ -52,6 +53,6 @@ namespace InstancedRendering
         glm::vec3 position;
         glm::vec3 viewingVector;
         int w_Index;
-        unsigned int waspBitmap;
+        uint32_t waspBitmap;
     };
 }

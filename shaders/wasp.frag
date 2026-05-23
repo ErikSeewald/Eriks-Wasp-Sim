@@ -1,6 +1,7 @@
 #version 330 core
 
 flat in int w_IndexFlat;
+flat in uint waspBitmapFlat;
 in vec3 vNormal;
 
 out vec4 FragColor;
@@ -22,11 +23,30 @@ void main()
     float brightness = (dotProduct + 1.0) / 2.0;
     brightness = clamp(brightness * 1.2, 0.2, 1.0);
 
-    // Scale base color by brightness factor and index hash
-    //float h = 1.0 - (hash(w_IndexFlat) * 0.75);
-    //vec3 baseColor = vec3(1.0 * h, 0.5 * h, 0.0);
+    vec3 baseColor;
+    uint renderMode = waspBitmapFlat >> 28;
+    switch (renderMode)
+    {
+        case 0u: // UniformFlat
+            baseColor = vec3(1.0, 0.5, 0.0); 
+            brightness = 1.0; 
+            break;
 
-    vec3 baseColor = vec3(hash(w_IndexFlat), hash(w_IndexFlat + 1), hash(w_IndexFlat + 2));
+        case 1u: // UniformColor
+            baseColor = vec3(1.0, 0.5, 0.0); 
+            break; 
+
+        case 2u: // RandomOranges                                          
+            float h = 1.0 - (hash(w_IndexFlat) * 0.6);
+            baseColor = vec3(1.0 * h, 0.5 * h, 0.1);
+            break;
+        
+        case 3u: // FullRandomColors
+            baseColor = vec3(hash(w_IndexFlat), hash(w_IndexFlat + 1), hash(w_IndexFlat + 2)); 
+            break;
+    }
+
+    
     vec3 color = baseColor * brightness;
 
     FragColor = vec4(color, 1.0);

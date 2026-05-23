@@ -8,9 +8,11 @@
 #include "DebugRenderer.h"
 #include "ThreadPool.h"
 #include "UI.h"
+#include "RenderMode.h"
 #include <thread>
 #include <mutex>
 #include "glm/ext.hpp"
+#include <cstdint>
 
 using InstancedRendering::InstanceDataWasp;
 
@@ -68,10 +70,30 @@ void WaspRenderer::init()
 }
 
 /**
+* Builds the entity information bitmap that is used by the wasp shader.
+* Format:
+* 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+* RM RM RM RM 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  Q
+*
+* With:
+* RM - Byte representing RenderMode::WaspRenderMode
+* Q  - Is this wasp the queen? Then 1, otherwise 0
+*/
+inline uint32_t _constructWaspBitmap(bool isQueen)
+{
+    uint32_t bitmap = isQueen ? 0b1 : 0b0; // Q
+    bitmap = ((uint32_t) UI::getUIState()->waspRenderMode) << 28; // RM
+    return bitmap;
+}
+
+/**
 * Renders the given wasps.
 */
 void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
 {
+    const bool isQueen = false; // The queen is handled by its own function.
+    uint32_t baseWaspBitmap = _constructWaspBitmap(isQueen); // Shared bitmap values for all normal wasps
+
     std::atomic<size_t> instanceIndex(0); // Thread safe index into wasp_instanceData
 
     int maxIndex = WaspSlots::getMaxIndex();
@@ -97,11 +119,9 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
                 const Wasp& w = wasps[i];
                 if (!w.isAlive) { continue; }
 
-                unsigned int waspBitmap = 0b0; // Nothing on by default (TODO: More non-queen bitmap info)
-
                 // weakest memory ordering that still guarantees atomicity
                 int idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
-                wasp_instanceData[idx] = InstanceDataWasp{ w.position, w.viewingVector, i, waspBitmap};
+                wasp_instanceData[idx] = InstanceDataWasp{ w.position, w.viewingVector, i, baseWaspBitmap};
             }
         });
     }
@@ -120,7 +140,9 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
 void WaspRenderer::drawQueen(const Queen& queen)
 {
     if (!queen.isAlive) { return; }
-    unsigned int queenBitmap = 0b1;
+
+    const bool isQueen = true;
+    uint32_t queenBitmap = _constructWaspBitmap(isQueen);
     std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp{ queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap });
     InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, waspShaderProgram);
 }

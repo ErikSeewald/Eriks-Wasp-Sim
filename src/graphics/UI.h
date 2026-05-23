@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Wasp.h"
+#include "RenderMode.h"
 #include <string>
 
 #include "imgui.h"
@@ -20,9 +21,10 @@ namespace UI
 	struct UI_STATE
 	{
 		Wasp* selectedWasp;
-		bool drawSelectedWaspGoal;
-		bool drawGrid;
-		bool isPaused;
+		bool drawSelectedWaspGoal = false;
+		bool drawGrid = true;
+		bool isPaused = false;
+		RenderMode::WaspRenderMode waspRenderMode = RenderMode::WaspRenderMode::RandomOranges;
 	};
 
 	UI_STATE* getUIState();

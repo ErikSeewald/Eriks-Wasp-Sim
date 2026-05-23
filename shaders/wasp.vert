@@ -13,6 +13,7 @@ layout (location = 5) in uint waspBitmap;
 uniform mat4 uViewProj;
 
 flat out int w_IndexFlat;
+flat out uint waspBitmapFlat;
 out vec3 vNormal;
 
 // Vert shader for drawing a instanced wasp entity.
@@ -40,6 +41,7 @@ void main()
 	vNormal.y = aNormal.y;
 	vNormal.z = -aNormal.x * sinAngle + aNormal.z * cosAngle;
 
-	// Pass the index to the frag shader without interpolation
+	// Pass the index and bitmap to the frag shader without interpolation
 	w_IndexFlat = w_Index;
+	waspBitmapFlat = waspBitmap;
 }

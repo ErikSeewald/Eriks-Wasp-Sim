@@ -202,7 +202,7 @@ void UI::_drawCameraUI()
 
 void UI::_drawOptionsUI()
 {
-    const static ImVec2 initSize(150, 80);
+    const static ImVec2 initSize(150, 150);
     const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 400);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
@@ -210,6 +210,16 @@ void UI::_drawOptionsUI()
     if (ImGui::Begin("Options"))
     {
         ImGui::Checkbox("Draw grid", &uiState.drawGrid);
+        ImGui::Separator();
+
+        // WaspRenderMode
+        ImGui::Text("WaspRenderMode:");
+        const static char* WASP_RENDER_MODE_STRING_NAMES[] = {"UniformFlat", "UniformColor", "RandomOranges", "FullRandomColors",};
+        int current = static_cast<int>(uiState.waspRenderMode);
+        bool changed = ImGui::Combo(" ", &current, WASP_RENDER_MODE_STRING_NAMES, 4);
+        if (changed) { uiState.waspRenderMode = static_cast<RenderMode::WaspRenderMode>(current); }
+
+        ImGui::Separator();
     }
 
     ImGui::End();
