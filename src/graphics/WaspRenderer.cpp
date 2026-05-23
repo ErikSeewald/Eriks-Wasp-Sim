@@ -70,19 +70,33 @@ void WaspRenderer::init()
 }
 
 /**
-* Builds the entity information bitmap that is used by the wasp shader.
+* Constructs the base information in the bitmap that is used by the wasp shader.
+* This bitmap is shared by many wasp entities, _modifyWaspBitmap being used to add entity-specific information.
+*
 * Format:
 * 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
-* RM RM RM RM 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  Q
+* RM RM RM RM 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  G  Q
 *
 * With:
 * RM - Byte representing RenderMode::WaspRenderMode
+* G  - Does this wasp currently have a goal? Then 1, otherwise 0
 * Q  - Is this wasp the queen? Then 1, otherwise 0
 */
 inline uint32_t _constructWaspBitmap(bool isQueen)
 {
     uint32_t bitmap = isQueen ? 0b1 : 0b0; // Q
-    bitmap = ((uint32_t) UI::getUIState()->waspRenderMode) << 28; // RM
+    bitmap |= ((uint32_t) UI::getUIState()->waspRenderMode) << 28; // RM
+    return bitmap;
+}
+
+/**
+* Adds entity-specific information to the given baseBitmap.
+* See _constructWaspBitmap
+*/
+inline uint32_t _modifyWaspBitmap(const uint32_t& baseBitmap, const Wasp& wasp)
+{
+    uint32_t bitmap = baseBitmap;
+    bitmap |= wasp.currentGoal != nullptr ? 0b10 : 0b00; // G
     return bitmap;
 }
 
@@ -121,7 +135,7 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
 
                 // weakest memory ordering that still guarantees atomicity
                 int idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
-                wasp_instanceData[idx] = InstanceDataWasp{ w.position, w.viewingVector, i, baseWaspBitmap};
+                wasp_instanceData[idx] = InstanceDataWasp{ w.position, w.viewingVector, i, _modifyWaspBitmap(baseWaspBitmap, w)};
             }
         });
     }

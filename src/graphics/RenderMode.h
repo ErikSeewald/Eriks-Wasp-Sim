@@ -15,6 +15,7 @@ namespace RenderMode
         UniformFlat,
         UniformColor,
         RandomOranges,
-        FullRandomColors
+        FullRandomColors,
+        GreenIfHasGoal,
     };
 }

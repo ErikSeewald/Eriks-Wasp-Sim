@@ -2,7 +2,7 @@
 
 #include "SimVisualizer.h"
 #include <vector>
-#include <cstdintyy>
+#include <cstdint>
 
 /**
 * @namespace InstancedRendering

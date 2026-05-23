@@ -1,7 +1,7 @@
 #version 330 core
 
 flat in int w_IndexFlat;
-flat in uint waspBitmapFlat;
+flat in uint waspBitmapFlat; // See WaspRenderer.ccp for the bitmap format
 in vec3 vNormal;
 
 out vec4 FragColor;
@@ -43,6 +43,11 @@ void main()
         
         case 3u: // FullRandomColors
             baseColor = vec3(hash(w_IndexFlat), hash(w_IndexFlat + 1), hash(w_IndexFlat + 2)); 
+            break;
+
+        case 4u: // GreenIfHasGoal
+            bool hasGoal = (waspBitmapFlat & 2u) == 2u;
+            baseColor = hasGoal ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);
             break;
     }
 

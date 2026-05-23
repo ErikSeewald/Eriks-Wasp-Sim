@@ -8,7 +8,7 @@ layout (location = 1) in vec3 aNormal;	// Vertex normal
 layout (location = 2) in vec3 iPosition;
 layout (location = 3) in vec3 iViewingVector;
 layout (location = 4) in int w_Index;
-layout (location = 5) in uint waspBitmap;
+layout (location = 5) in uint waspBitmap; // See WaspRenderer.ccp for the bitmap format
 
 uniform mat4 uViewProj;
 
