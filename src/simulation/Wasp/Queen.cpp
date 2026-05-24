@@ -2,7 +2,7 @@
 #include "WaspSlots.h"
 #include <stdexcept>
 
-Queen::Queen() : Wasp(W_INDEX, *this) // The queen has no queen.. But she is her own queen.
+Queen::Queen() : _allWasps(*WaspSlots::getWasps()), Wasp(W_INDEX, *this) // The queen has no queen.. But she is her own queen.
 {
     // All workers start with a score of 0
     for (int i = 0; i < WaspSlots::getSlotCount(); i++)
@@ -44,6 +44,19 @@ int Queen::getWorkerScore(int w_Index)
 }
 
 /**
+* Returns the highest current worker score of all the workers that the queen knows about. 
+*/
+int Queen::getCurrentMaxWorkerScore()
+{
+    int max = 0.0;
+    for (const WorkerDossier& dossier : workerDossiers)
+    {
+        if (dossier.score > max) { max = dossier.score; }
+    }
+    return max;
+}
+
+/**
 * Resets the queens knowledge of the worker wasp defined by the given w_Index. Useful for respawning wasps.
 */
 void Queen::resetWorkerDossier(int w_Index)
@@ -58,4 +71,8 @@ void Queen::updateWorkerScore(int w_Index, int scoreChange)
 {
     WorkerDossier* dossier = &workerDossiers[w_Index];
     dossier->score += scoreChange;
+
+    // Only the value retrieved through getWorkerScore is valid.
+    // This wasp owned attribute is only used for fast debug rendering.
+    _allWasps[w_Index]._debugWorkerScore = dossier->score;
 }

@@ -54,5 +54,8 @@ namespace InstancedRendering
         glm::vec3 viewingVector;
         int w_Index;
         uint32_t waspBitmap;
+        float relativeWorkerScore;
+        float relativeHunger;
+        float relativeHealth;
     };
 }

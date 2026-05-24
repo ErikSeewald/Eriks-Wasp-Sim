@@ -2,6 +2,9 @@
 
 flat in int w_IndexFlat;
 flat in uint waspBitmapFlat; // See WaspRenderer.ccp for the bitmap format
+flat in float relativeWorkerScoreFlat;
+flat in float relativeHungerFlat;
+flat in float relativeHealthFlat;
 in vec3 vNormal;
 
 out vec4 FragColor;
@@ -48,11 +51,23 @@ void main()
         case 4u: // GreenIfHasGoal
             bool hasGoal = (waspBitmapFlat & 2u) == 2u;
             baseColor = hasGoal ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);
-            break;
-    }
+            break;     
 
+        case 5u: // RelativeWorkerScore
+            bool isQueen = (waspBitmapFlat & 1u) == 1u;
+            float r = relativeWorkerScoreFlat;
+            baseColor = isQueen ? vec3(0.0, 1.0, 0.0) : vec3(r, 0.1, 1.0 - r);
+            break;
+
+        case 6u: // RelativeHunger
+            baseColor = vec3(1.0 - relativeHungerFlat, relativeHungerFlat, 0.1);
+            break;
+
+        case 7u: // RelativeHealth
+            baseColor = vec3(1.0 - relativeHealthFlat, relativeHealthFlat, 0.1);
+            break;  
+    }
     
     vec3 color = baseColor * brightness;
-
     FragColor = vec4(color, 1.0);
 }

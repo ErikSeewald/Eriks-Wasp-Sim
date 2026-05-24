@@ -17,5 +17,8 @@ namespace RenderMode
         RandomOranges,
         FullRandomColors,
         GreenIfHasGoal,
+        RelativeWorkerScore,
+        RelativeHunger,
+        RelativeHealth,
     };
 }

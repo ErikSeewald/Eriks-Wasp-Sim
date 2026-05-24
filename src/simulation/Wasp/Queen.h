@@ -52,11 +52,18 @@ class Queen : public Wasp
 		int getWorkerScore(int w_Index);
 
 		/**
+		* Returns the highest current worker score of all the workers that the queen knows about. 
+		*/
+		int getCurrentMaxWorkerScore();
+
+		/**
 		* Resets the queens knowledge of the worker wasp defined by the given w_Index. Useful for respawning wasps.
 		*/
 		void resetWorkerDossier(int w_Index);
 
 	private:
+		std::vector<Wasp>& _allWasps; // This vec does not represent the wasps that the queen actually KNOWS
+
 		const int MAX_INTERACTIONS_PER_ITERATION = 4; // Don't want to overwork her
 		int interactionsLeft; // How many interactions does the queen still allow at this iteration
 

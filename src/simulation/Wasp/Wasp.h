@@ -68,6 +68,9 @@ class Wasp : Updatable
 		glm::vec3* currentGoal;
 		Food::FoodEntity* currentGoalFoodEntity;
 
+		// DEBUG ONLY
+		float _debugWorkerScore = 0.0; // Only the score queried from the queen is actually valid, this is only for debug rendering.
+
 	// Note: While I would prefer more attributes to be private, the overhead of getter functions
 	// is just not worth it at very high wasp counts
 	private:

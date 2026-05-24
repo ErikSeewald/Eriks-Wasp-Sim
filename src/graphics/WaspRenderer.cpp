@@ -107,6 +107,7 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
 {
     const bool isQueen = false; // The queen is handled by its own function.
     uint32_t baseWaspBitmap = _constructWaspBitmap(isQueen); // Shared bitmap values for all normal wasps
+    float maxWorkerScore = (float) WaspSlots::getQueen().getCurrentMaxWorkerScore(); // Used for rendering the relative score
 
     std::atomic<size_t> instanceIndex(0); // Thread safe index into wasp_instanceData
 
@@ -133,9 +134,19 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
                 const Wasp& w = wasps[i];
                 if (!w.isAlive) { continue; }
 
+                uint32_t bitmap = _modifyWaspBitmap(baseWaspBitmap, w);
+
+                // _debugWorkerScore is used for optimization (set by the queen when the worker score changes)
+                float relativeWorkerScore = w._debugWorkerScore / maxWorkerScore;
+                float relativeHunger = w.hungerSaturation / w.balancedGenes.maxHungerSaturation;
+                float relativeHealth = w.hp / w.balancedGenes.maxHP;
+
                 // weakest memory ordering that still guarantees atomicity
                 int idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
-                wasp_instanceData[idx] = InstanceDataWasp{ w.position, w.viewingVector, i, _modifyWaspBitmap(baseWaspBitmap, w)};
+                wasp_instanceData[idx] = InstanceDataWasp 
+                { 
+                    w.position, w.viewingVector, i, bitmap, relativeWorkerScore, relativeHunger, relativeHealth
+                };
             }
         });
     }
@@ -157,7 +168,13 @@ void WaspRenderer::drawQueen(const Queen& queen)
 
     const bool isQueen = true;
     uint32_t queenBitmap = _constructWaspBitmap(isQueen);
-    std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp{ queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap });
+    float relativeWorkerScore = 0.0;
+    float relativeHunger = queen.hungerSaturation / queen.balancedGenes.maxHungerSaturation;
+    float relativeHealth = queen.hp / queen.balancedGenes.maxHP;
+
+    std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp { 
+            queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap, relativeWorkerScore, relativeHunger, relativeHealth
+        });
     InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, waspShaderProgram);
 }
 
