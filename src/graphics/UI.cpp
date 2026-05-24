@@ -227,16 +227,17 @@ void UI::_drawOptionsUI()
 
     if (ImGui::Begin("Options"))
     {
+        ImGui::Checkbox("Pause sim", &uiState.isPaused);
         ImGui::Checkbox("Draw grid", &uiState.drawGrid);
         ImGui::Separator();
 
         // WaspRenderMode
         ImGui::Text("WaspRenderMode:");
-        const int MODES = 7;
+        const int MODES = 8;
         const static char* WASP_RENDER_MODE_STRING_NAMES[MODES] = 
         {
             "UniformFlat", "UniformColor", "RandomOranges", "FullRandomColors", 
-            "RelativeWorkerScore", "RelativeHunger", "RelativeHealth"
+            "GreenIfHasGoal", "RelativeWorkerScore", "RelativeHunger", "RelativeHealth"
         };
         int current = static_cast<int>(uiState.waspRenderMode);
         bool changed = ImGui::Combo(" ", &current, WASP_RENDER_MODE_STRING_NAMES, MODES);
