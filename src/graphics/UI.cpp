@@ -112,14 +112,32 @@ void UI::_drawSelectedWaspUI()
         {
             if (ImGui::CollapsingHeader("Unbound Genes"))
             {
-                ImGui::Text("Queen loyalty: %f", wasp->unboundGenes.queenLoyalty);
+                if (ImGui::BeginTable("Unbound Genes", 2, ImGuiTableFlags_Borders))
+                {
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0); ImGui::Text("Queen loyalty");
+                    ImGui::TableSetColumnIndex(1); ImGui::Text("%.3f", wasp->unboundGenes.queenLoyalty);
+                    ImGui::EndTable();
+                }
             }
 
             if (ImGui::CollapsingHeader("Balanced Genes"))
             {
-                ImGui::Text("Max HP: %f", wasp->balancedGenes.maxHP);
-                ImGui::Text("Max Hunger Saturation: %f", wasp->balancedGenes.maxHungerSaturation);
-                ImGui::Text("Flying speed: %f", wasp->balancedGenes.flyingSpeed);
+                if (ImGui::BeginTable("Balanced Genes", 2, ImGuiTableFlags_Borders))
+                {
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0); ImGui::Text("Max HP");
+                    ImGui::TableSetColumnIndex(1); ImGui::Text("%.3f", wasp->balancedGenes.maxHP);
+
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0); ImGui::Text("Max Hunger Sat.");
+                    ImGui::TableSetColumnIndex(1); ImGui::Text("%.3f", wasp->balancedGenes.maxHungerSaturation);
+
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0); ImGui::Text("Flying speed");
+                    ImGui::TableSetColumnIndex(1); ImGui::Text("%.3f", wasp->balancedGenes.flyingSpeed);
+                    ImGui::EndTable();
+                }
             }
         }
     }
@@ -232,7 +250,7 @@ void UI::_drawOptionsUI()
 
 void UI::_drawVectorTable(const glm::vec3& vector, const std::string& tableName)
 {
-    if (ImGui::BeginTable("VectorTable", 2, ImGuiTableFlags_Borders))
+    if (ImGui::BeginTable(tableName.c_str(), 2, ImGuiTableFlags_Borders))
     {
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0); ImGui::Text("X");
