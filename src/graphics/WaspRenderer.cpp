@@ -108,6 +108,7 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
     const bool isQueen = false; // The queen is handled by its own function.
     uint32_t baseWaspBitmap = _constructWaspBitmap(isQueen); // Shared bitmap values for all normal wasps
     float maxWorkerScore = (float) WaspSlots::getQueen().getCurrentMaxWorkerScore(); // Used for rendering the relative score
+    if (maxWorkerScore == 0.0) { maxWorkerScore = INFINITY; } // Avoid div by zero
 
     std::atomic<size_t> instanceIndex(0); // Thread safe index into wasp_instanceData
 
