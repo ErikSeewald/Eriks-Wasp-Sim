@@ -15,7 +15,7 @@ namespace WaspGenes
         // Queen loyalty affects how devoted the wasp is to its queen:
         // - How likely is it to choose to fly toward the queen
         // - How much food is it willing to gift the queen
-        float queenLoyalty = 1000.0;
+        float queenLoyalty = 1.0;
     };
 
     /**

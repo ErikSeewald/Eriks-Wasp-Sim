@@ -2,6 +2,7 @@
 
 #include "Wasp.h"
 #include <vector>
+#include <chrono>
 
 /**
 * @class Queen
@@ -38,13 +39,18 @@ class Queen : public Wasp
 		/**
 		* Does queen-specific updating and then calls Wasp::update()
 		*/
-		void update();
+		void update(const std::chrono::duration<double>& deltaTime);
 
 		/**
 		* Allows a worker wasp (with the given w_Index) to attempt to gift the given amount of food
 		* to the queen. Whether she accepted it is returned in the InteractionResponse.
 		*/
 		InteractionResponse receiveFood(int amount, int w_Index);
+
+		/**
+		* Returns the amount of food that the queen has currently stored beyond her own hunger saturation.
+		*/
+		int getStoredFoodAmount();
 
 		/**
 		* Returns the score that the queen has assigned to the worker wasp defined by the given w_Index.
@@ -61,16 +67,38 @@ class Queen : public Wasp
 		*/
 		void resetWorkerDossier(int w_Index);
 
+
 	private:
 		std::vector<Wasp>& _allWasps; // This vec does not represent the wasps that the queen actually KNOWS
 
 		const int MAX_INTERACTIONS_PER_ITERATION = 4; // Don't want to overwork her
 		int interactionsLeft; // How many interactions does the queen still allow at this iteration
 
+		// During handouts, the queen can give things to her workers.
+		const double SECONDS_BETWEEN_HANDOUTS = 5.0;
+        double secondsSinceLastHandout = 0.0;
+		bool isHandoutDue = false;
+
 		std::vector<WorkerDossier> workerDossiers{};
+		std::vector<int> wIndexSortedByWorkerScore; // Not updated every interation.
+
+		int storedFoodAmount; // Additional food that the queen does not need for its own hunger saturation.
+
+		/**
+		* Updates 'wIndexSortedByWorkerScore' with the current worker score iteration.
+		* Due to performance reason, this is only done rarely when needed (like for handouts)
+		* and not at every iteration. Most times its better to keep everything sorted by wIndex.
+		*/
+		void sortIndicesByWorkerScore();
 
 		/**
 		* Updates the score of the worker wasp defined by the given w_Index.
 		*/
 		void updateWorkerScore(int w_Index, int scoreChange);
+
+		/**
+		* Manages how the queen's stored food should be used in the current update cycle.
+		* Either for her own benefit or for that of her most appreciated workers.
+		*/
+		void updateFoodStorage();
 };

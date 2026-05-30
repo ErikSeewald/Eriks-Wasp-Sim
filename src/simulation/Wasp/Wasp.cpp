@@ -112,6 +112,20 @@ void Wasp::update()
 		}
 	}
 
+	// Highly loyal wasps will move close to the queen if she needs food
+	else if (queen.hungerSaturation < 0.5 * queen.balancedGenes.maxHungerSaturation)
+	{
+		if (glm::distance(position, queen.position) > Queen::INTERACTION_RADIUS)
+		{ 
+			if (RNG::randBetween(0.0, 1.0) * unboundGenes.queenLoyalty > 0.75) { currentGoal = &queen.position; } 
+		}
+
+		else if (currentGoal == &queen.position) // No need to keep moving towards her if already in range
+		{
+			currentGoal = nullptr;
+		}
+	}
+
 
 	// --- SPEEDS ---
 	if (currentGoal != nullptr) { turnTowardsGoal(); }
@@ -164,7 +178,9 @@ void Wasp::update()
 			float distToQueen = glm::distance(position, queen.position);
 			if (distToQueen < Queen::INTERACTION_RADIUS)
 			{
-				giveFoodToQueen(RNG::randBetween(0, hungerSaturation));
+				// The average wasp (loyalty 1.0) should be willing to give at most half of its food to the queen.
+				// The most loyal would give her everything they have.
+				giveFoodToQueen(RNG::randBetween(0, hungerSaturation * 0.5 * unboundGenes.queenLoyalty));
 				queenInteractionCountdown = QUEEN_INTERACTION_TIMEOUT;
 			}
 		}
@@ -225,10 +241,13 @@ inline void Wasp::turnTowardsGoal()
 
 /**
 * Gives the given amount of food to the queen and thereby decreases the wasp's own hungerSaturation.
+* Limits the amount to the actual available amount of food.
 * Does not check food availability or distance to the queen.
 */
 void Wasp::giveFoodToQueen(int amount)
 {
+	if (amount > hungerSaturation) { amount = hungerSaturation; }
+
 	Queen::InteractionResponse response = queen.receiveFood(amount, this->w_Index);
 	if (response == Queen::InteractionResponse::Denied) { return; }
 

@@ -175,7 +175,7 @@ void UI::_drawPerformanceUI()
 
 void UI::_drawHiveUI()
 {
-    const static ImVec2 initSize(150, 85);
+    const static ImVec2 initSize(150, 120);
     const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 105);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
@@ -187,6 +187,9 @@ void UI::_drawHiveUI()
         ImGui::Text("Alive: %d", aliveCount);
         ImGui::Text("Dead: %d", deadCount);
         ImGui::Text("Total: %d", aliveCount + deadCount);
+
+        ImGui::Separator();
+        ImGui::Text("QueenFoodStorage:\n%d", WaspSlots::getQueen().getStoredFoodAmount());
     }
 
     ImGui::End();
@@ -196,7 +199,7 @@ void UI::_drawHiveUI()
 void UI::_drawCameraUI()
 {
     const static ImVec2 initSize(150, 190);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 200);
+    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 235);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
@@ -221,7 +224,7 @@ void UI::_drawCameraUI()
 void UI::_drawOptionsUI()
 {
     const static ImVec2 initSize(150, 150);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 400);
+    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 435);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 

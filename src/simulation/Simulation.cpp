@@ -94,7 +94,7 @@ void Simulation::updateWasps()
     }
 
     //QUEEN
-    WaspSlots::getQueen().update();
+    WaspSlots::getQueen().update(deltaTime);
 }
 
 void Simulation::updateDeltaTime()

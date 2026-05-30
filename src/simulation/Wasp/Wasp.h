@@ -88,6 +88,7 @@ class Wasp : Updatable
 
 		/**
 		* Gives the given amount of food to the queen and thereby decreases the wasp's own hungerSaturation.
+		* Limits the amount to the actual available amount of food.
 		* Does not check food availability or distance to the queen.
 		*/
 		void giveFoodToQueen(int amount);

@@ -75,7 +75,7 @@ BalancedGenes WaspGenes::mutate(BalancedGenes genes)
 {
     static const float DEFAULT_MUTATION_RANGE = 10.0; // A gene with weight 1.0 can mutate in this range
 
-    static constexpr int MAX_MUTATION_ROUNDS = 8 * NUM_B_GENE_POINTERS;
+    static constexpr int MAX_MUTATION_ROUNDS = 4 * NUM_B_GENE_POINTERS;
     int mutationRounds = RNG::randMod(MAX_MUTATION_ROUNDS);
 
     BalancedGenes mutated = genes;
@@ -117,7 +117,7 @@ constexpr std::array<UGenePointer, NUM_U_GENE_POINTERS> U_GENE_POINTERS =
 // The value of a given gene represents the range in which it can mutate in one mutation round.
 const UnboundGenes U_GENE_RANGES = 
 {
-    .queenLoyalty = 100.0
+    .queenLoyalty = 0.5
 };
 
 /**
@@ -125,7 +125,7 @@ const UnboundGenes U_GENE_RANGES =
 */
 UnboundGenes WaspGenes::mutate(UnboundGenes genes)
 {
-    static constexpr int MAX_MUTATION_ROUNDS = 4 * NUM_U_GENE_POINTERS;
+    static constexpr int MAX_MUTATION_ROUNDS = 2 * NUM_U_GENE_POINTERS;
     int mutationRounds = RNG::randMod(MAX_MUTATION_ROUNDS);
 
     UnboundGenes mutated = genes;
