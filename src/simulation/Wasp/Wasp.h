@@ -3,7 +3,9 @@
 #include "Updatable.h"
 #include "WaspGenes.h"
 #include "Food.h"
+#include "Contracts.h"
 #include <chrono>
+#include <array>
 #include <glm/glm.hpp>
 
 class Queen; // Forward declaration so the queen can be referenced here
@@ -18,6 +20,7 @@ class Wasp : Updatable
 		// CONSTANTS
 		static constexpr int VIEW_RANGE = 10; // How far the wasp can see other entities
 		static constexpr std::chrono::milliseconds RESOURCE_TICK_INTERVAL{2000}; // How often do resource attributes like hp and hunger get ticked
+		static constexpr int MAX_NUM_CONTRACTS = 8; // A limit here should make for more interestic cost-benefit decisions
 		const int w_Index; // Position in the wasp vector
 
 		/**
@@ -40,6 +43,9 @@ class Wasp : Updatable
 		// ---GENES---
 		WaspGenes::UnboundGenes unboundGenes;
 		WaspGenes::BalancedGenes balancedGenes;
+
+		// ---CONTRACTS---
+		std::array<Contracts::Contract*, MAX_NUM_CONTRACTS> contracts;
 
 		// ---MOVEMENT---
 		glm::vec3 position;

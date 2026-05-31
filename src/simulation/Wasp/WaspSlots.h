@@ -3,6 +3,7 @@
 #include "Wasp.h"
 #include "Queen.h"
 #include "Simulation.h"
+#include "Contracts.h"
 
 using Strategies::SpawnStrategy;
 using Strategies::KillStrategy;

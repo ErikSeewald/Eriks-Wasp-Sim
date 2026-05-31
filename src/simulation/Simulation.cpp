@@ -4,6 +4,7 @@
 #include "ResourceSpawner.h"
 #include "ThreadPool.h"
 #include "RNG.h"
+#include "Contracts.h"
 #include <thread>
 #include <mutex>
 #include <iostream>
@@ -38,16 +39,17 @@ void Simulation::startLoop()
             ResourceSpawner::update(&deltaTime);
         }
 
-        // MAX INDICES
-        static const double secondsBetweenMaxIndexUpdates = 5.0;
-        static double secondsSinceMaxIndexUpdate = 0.0;
+        // CLEANUPS AND EXPENSIVE UPDATES
+        static const double SECONDS_BETWEEN_CLEANUPS = 5.0;
+        static double secondsSinceLastCleanup = 0.0;
 
-        secondsSinceMaxIndexUpdate += deltaTime.count();
-        if (secondsSinceMaxIndexUpdate > secondsBetweenMaxIndexUpdates)
+        secondsSinceLastCleanup += deltaTime.count();
+        if (secondsSinceLastCleanup > SECONDS_BETWEEN_CLEANUPS)
         {
             WaspSlots::updateMaxIndex();
             Food::updateMaxIndex();
-            secondsSinceMaxIndexUpdate = 0.0;
+            Contracts::cleanupExpiredContracts();
+            secondsSinceLastCleanup = 0.0;
         }
 
         // DELTA TIME
@@ -134,7 +136,7 @@ std::chrono::duration<double>* Simulation::getDeltaTime()
 */
 std::chrono::steady_clock::time_point* Simulation::getCachedTimePoint()
 {
- return &currentTime;
+    return &currentTime;
 }
 
 /**
