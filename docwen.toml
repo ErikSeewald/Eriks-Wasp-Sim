@@ -219,3 +219,10 @@ files = [
     "simulation/Wasp/WaspGenes.cpp",
     "simulation/Wasp/WaspGenes.h",
 ]
+
+[[filegroup]]
+name = "contracts"
+files = [
+    "simulation/Wasp/Contracts.cpp",
+    "simulation/Wasp/Contracts.h",
+]
