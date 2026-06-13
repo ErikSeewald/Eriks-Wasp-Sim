@@ -16,6 +16,9 @@ namespace WaspGenes
         // - How likely is it to choose to fly toward the queen
         // - How much food is it willing to gift the queen
         float queenLoyalty = 1.0;
+
+        // How likely the wasp is to both propose and accept contracts.
+        float contractDesire = 0.25;
     };
 
     /**

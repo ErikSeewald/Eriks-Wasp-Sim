@@ -117,6 +117,10 @@ void UI::_drawSelectedWaspUI()
                     ImGui::TableNextRow();
                     ImGui::TableSetColumnIndex(0); ImGui::Text("Queen loyalty");
                     ImGui::TableSetColumnIndex(1); ImGui::Text("%.3f", wasp->unboundGenes.queenLoyalty);
+
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0); ImGui::Text("Contract desire");
+                    ImGui::TableSetColumnIndex(1); ImGui::Text("%.3f", wasp->unboundGenes.contractDesire);
                     ImGui::EndTable();
                 }
             }
@@ -138,6 +142,29 @@ void UI::_drawSelectedWaspUI()
                     ImGui::TableSetColumnIndex(1); ImGui::Text("%.3f", wasp->balancedGenes.flyingSpeed);
                     ImGui::EndTable();
                 }
+            }
+        }
+
+        // CONTRACTS
+        if (ImGui::CollapsingHeader("Contracts"))
+        {
+            if (ImGui::BeginTable("Contracts", 2, ImGuiTableFlags_Borders))
+            {
+                ImGui::TableHeadersRow();
+                ImGui::TableSetColumnIndex(0); ImGui::Text("Contract type");
+                ImGui::TableSetColumnIndex(1); ImGui::Text("Partners");
+
+                for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
+                {
+                    Contracts::Contract* contract = wasp->contracts[i];
+                    if (contract == nullptr) { continue; }
+
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0); ImGui::Text("%s", contract->getTypeAsString().c_str());
+                    ImGui::TableSetColumnIndex(1); ImGui::Text("partner");
+                }
+
+                ImGui::EndTable();
             }
         }
     }

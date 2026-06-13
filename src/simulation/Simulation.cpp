@@ -68,6 +68,12 @@ void Simulation::updateWasps()
     //WASPS (Divide wasp array into local sections and use threads to update them)
     std::vector<Wasp>* wasps = WaspSlots::getWasps();
 
+    // Every iteration a single wasp is 'privileged', meaning it is allowed to perform
+    // computationally expensive tasks like checking for the closest other wasp.
+    // The privileged wasp changes in index order to be 'fair' :)
+    static int curPrivilegedWaspIndex = 0;
+    wasps->at(curPrivilegedWaspIndex).setPrivileged(true);
+
     int maxIndex = WaspSlots::getMaxIndex();
     int sectionSize = std::floor(maxIndex / threadPoolSize);
 
@@ -97,6 +103,13 @@ void Simulation::updateWasps()
 
     //QUEEN
     WaspSlots::getQueen().update(deltaTime);
+
+    // Move up the privileged wasp index and skip any dead slots.
+    // I know this means the waiting time between being privileged is always
+    // changing, but such is life. A larger hive means less time for the individual.
+    wasps->at(curPrivilegedWaspIndex).setPrivileged(false);
+    do { curPrivilegedWaspIndex = (curPrivilegedWaspIndex + 1) % WaspSlots::getMaxIndex(); }
+    while (!wasps->at(curPrivilegedWaspIndex).isAlive);
 }
 
 void Simulation::updateDeltaTime()

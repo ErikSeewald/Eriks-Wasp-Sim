@@ -72,6 +72,14 @@ void Wasp::onFoodReached()
 }
 
 /**
+*  Sets the 'privileged' state of the wasp, dictating whether it is allowed to perform certain expensive computations.
+*/ 
+void Wasp::setPrivileged(bool privileged)
+{
+	isPrivileged = privileged;
+}
+
+/**
 * Implementation/Override of the 'Updatable' class update method. Updates the wasps state in the simulation.
 */
 void Wasp::update()
@@ -168,6 +176,9 @@ void Wasp::update()
 		else if (hp >0) { hp--; }
 	}
 
+	// --- CONTRACTS ---
+	tryProposeContract();
+
 	// --- QUEEN INTERACTION ---
 	if (w_Index != Queen::W_INDEX && queen.isAlive)
 	{
@@ -240,6 +251,32 @@ inline void Wasp::turnTowardsGoal()
 }
 
 /**
+ * By random chance the wasp can try to propose a contract with another wasp in its vicinity.
+ */
+void Wasp::tryProposeContract()
+{
+	// A wasp is only allowed to try for a contract while it is privileged.
+	// If so, it has a random chance of wanting to propose one.
+	if (!isPrivileged || RNG::randBetween(0.0, 1.0) > unboundGenes.contractDesire) { return; }
+
+    std::vector<Wasp>* wasps = WaspSlots::getWasps();
+    int maxIndex = WaspSlots::getMaxIndex();
+	Wasp* wasp = nullptr;
+	for (int i = 0; i < maxIndex; i++)
+	{
+		// Take the first one in range.
+		Wasp* wasp = &(*wasps)[i];
+		if (glm::distance(position, wasp->position) < Wasp::VIEW_RANGE)
+		{
+			break;
+		}
+	}
+	if (wasp == nullptr) { return; }
+
+	// TODO: Propose contract
+}
+
+/**
 * Gives the given amount of food to the queen and thereby decreases the wasp's own hungerSaturation.
 * Limits the amount to the actual available amount of food.
 * Does not check food availability or distance to the queen.
@@ -261,6 +298,16 @@ inline void Wasp::die()
 {
 	hp = 0;
 	isAlive = false;
+
+	for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
+	{
+		if (contracts[i] != nullptr) 
+		{ 
+			contracts[i]->registerPartnerDeath(this);
+			contracts[i] = nullptr;
+		}
+	}
+
 	if (queen.isAlive) { queen.resetWorkerDossier(w_Index); }
 	WaspSlots::registerDeath();
 }

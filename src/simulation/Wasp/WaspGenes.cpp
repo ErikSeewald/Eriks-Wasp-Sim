@@ -104,20 +104,22 @@ BalancedGenes WaspGenes::mutate(BalancedGenes genes)
 // #### UNBOUND GENES ####
 // #######################
 using UGenePointer = float UnboundGenes::*;
-const int NUM_U_GENE_POINTERS = 1;
+const int NUM_U_GENE_POINTERS = 2;
 
 // Vector of pointers to all attributes of UnboundGenes to use for non-named access.
 // Leaving a pointer out of this vector means it will not be considered by functions like mutate().
 constexpr std::array<UGenePointer, NUM_U_GENE_POINTERS> U_GENE_POINTERS =
 {
-    &UnboundGenes::queenLoyalty
+    &UnboundGenes::queenLoyalty,
+    &UnboundGenes::contractDesire
 };
 
 // Uses the UnboundGenes struct as a map.
 // The value of a given gene represents the range in which it can mutate in one mutation round.
 const UnboundGenes U_GENE_RANGES = 
 {
-    .queenLoyalty = 0.5
+    .queenLoyalty = 0.5,
+    .contractDesire = 0.5
 };
 
 /**

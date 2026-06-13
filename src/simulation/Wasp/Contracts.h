@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 class Wasp; // Forward declaration so the wasp can be referenced here
 
@@ -33,6 +34,11 @@ namespace Contracts
             Contract(Wasp* partner1, Wasp* partner2, double validForSeconds);
 
             /**
+             * Returns the name of this contract's type.
+             */
+            virtual const std::string& getTypeAsString() = 0;
+
+            /**
             * Returns the amount of seconds left until this contract expires.
             */
             double getRemainingValiditySeconds();
@@ -53,6 +59,17 @@ namespace Contracts
             * to free the memory and the responsibility of all others to always check for nullptr.
             */
             bool isValid();
+
+            /**
+             * Allows immediate invalidation of the contract.
+             */
+            void invalidate();
+
+            /**
+             * Registers the death of one of the partners in the contract. Critical for ensuring
+             * contracts get invalidated and deleted when less than two living partners remain.
+             */
+            void registerPartnerDeath(Wasp* partner);
 
             /**
             * Returns the list of all partners involved in this contract.
@@ -80,6 +97,11 @@ namespace Contracts
 
             // The relative amount of any new chunk of acquired food that needs to be shared.
             const float sharingRate;
+
+            /**
+             * Returns the name of this contract's type.
+             */
+            const std::string& getTypeAsString() override;
 
             FoodSharingContract(
                 Wasp* partner1, Wasp* partner2, double validForSeconds,

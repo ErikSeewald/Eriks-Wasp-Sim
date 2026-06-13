@@ -36,6 +36,11 @@ class Wasp : Updatable
 		void respawn();
 
 		/**
+		*  Sets the 'privileged' state of the wasp, dictating whether it is allowed to perform certain expensive computations.
+		*/ 
+		void setPrivileged(bool privileged);
+
+		/**
 		* Implementation/Override of the 'Updatable' class update method. Updates the wasps state in the simulation.
 		*/
 		void update();
@@ -64,7 +69,6 @@ class Wasp : Updatable
 		*/
 		void kill();
 
-
 		// ---HUNGER---
 		int hungerSaturation;
 
@@ -86,11 +90,18 @@ class Wasp : Updatable
 		
 		std::chrono::steady_clock::time_point lastResourceTick;
 
+		bool isPrivileged; // Whether the wasp is currently allowed to perform certain expensive computations
+
 		void initialize();
 
 		inline void lookAroundRandomly(double deltaTime);
 
 		inline void turnTowardsGoal();
+
+		/**
+		 * By random chance the wasp can try to propose a contract with another wasp in its vicinity.
+		 */
+		void tryProposeContract();
 
 		/**
 		* Gives the given amount of food to the queen and thereby decreases the wasp's own hungerSaturation.

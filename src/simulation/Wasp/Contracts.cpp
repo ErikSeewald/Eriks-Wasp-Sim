@@ -17,7 +17,14 @@ void Contracts::cleanupExpiredContracts()
 {
     for (int i = 0; i < _activeContracts.size(); i++)
     {
-        if (_activeContracts[i]->isValid()) { continue; }
+        if (_activeContracts[i]->isValid()) 
+        { 
+            if (_activeContracts[i]->getPartners().size() < 2) 
+            {
+                _activeContracts[i]->invalidate(); // Needs to go too!
+            }
+            else { continue; } // Can stay :)
+        }
 
         // Remove the pointer from all wasps that were partners in the contract
         const std::vector<Wasp*>& partners = _activeContracts[i]->getPartners();
@@ -117,6 +124,27 @@ bool Contract::isValid()
 }
 
 /**
+ * Allows immediate invalidation of the contract.
+ */
+void Contract::invalidate()
+{
+    remainingValiditySeconds = 0.0;
+}
+
+/**
+ * Registers the death of one of the partners in the contract. Critical for ensuring
+ * contracts get invalidated and deleted when less than two living partners remain.
+ */
+void Contract::registerPartnerDeath(Wasp* partner)
+{
+    partners.erase(
+        std::remove(partners.begin(), partners.end(), partner),
+        partners.end()
+    );
+}
+
+
+/**
 * Returns the list of all partners involved in this contract.
 */
 const std::vector<Wasp*>& Contract::getPartners()
@@ -128,4 +156,10 @@ const std::vector<Wasp*>& Contract::getPartners()
 //-------------------------------------
 //--------FOOD SHARING CONTRACT--------
 //-------------------------------------
+using Contracts::FoodSharingContract;
 
+const std::string& FoodSharingContract::getTypeAsString()
+{
+    static const std::string typeName = "FoodSharingContract";
+    return typeName;
+}
