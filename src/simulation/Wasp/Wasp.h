@@ -52,6 +52,13 @@ class Wasp : Updatable
 		// ---CONTRACTS---
 		std::array<Contracts::Contract*, MAX_NUM_CONTRACTS> contracts;
 
+		/**
+		* Allows the given wasp to propose a contract of the given type to this wasp.
+		* Performs the terms negotiation and creates the contract if the proposal was accepted.
+		* Returns a pointer to the newly created contract or nullptr if the proposal was rejected.
+		*/
+		Contracts::Contract* proposeContract(Wasp* proposer, Contracts::ContractType type);
+
 		// ---MOVEMENT---
 		glm::vec3 position;
 		glm::vec3 viewingVector;
@@ -99,9 +106,15 @@ class Wasp : Updatable
 		inline void turnTowardsGoal();
 
 		/**
+		* Returns an index of a contract slot that is available to be overwritten (is nullptr or expired).
+		* Returns -1 if no such index could be found. 
+		*/
+		int getAvailableContractIndex();
+
+		/**
 		 * By random chance the wasp can try to propose a contract with another wasp in its vicinity.
 		 */
-		void tryProposeContract();
+		void tryProposeContract(double deltaTime);
 
 		/**
 		* Gives the given amount of food to the queen and thereby decreases the wasp's own hungerSaturation.

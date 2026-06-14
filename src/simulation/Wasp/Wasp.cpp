@@ -177,7 +177,7 @@ void Wasp::update()
 	}
 
 	// --- CONTRACTS ---
-	tryProposeContract();
+	tryProposeContract(deltaTime);
 
 	// --- QUEEN INTERACTION ---
 	if (w_Index != Queen::W_INDEX && queen.isAlive)
@@ -250,30 +250,100 @@ inline void Wasp::turnTowardsGoal()
 	turnSpeed = angle > 0 ? -speed : speed;
 }
 
+#include <iostream>
+/**
+* Allows the given wasp to propose a contract of the given type to this wasp.
+* Performs the terms negotiation and creates the contract if the proposal was accepted.
+* Returns a pointer to the newly created contract or nullptr if the proposal was rejected.
+*/
+Contracts::Contract* Wasp::proposeContract(Wasp* proposer, Contracts::ContractType type)
+{
+	int contractIndex = getAvailableContractIndex();
+	if (contractIndex == -1) { return nullptr; }
+
+	// A base likelihood to accept the contract is generated and can then be
+	// updated by further conditions before the final outcome is determined.
+	float interest = RNG::randBetween(0.0, 1.0);
+
+	switch (type)
+	{
+		case Contracts::ContractType::FoodSharingContract:
+			// Scale interest by how much food the proposer has in relation to one self
+			if (hungerSaturation < 1) { interest = INFINITY;}
+			else {interest *= (float) proposer->hungerSaturation / (float) hungerSaturation; }
+			break;
+	}
+
+	const float ACCEPTANCE_THRESHOLD = 0.5;
+	bool accepted = interest * unboundGenes.contractDesire >= ACCEPTANCE_THRESHOLD;
+	if (!accepted) { return nullptr; }
+
+	Contracts::Contract* newContract = Contracts::Contract::negotiateTerms(type, this, proposer);
+	contracts[contractIndex] = newContract;
+
+	return newContract;
+}
+
 /**
  * By random chance the wasp can try to propose a contract with another wasp in its vicinity.
  */
-void Wasp::tryProposeContract()
+void Wasp::tryProposeContract(double deltaTime)
 {
-	// A wasp is only allowed to try for a contract while it is privileged.
-	// If so, it has a random chance of wanting to propose one.
-	if (!isPrivileged || RNG::randBetween(0.0, 1.0) > unboundGenes.contractDesire) { return; }
+	const double SECONDS_BETWEEN_PROPOSALS = 5.0;
+	static double timeSinceLastProposal = SECONDS_BETWEEN_PROPOSALS;
+	timeSinceLastProposal += deltaTime;
+	if (timeSinceLastProposal < SECONDS_BETWEEN_PROPOSALS) { return; }
 
+	// A wasp is only allowed to try for a contract while it is privileged.
+	if (!isPrivileged) { return; }
+
+	int contractIndex = getAvailableContractIndex();
+	if (contractIndex == -1) { return; }
+
+	// If a contract index is available, the wasp has a random chance of wanting to propose one.
+	if (RNG::randBetween(0.0, 1.0) > unboundGenes.contractDesire) { return; }
+
+	// Find a wasp in range to propose to (chooses the first one found, does not need to be the closest)
     std::vector<Wasp>* wasps = WaspSlots::getWasps();
     int maxIndex = WaspSlots::getMaxIndex();
-	Wasp* wasp = nullptr;
+	Wasp* partner = nullptr;
 	for (int i = 0; i < maxIndex; i++)
 	{
-		// Take the first one in range.
-		Wasp* wasp = &(*wasps)[i];
-		if (glm::distance(position, wasp->position) < Wasp::VIEW_RANGE)
+		partner = &(*wasps)[i];
+		if (partner != this && glm::distance(position, partner->position) < Wasp::VIEW_RANGE)
 		{
 			break;
 		}
 	}
-	if (wasp == nullptr) { return; }
+	if (partner == nullptr) { return; }
 
-	// TODO: Propose contract
+	// TODO: Type logic once there are more contract types.s
+	Contracts::ContractType type = Contracts::ContractType::FoodSharingContract;
+	Contracts::Contract* newContract = partner->proposeContract(this, type);
+	if (newContract != nullptr)
+	{
+		contracts[contractIndex] = newContract;
+	}
+
+	timeSinceLastProposal = 0.0;
+}
+
+/**
+* Returns an index of a contract slot that is available to be overwritten (is nullptr or expired).
+* Returns -1 if no such index could be found. 
+*/
+int Wasp::getAvailableContractIndex()
+{
+	int index = -1;
+	for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
+	{
+		if (contracts[i] == nullptr || !contracts[i]->isValid() || contracts[i]->getPartners().size() < 2) 
+		{ 
+			index = i; 
+			break; 
+		}
+	}
+	return index;
 }
 
 /**

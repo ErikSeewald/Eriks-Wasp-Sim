@@ -38,7 +38,7 @@ void UI::_drawSelectedWaspUI()
     }
 
     // Initial size and position
-    const static ImVec2 initSize(250, 700);
+    const static ImVec2 initSize(300, 700);
     const static ImVec2 initPos(10,10);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
@@ -152,16 +152,27 @@ void UI::_drawSelectedWaspUI()
             {
                 ImGui::TableHeadersRow();
                 ImGui::TableSetColumnIndex(0); ImGui::Text("Contract type");
-                ImGui::TableSetColumnIndex(1); ImGui::Text("Partners");
+                ImGui::TableSetColumnIndex(1); ImGui::Text("Partners (w_Index)");
 
                 for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
                 {
                     Contracts::Contract* contract = wasp->contracts[i];
                     if (contract == nullptr) { continue; }
-
+                    
                     ImGui::TableNextRow();
-                    ImGui::TableSetColumnIndex(0); ImGui::Text("%s", contract->getTypeAsString().c_str());
-                    ImGui::TableSetColumnIndex(1); ImGui::Text("partner");
+                    ImGui::TableSetColumnIndex(0); ImGui::Text("%s", Contracts::contractTypeAsStr(contract->getType()));
+
+                    std::string partnerList;
+                    const std::vector<Wasp*>& partners = contract->getPartners();
+                    for (size_t i = 0; i < partners.size(); ++i)
+                    {
+                        Wasp* partner = partners[i];
+                        if (partner == wasp) { continue; }
+
+                        if (!partnerList.empty()) { partnerList += ", "; }
+                        partnerList += std::to_string(partner->w_Index);
+                    }
+                    ImGui::TableSetColumnIndex(1); ImGui::Text("%s", partnerList.c_str());
                 }
 
                 ImGui::EndTable();
@@ -202,7 +213,7 @@ void UI::_drawPerformanceUI()
 
 void UI::_drawHiveUI()
 {
-    const static ImVec2 initSize(150, 120);
+    const static ImVec2 initSize(150, 150);
     const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 105);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
@@ -217,6 +228,9 @@ void UI::_drawHiveUI()
 
         ImGui::Separator();
         ImGui::Text("QueenFoodStorage:\n%d", WaspSlots::getQueen().getStoredFoodAmount());
+
+        ImGui::Separator();
+        ImGui::Text("Contracts: \n%d", Contracts::getNumActiveContracts());
     }
 
     ImGui::End();
@@ -226,7 +240,7 @@ void UI::_drawHiveUI()
 void UI::_drawCameraUI()
 {
     const static ImVec2 initSize(150, 190);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 235);
+    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 265);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
@@ -251,7 +265,7 @@ void UI::_drawCameraUI()
 void UI::_drawOptionsUI()
 {
     const static ImVec2 initSize(150, 150);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 435);
+    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 465);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 

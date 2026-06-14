@@ -183,5 +183,6 @@ int WaspSlots::killWasps(int amountToKill, KillStrategy strategy)
     }
 
     updateMaxIndex();
+    Contracts::cleanupExpiredContracts();
     return killedAmount;
 }

@@ -1,13 +1,16 @@
 #include "Contracts.h"
 #include "Wasp.h"
+#include "RNG.h"
 #include <stdexcept>
 #include <algorithm>
 
 
 using Contracts::Contract;
+using Contracts::ContractType;
 
 std::vector<Contract*> _activeContracts;
 
+#include <iostream>
 /**
 * The implementation file for the Contracts namespace has static ownership of all exisiting contracts.
 * Therefore, it must also be the one to clean up expired contracts and remove references to them.
@@ -34,7 +37,7 @@ void Contracts::cleanupExpiredContracts()
             {
                 if (partner->contracts[j] == _activeContracts[i])
                 {
-                    partner->contracts[j] == nullptr;
+                    partner->contracts[j] = nullptr;
                     break;
                 }
             }
@@ -50,7 +53,7 @@ void Contracts::cleanupExpiredContracts()
 
 /**
 * Registers the given contract in the list of active contracts by either
-* intersting it at the first nullptr it finds or extending the vector.
+* inserting it at the first nullptr it finds or extending the vector.
 */
 void _registerActiveContract(Contract* contract)
 {
@@ -66,23 +69,69 @@ void _registerActiveContract(Contract* contract)
     _activeContracts.push_back(contract);
 }
 
+/**
+* Returns the number of active contracts as was determined during the last run of cleanupExpiredContracts().
+* May be out of date.
+*/
+int Contracts::getNumActiveContracts()
+{
+    return _activeContracts.size();
+}
+
+/**
+* Returns the c_str representation of the given ContractType.
+*/
+const char* Contracts::contractTypeAsStr(ContractType type)
+{
+    switch (type)
+    {
+        case ContractType::FoodSharingContract:
+            return "FoodSharingContract";
+        default:
+            return "UNKNOWN";
+    }
+}
+
 
 //-------------------------------------
 //---------------CONTRACT--------------
 //-------------------------------------
 /**
 * Creates a contract between the two given partners that is valid for the given amount of seconds.
+* The partners need to be different wasps. Exits the program with an error otherwise.
 * Additional partners need to be added later. 
 * Gives ownership of this object to a static list in the Contracts namespace for memory management.
 */
 Contract::Contract(Wasp* partner1, Wasp* partner2, double validForSeconds) : initialValiditySeconds(validForSeconds)
 {
+    if (partner1 == partner2) 
+    { 
+        std::cerr << "Tried to create contract where partner1 and partner2 are both " << partner1 << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     partners.push_back(partner1);
     partners.push_back(partner2);
 
     remainingValiditySeconds = validForSeconds;
 
-    _activeContracts.push_back(this);
+    // This causes undefined behaviour if a contract is ever created on the stack.
+    // But right now I am not really into the idea of enforcing heap-only creation. Oh well.
+    _registerActiveContract(this);
+}
+
+/**
+ * Allows two partners that have agreed on forming a contract to negotiate its terms, thereby
+ * creating the contract to which a pointer is then returned.
+ */
+Contract* Contract::negotiateTerms(ContractType type, Wasp* partner1, Wasp* partner2)
+{
+    switch (type)
+    {
+        case ContractType::FoodSharingContract:
+            return FoodSharingContract::negotiateTermsImpl(partner1, partner2);
+    }
+    return nullptr;
 }
 
 /**
@@ -158,8 +207,22 @@ const std::vector<Wasp*>& Contract::getPartners()
 //-------------------------------------
 using Contracts::FoodSharingContract;
 
-const std::string& FoodSharingContract::getTypeAsString()
+/**
+* Type-specific implementation of Contract::negotiateTerms().
+*/
+Contract* FoodSharingContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2)
 {
-    static const std::string typeName = "FoodSharingContract";
-    return typeName;
+    // TODO: More interesting negotiation
+
+    // VALID FOR SECONDS
+    double validForSeconds = RNG::randBetween(0.0, 100.0);
+
+    // HUNGER SATURATION ALLOWANCE
+    int smallerMaxSaturation = std::min(partner1->balancedGenes.maxHungerSaturation, partner2->balancedGenes.maxHungerSaturation);
+    int hungerSaturationAllowance = RNG::randMod(smallerMaxSaturation);
+
+    // SHARING RATE
+    float sharingRate = RNG::randBetween(0.0, 1.0);
+
+    return new FoodSharingContract(partner1, partner2, validForSeconds, hungerSaturationAllowance, sharingRate);
 }

@@ -19,6 +19,26 @@ namespace Contracts
     void cleanupExpiredContracts();
 
     /**
+    * Returns the number of active contracts as was determined during the last run of cleanupExpiredContracts().
+    * May be out of date.
+    */
+    int getNumActiveContracts();
+
+    /**
+    * @enum ContractType
+    * @brief Enum specifying all possible contract types. Used with Contract::getType().
+    */
+    enum ContractType
+    { 
+        FoodSharingContract
+    };
+
+    /**
+    * Returns the c_str representation of the given ContractType.
+    */
+    const char* contractTypeAsStr(ContractType type);
+
+    /**
     * @class Contract
     * @brief A class servering as the base contract type. Tracks remaining validity and a list of partners.
     */
@@ -28,15 +48,22 @@ namespace Contracts
 
             /**
             * Creates a contract between the two given partners that is valid for the given amount of seconds.
+            * The partners need to be different wasps. Exits the program with an error otherwise.
             * Additional partners need to be added later. 
             * Gives ownership of this object to a static list in the Contracts namespace for memory management.
             */
             Contract(Wasp* partner1, Wasp* partner2, double validForSeconds);
 
             /**
-             * Returns the name of this contract's type.
+             * Returns the type of the contract.
              */
-            virtual const std::string& getTypeAsString() = 0;
+            virtual ContractType getType() const = 0;
+            
+            /**
+             * Allows two partners that have agreed on forming a contract to negotiate its terms, thereby
+             * creating the contract to which a pointer is then returned.
+             */
+            static Contract* negotiateTerms(ContractType type, Wasp* partner1, Wasp* partner2);
 
             /**
             * Returns the amount of seconds left until this contract expires.
@@ -98,15 +125,17 @@ namespace Contracts
             // The relative amount of any new chunk of acquired food that needs to be shared.
             const float sharingRate;
 
-            /**
-             * Returns the name of this contract's type.
-             */
-            const std::string& getTypeAsString() override;
+            ContractType getType() const override { return ContractType::FoodSharingContract; }
 
             FoodSharingContract(
                 Wasp* partner1, Wasp* partner2, double validForSeconds,
                 int hungerSaturationAllowance, float sharingRate
             ) : Contract(partner1, partner2, validForSeconds), 
                 hungerSaturationAllowance(hungerSaturationAllowance), sharingRate(sharingRate) {}
+
+            /**
+            * Type-specific implementation of Contract::negotiateTerms().
+            */
+            static Contract* negotiateTermsImpl(Wasp* partner1, Wasp* partner2);
     };
 };

@@ -78,7 +78,7 @@ void Simulation::updateWasps()
     {
         // Note, some of these wasps might not be alive and therefore wont benefit.
         // But that is a sacrifice I am willing to make.
-        wasps->at(i % maxIndex).setPrivileged(true);
+        if (maxIndex > 0) { wasps->at(i % maxIndex).setPrivileged(true); }
     }
 
     int sectionSize = std::floor(maxIndex / threadPoolSize);
@@ -110,14 +110,21 @@ void Simulation::updateWasps()
     WaspSlots::getQueen().update(deltaTime);
 
     //PRIVILEGED WASPS
-    for (int i = curPrivilegedWaspIndex; i < curPrivilegedWaspIndex + waspsPrivilegedAtOnce; i++)
+    maxIndex = WaspSlots::getMaxIndex();
+    if (maxIndex > 0)
     {
-        wasps->at(i % maxIndex).setPrivileged(false);
+        for (int i = curPrivilegedWaspIndex; i < curPrivilegedWaspIndex + waspsPrivilegedAtOnce; i++)
+        {
+            wasps->at(i % maxIndex).setPrivileged(false);
+        }
+
+        // I know looping back at maxIndex means the waiting time between being privileged is always
+        // changing, but such is life. A larger hive means less privilege for the individual.
+        curPrivilegedWaspIndex = (curPrivilegedWaspIndex + waspsPrivilegedAtOnce) % maxIndex;
     }
 
-    // I know looping back at maxIndex means the waiting time between being privileged is always
-    // changing, but such is life. A larger hive means less privilege for the individual.
-    curPrivilegedWaspIndex = (curPrivilegedWaspIndex + waspsPrivilegedAtOnce) % WaspSlots::getMaxIndex();
+    else { curPrivilegedWaspIndex = 0; }
+
 }
 
 void Simulation::updateDeltaTime()
