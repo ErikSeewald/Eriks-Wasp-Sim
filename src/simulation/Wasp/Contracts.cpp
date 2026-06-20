@@ -3,6 +3,7 @@
 #include "RNG.h"
 #include <stdexcept>
 #include <algorithm>
+#include <iostream>
 
 
 using Contracts::Contract;
@@ -10,7 +11,6 @@ using Contracts::ContractType;
 
 std::vector<Contract*> _activeContracts;
 
-#include <iostream>
 /**
 * The implementation file for the Contracts namespace has static ownership of all exisiting contracts.
 * Therefore, it must also be the one to clean up expired contracts and remove references to them.
@@ -102,7 +102,7 @@ const char* Contracts::contractTypeAsStr(ContractType type)
 * Additional partners need to be added later. 
 * Gives ownership of this object to a static list in the Contracts namespace for memory management.
 */
-Contract::Contract(Wasp* partner1, Wasp* partner2, double validForSeconds) : initialValiditySeconds(validForSeconds)
+Contract::Contract(Wasp* partner1, Wasp* partner2, double validForSeconds) : validityStart(Clock::now())
 {
     if (partner1 == partner2) 
     { 
@@ -113,7 +113,7 @@ Contract::Contract(Wasp* partner1, Wasp* partner2, double validForSeconds) : ini
     partners.push_back(partner1);
     partners.push_back(partner2);
 
-    remainingValiditySeconds = validForSeconds;
+    validityEnd = validityStart + std::chrono::duration_cast<Clock::duration>(Seconds(validForSeconds));
 
     // This causes undefined behaviour if a contract is ever created on the stack.
     // But right now I am not really into the idea of enforcing heap-only creation. Oh well.
@@ -139,7 +139,7 @@ Contract* Contract::negotiateTerms(ContractType type, Wasp* partner1, Wasp* part
 */
 double Contract::getRemainingValiditySeconds()
 {
-    return remainingValiditySeconds;
+    return Seconds(validityEnd - Clock::now()).count();
 }
 
 /**
@@ -156,12 +156,12 @@ void Contract::extendValidityBySeconds(double seconds)
         throw std::runtime_error("Cannot extend expired contract");
     }
 
-    if (seconds > 0.0)
+    if (seconds < 0.0)
     {
         throw std::runtime_error("Cannot extend a contract by < 0 seconds");
     }
 
-    remainingValiditySeconds += seconds;
+    validityEnd += std::chrono::duration_cast<Clock::duration>(Seconds(seconds));
 }
 
 /**
@@ -169,7 +169,10 @@ void Contract::extendValidityBySeconds(double seconds)
 */
 bool Contract::isValid()
 {
-    return remainingValiditySeconds > 0.0;
+    // TODO: When pause simulation is paused, globally save the time point when it occured
+    // and then add the paused time to validityEnd for all contracts once when unpaused.
+    
+    return Clock::now() < validityEnd;
 }
 
 /**
@@ -177,7 +180,7 @@ bool Contract::isValid()
  */
 void Contract::invalidate()
 {
-    remainingValiditySeconds = 0.0;
+    validityEnd = Clock::now();
 }
 
 /**

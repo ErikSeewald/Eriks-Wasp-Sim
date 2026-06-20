@@ -2,6 +2,12 @@
 
 #include <vector>
 #include <string>
+#include <chrono>
+
+// Define some shorthands for contract validity stuff
+using Clock = std::chrono::steady_clock;
+using TimePoint = std::chrono::time_point<Clock>;
+using Seconds = std::chrono::duration<double>;
 
 class Wasp; // Forward declaration so the wasp can be referenced here
 
@@ -104,8 +110,8 @@ namespace Contracts
             const std::vector<Wasp*>& getPartners();
 
         private:
-            const double initialValiditySeconds;
-            double remainingValiditySeconds;
+            const TimePoint validityStart;
+            TimePoint validityEnd;
 
             std::vector<Wasp*> partners;
     };

@@ -148,11 +148,12 @@ void UI::_drawSelectedWaspUI()
         // CONTRACTS
         if (ImGui::CollapsingHeader("Contracts"))
         {
-            if (ImGui::BeginTable("Contracts", 2, ImGuiTableFlags_Borders))
+            if (ImGui::BeginTable("Contracts", 3, ImGuiTableFlags_Borders))
             {
                 ImGui::TableHeadersRow();
                 ImGui::TableSetColumnIndex(0); ImGui::Text("Contract type");
                 ImGui::TableSetColumnIndex(1); ImGui::Text("Partners (w_Index)");
+                ImGui::TableSetColumnIndex(2); ImGui::Text("Valid for (s)");
 
                 for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
                 {
@@ -173,6 +174,8 @@ void UI::_drawSelectedWaspUI()
                         partnerList += std::to_string(partner->w_Index);
                     }
                     ImGui::TableSetColumnIndex(1); ImGui::Text("%s", partnerList.c_str());
+                    ImGui::TableSetColumnIndex(2); ImGui::Text("%.1f", contract->getRemainingValiditySeconds());
+
                 }
 
                 ImGui::EndTable();

@@ -309,9 +309,10 @@ void Wasp::tryProposeContract(double deltaTime)
 	Wasp* partner = nullptr;
 	for (int i = 0; i < maxIndex; i++)
 	{
-		partner = &(*wasps)[i];
-		if (partner != this && glm::distance(position, partner->position) < Wasp::VIEW_RANGE)
+		Wasp* w = &(*wasps)[i];
+		if (w != this && glm::distance(position, w->position) < Wasp::VIEW_RANGE)
 		{
+			partner = w;
 			break;
 		}
 	}
