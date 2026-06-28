@@ -11,6 +11,27 @@ using Contracts::ContractType;
 
 std::vector<Contract*> _activeContracts;
 
+// Should be fine as long as noone leaves this sim running for a million years.
+double _contractTimerSeconds;
+
+/**
+* All contracts use a shared timer for their duration calculations. This function updates it.
+* I chose against using std::chrono::time_point to make this work better with pausing and debugging.
+*/
+void Contracts::updateContractTimer(std::chrono::duration<double>* deltaTime)
+{
+    _contractTimerSeconds += deltaTime->count();
+}
+
+/**
+* Returns the number of active contracts as was determined during the last run of cleanupExpiredContracts().
+* May be out of date.
+*/
+int Contracts::getNumActiveContracts()
+{
+    return _activeContracts.size();
+}
+
 /**
 * The implementation file for the Contracts namespace has static ownership of all exisiting contracts.
 * Therefore, it must also be the one to clean up expired contracts and remove references to them.
@@ -70,15 +91,6 @@ void _registerActiveContract(Contract* contract)
 }
 
 /**
-* Returns the number of active contracts as was determined during the last run of cleanupExpiredContracts().
-* May be out of date.
-*/
-int Contracts::getNumActiveContracts()
-{
-    return _activeContracts.size();
-}
-
-/**
 * Returns the c_str representation of the given ContractType.
 */
 const char* Contracts::contractTypeAsStr(ContractType type)
@@ -102,7 +114,7 @@ const char* Contracts::contractTypeAsStr(ContractType type)
 * Additional partners need to be added later. 
 * Gives ownership of this object to a static list in the Contracts namespace for memory management.
 */
-Contract::Contract(Wasp* partner1, Wasp* partner2, double validForSeconds) : validityStart(Clock::now())
+Contract::Contract(Wasp* partner1, Wasp* partner2, double validForSeconds) : validityStart(_contractTimerSeconds)
 {
     if (partner1 == partner2) 
     { 
@@ -113,7 +125,7 @@ Contract::Contract(Wasp* partner1, Wasp* partner2, double validForSeconds) : val
     partners.push_back(partner1);
     partners.push_back(partner2);
 
-    validityEnd = validityStart + std::chrono::duration_cast<Clock::duration>(Seconds(validForSeconds));
+    validityEnd = validityStart + validForSeconds;
 
     // This causes undefined behaviour if a contract is ever created on the stack.
     // But right now I am not really into the idea of enforcing heap-only creation. Oh well.
@@ -139,7 +151,7 @@ Contract* Contract::negotiateTerms(ContractType type, Wasp* partner1, Wasp* part
 */
 double Contract::getRemainingValiditySeconds()
 {
-    return Seconds(validityEnd - Clock::now()).count();
+    return validityEnd - _contractTimerSeconds;
 }
 
 /**
@@ -161,7 +173,7 @@ void Contract::extendValidityBySeconds(double seconds)
         throw std::runtime_error("Cannot extend a contract by < 0 seconds");
     }
 
-    validityEnd += std::chrono::duration_cast<Clock::duration>(Seconds(seconds));
+    validityEnd += seconds;
 }
 
 /**
@@ -169,10 +181,7 @@ void Contract::extendValidityBySeconds(double seconds)
 */
 bool Contract::isValid()
 {
-    // TODO: When pause simulation is paused, globally save the time point when it occured
-    // and then add the paused time to validityEnd for all contracts once when unpaused.
-    
-    return Clock::now() < validityEnd;
+    return _contractTimerSeconds < validityEnd;
 }
 
 /**
@@ -180,7 +189,7 @@ bool Contract::isValid()
  */
 void Contract::invalidate()
 {
-    validityEnd = Clock::now();
+    validityEnd = _contractTimerSeconds;
 }
 
 /**

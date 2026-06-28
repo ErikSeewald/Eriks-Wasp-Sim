@@ -4,11 +4,6 @@
 #include <string>
 #include <chrono>
 
-// Define some shorthands for contract validity stuff
-using Clock = std::chrono::steady_clock;
-using TimePoint = std::chrono::time_point<Clock>;
-using Seconds = std::chrono::duration<double>;
-
 class Wasp; // Forward declaration so the wasp can be referenced here
 
 /**
@@ -17,6 +12,13 @@ class Wasp; // Forward declaration so the wasp can be referenced here
 */
 namespace Contracts
 {
+
+    /**
+    * All contracts use a shared timer for their duration calculations. This function updates it.
+    * I chose against using std::chrono::time_point to make this work better with pausing and debugging.
+    */
+    void updateContractTimer(std::chrono::duration<double>* deltaTime);
+
     /**
     * The implementation file for the Contracts namespace has static ownership of all exisiting contracts.
     * Therefore, it must also be the one to clean up expired contracts and remove references to them.
@@ -29,7 +31,7 @@ namespace Contracts
     * May be out of date.
     */
     int getNumActiveContracts();
-
+    
     /**
     * @enum ContractType
     * @brief Enum specifying all possible contract types. Used with Contract::getType().
@@ -110,8 +112,9 @@ namespace Contracts
             const std::vector<Wasp*>& getPartners();
 
         private:
-            const TimePoint validityStart;
-            TimePoint validityEnd;
+            
+            const double validityStart; // Value of the global contract timer at the start of validity
+            double validityEnd; // Value of the global contract timer at the end of validity
 
             std::vector<Wasp*> partners;
     };

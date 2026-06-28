@@ -37,6 +37,7 @@ void Simulation::startLoop()
         {
             updateWasps();
             ResourceSpawner::update(&deltaTime);
+            Contracts::updateContractTimer(&deltaTime);
         }
 
         // CLEANUPS AND EXPENSIVE UPDATES
