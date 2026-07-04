@@ -73,7 +73,7 @@ void Simulation::updateWasps()
     // Every iteration a few wasp are 'privileged', meaning they are allowed to perform
     // computationally expensive tasks like checking for the closest other wasp.
     // The privileged wasps change in index order to be 'fair' :)
-    const int waspsPrivilegedAtOnce = 100;
+    const int waspsPrivilegedAtOnce = 5000;
     static int curPrivilegedWaspIndex = 0;
     for (int i = curPrivilegedWaspIndex; i < curPrivilegedWaspIndex + waspsPrivilegedAtOnce; i++)
     {
@@ -206,7 +206,7 @@ FoodEntity* Simulation::getRandomAvailableFood()
 */
 bool Simulation::attemptEatFoodMutex(FoodEntity* food)
 {
-    // TODO: Currently only one mutex for all food. Not sure wether the trade of for
+    // TODO: Currently only one mutex for all food. Not sure whether the trade of for
     // individual mutexes for individual food entites would be worth it.
     static std::mutex foodMutex;
 

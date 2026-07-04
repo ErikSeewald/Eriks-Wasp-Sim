@@ -65,7 +65,13 @@ void main()
 
         case 7u: // RelativeHealth
             baseColor = vec3(1.0 - relativeHealthFlat, relativeHealthFlat, 0.1);
-            break;  
+            break; 
+
+        case 8u: // IsContractPartner
+            bool isPartner = (waspBitmapFlat & 4u) == 4u;
+            float hasContract = (waspBitmapFlat & 8u) == 8u ? 1.0 : 0.25;
+            baseColor = isPartner ? vec3(0.0, hasContract, 0.0) : vec3(hasContract, 0.0, 0.0);
+            break;
     }
     
     vec3 color = baseColor * brightness;

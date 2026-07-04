@@ -20,5 +20,6 @@ namespace RenderMode
         RelativeWorkerScore,
         RelativeHunger,
         RelativeHealth,
+        IsContractPartner,
     };
 }

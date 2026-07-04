@@ -50,6 +50,7 @@ class Wasp : Updatable
 		WaspGenes::BalancedGenes balancedGenes;
 
 		// ---CONTRACTS---
+		// A wasp can only have a maximum number of contracts and ONLY ONE per ContractType.
 		std::array<Contracts::Contract*, MAX_NUM_CONTRACTS> contracts;
 
 		/**
@@ -110,6 +111,13 @@ class Wasp : Updatable
 		* Returns -1 if no such index could be found. 
 		*/
 		int getAvailableContractIndex();
+
+		/**
+		* Wasps are only allowed a maximum of one active contract per type. Therefore,
+		* this function either returns the index of that contract or -1 if the wasp
+		* does not yet have a (still active) contract of the given type.
+		*/
+		int getContractIndexByType(Contracts::ContractType type);
 
 		/**
 		 * By random chance the wasp can try to propose a contract with another wasp in its vicinity.

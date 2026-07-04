@@ -75,12 +75,17 @@ void WaspRenderer::init()
 *
 * Format:
 * 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
-* RM RM RM RM 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  G  Q
+* RM RM RM RM 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  HC  C  G  Q
 *
 * With:
 * RM - Byte representing RenderMode::WaspRenderMode
 * G  - Does this wasp currently have a goal? Then 1, otherwise 0
 * Q  - Is this wasp the queen? Then 1, otherwise 0
+* C  - Is this wasp in a contract with the selected Wasp? Then 1, otherwise 0
+* HC - Does this wasp have at least 1 active contract? Then 1, otherwise 0
+*
+* Note:
+* - *C* and *HC* are only calculated if IsContractPartner is on.
 */
 inline uint32_t _constructWaspBitmap(bool isQueen)
 {
@@ -95,8 +100,38 @@ inline uint32_t _constructWaspBitmap(bool isQueen)
 */
 inline uint32_t _modifyWaspBitmap(const uint32_t& baseBitmap, const Wasp& wasp)
 {
+    UI::UI_STATE* uiState = UI::getUIState();
+
     uint32_t bitmap = baseBitmap;
     bitmap |= wasp.currentGoal != nullptr ? 0b10 : 0b00; // G
+
+    // C & HC
+    if (uiState->waspRenderMode == RenderMode::WaspRenderMode::IsContractPartner)
+    {
+        bool found = false;
+        for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
+        {
+            if (wasp.contracts[i] != nullptr && wasp.contracts[i]->isValid())
+            {
+                bitmap |= 0b1000;
+
+                // Need to make it far enough in to set HC before breaking
+                if (uiState->selectedWasp == nullptr) { break; }
+    
+                for (Wasp* partner : wasp.contracts[i]->getPartners())
+                {
+                    if (partner == uiState->selectedWasp) 
+                    {
+                        bitmap |= 0b100;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (found) { break; }
+        }
+    }
+
     return bitmap;
 }
 

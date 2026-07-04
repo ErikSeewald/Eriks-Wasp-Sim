@@ -60,6 +60,8 @@ void Wasp::onFoodReached()
 {
 	if (Simulation::attemptEatFoodMutex(currentGoalFoodEntity))
 	{
+		// TODO: FoodContract
+
 		hungerSaturation += currentGoalFoodEntity->hungerPoints;
 
 		if (hungerSaturation > 100)
@@ -250,7 +252,7 @@ inline void Wasp::turnTowardsGoal()
 	turnSpeed = angle > 0 ? -speed : speed;
 }
 
-#include <iostream>
+
 /**
 * Allows the given wasp to propose a contract of the given type to this wasp.
 * Performs the terms negotiation and creates the contract if the proposal was accepted.
@@ -258,8 +260,20 @@ inline void Wasp::turnTowardsGoal()
 */
 Contracts::Contract* Wasp::proposeContract(Wasp* proposer, Contracts::ContractType type)
 {
+	// TODO: Maybe mutex lock all this contract stuff eventually to be thread safe.
+
 	int contractIndex = getAvailableContractIndex();
 	if (contractIndex == -1) { return nullptr; }
+
+	// For now the proposer joins the exisiting contract immediately
+	// just so I can test multi-partner contracts
+	// TODO: Implement actual behaviour here.
+	int tIndex = getContractIndexByType(type);
+	if (tIndex != -1) 
+	{
+		contracts[tIndex]->addPartner(proposer);
+		return contracts[tIndex];
+	}
 
 	// A base likelihood to accept the contract is generated and can then be
 	// updated by further conditions before the final outcome is determined.
@@ -318,8 +332,11 @@ void Wasp::tryProposeContract(double deltaTime)
 	}
 	if (partner == nullptr) { return; }
 
-	// TODO: Type logic once there are more contract types.s
+	// TODO: Type logic once there are more contract types
 	Contracts::ContractType type = Contracts::ContractType::FoodSharingContract;
+	if (getContractIndexByType(type) != -1) { return; } // Only one contract per type allowed.
+
+
 	Contracts::Contract* newContract = partner->proposeContract(this, type);
 	if (newContract != nullptr)
 	{
@@ -335,17 +352,34 @@ void Wasp::tryProposeContract(double deltaTime)
 */
 int Wasp::getAvailableContractIndex()
 {
-	int index = -1;
 	for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
 	{
-		if (contracts[i] == nullptr || !contracts[i]->isValid() || contracts[i]->getPartners().size() < 2) 
+		if (contracts[i] == nullptr || !contracts[i]->isValid()) 
 		{ 
-			index = i; 
-			break; 
+			return i;
 		}
 	}
-	return index;
+	return -1;
 }
+
+
+/**
+* Wasps are only allowed a maximum of one active contract per type. Therefore,
+* this function either returns the index of that contract or -1 if the wasp
+* does not yet have a (still active) contract of the given type.
+*/
+int Wasp::getContractIndexByType(Contracts::ContractType type)
+{
+	for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
+	{
+		if (contracts[i] != nullptr && contracts[i]->isValid() && contracts[i]->getType() == type)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 
 /**
 * Gives the given amount of food to the queen and thereby decreases the wasp's own hungerSaturation.

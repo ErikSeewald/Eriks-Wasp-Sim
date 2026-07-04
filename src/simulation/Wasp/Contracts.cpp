@@ -177,11 +177,15 @@ void Contract::extendValidityBySeconds(double seconds)
 }
 
 /**
-* Returns whether the validity period of this contract is still active.
+* Returns true if the validity period of this contract is still active and
+* there are at least 2 living partners left.
+* 
+* If the contract has become invalid, it is the responsibility of the first entity that notices
+* to free the memory and the responsibility of all others to always check for nullptr.
 */
 bool Contract::isValid()
 {
-    return _contractTimerSeconds < validityEnd;
+    return _contractTimerSeconds < validityEnd && partners.size() >= 2;
 }
 
 /**
@@ -213,6 +217,30 @@ const std::vector<Wasp*>& Contract::getPartners()
     return partners;
 }
 
+/*
+* Adds the given wasp to the list of partners.
+* Exits the program with an error if the given partner is nullptr or already in the list. 
+*/
+void Contract::addPartner(Wasp* partner)
+{
+    if (partner == nullptr) 
+    { 
+        std::cerr << "Tried to add nullptr to contract partners" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    for (Wasp* p : partners)
+    {
+        if (p == partner)
+        {
+            std::cerr << "Tried to add the same partner to a contract twice: " << partner << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    partners.push_back(partner);
+}
+
 
 //-------------------------------------
 //--------FOOD SHARING CONTRACT--------
@@ -237,4 +265,13 @@ Contract* FoodSharingContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2
     float sharingRate = RNG::randBetween(0.0, 1.0);
 
     return new FoodSharingContract(partner1, partner2, validForSeconds, hungerSaturationAllowance, sharingRate);
+}
+
+/**
+ * If the given initiator has eaten the given food, this function handles
+ * the distribution of the attained food points amongst the partners.
+ */
+void FoodSharingContract::handleFoodEncounter(Wasp* initiator, Food::FoodEntity* food)
+{
+    // TODO   
 }

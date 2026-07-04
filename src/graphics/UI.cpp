@@ -280,11 +280,12 @@ void UI::_drawOptionsUI()
 
         // WaspRenderMode
         ImGui::Text("WaspRenderMode:");
-        const int MODES = 8;
+        const int MODES = 9;
         const static char* WASP_RENDER_MODE_STRING_NAMES[MODES] = 
         {
             "UniformFlat", "UniformColor", "RandomOranges", "FullRandomColors", 
-            "GreenIfHasGoal", "RelativeWorkerScore", "RelativeHunger", "RelativeHealth"
+            "GreenIfHasGoal", "RelativeWorkerScore", "RelativeHunger", "RelativeHealth",
+            "IsContractPartner"
         };
         int current = static_cast<int>(uiState.waspRenderMode);
         bool changed = ImGui::Combo(" ", &current, WASP_RENDER_MODE_STRING_NAMES, MODES);

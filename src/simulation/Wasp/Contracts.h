@@ -3,8 +3,10 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include "Food.h"
 
-class Wasp; // Forward declaration so the wasp can be referenced here
+// Forward declarations
+class Wasp;
 
 /**
 * @namespace Contratcs
@@ -88,7 +90,8 @@ namespace Contracts
             void extendValidityBySeconds( double seconds);
 
             /**
-            * Returns whether the validity period of this contract is still active.
+            * Returns true if the validity period of this contract is still active and
+            * there are at least 2 living partners left.
             * 
             * If the contract has become invalid, it is the responsibility of the first entity that notices
             * to free the memory and the responsibility of all others to always check for nullptr.
@@ -110,6 +113,12 @@ namespace Contracts
             * Returns the list of all partners involved in this contract.
             */
             const std::vector<Wasp*>& getPartners();
+
+            /*
+            * Adds the given wasp to the list of partners.
+            * Exits the program with an error if the given partner is nullptr or already in the list. 
+            */
+            void addPartner(Wasp* partner);
 
         private:
             
@@ -146,5 +155,11 @@ namespace Contracts
             * Type-specific implementation of Contract::negotiateTerms().
             */
             static Contract* negotiateTermsImpl(Wasp* partner1, Wasp* partner2);
+
+            /**
+             * If the given initiator has eaten the given food, this function handles
+             * the distribution of the attained food points amongst the partners.
+             */
+            void handleFoodEncounter(Wasp* initiator, Food::FoodEntity* food);
     };
 };
