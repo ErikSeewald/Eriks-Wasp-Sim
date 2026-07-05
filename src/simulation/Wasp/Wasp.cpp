@@ -252,28 +252,57 @@ inline void Wasp::turnTowardsGoal()
 	turnSpeed = angle > 0 ? -speed : speed;
 }
 
-
 /**
 * Allows the given wasp to propose a contract of the given type to this wasp.
 * Performs the terms negotiation and creates the contract if the proposal was accepted.
 * Returns a pointer to the newly created contract or nullptr if the proposal was rejected.
 */
-Contracts::Contract* Wasp::proposeContract(Wasp* proposer, Contracts::ContractType type)
+Contracts::Contract* Wasp::receiveNewContractProposal(Wasp* proposer, Contracts::ContractType type)
 {
 	// TODO: Maybe mutex lock all this contract stuff eventually to be thread safe.
 
 	int contractIndex = getAvailableContractIndex();
 	if (contractIndex == -1) { return nullptr; }
 
-	// For now the proposer joins the exisiting contract immediately
-	// just so I can test multi-partner contracts
-	// TODO: Implement actual behaviour here.
-	int tIndex = getContractIndexByType(type);
-	if (tIndex != -1) 
-	{
-		contracts[tIndex]->addPartner(proposer);
-		return contracts[tIndex];
-	}
+	bool accepted = considerAcceptingContract(proposer, type);
+	if (!accepted) { return nullptr; }
+
+	// Yes, term negotiations take place after both parties have already agreed to form a contract.
+	// This is how wasps do it.
+	Contracts::Contract* newContract = Contracts::Contract::negotiateTerms(type, this, proposer);
+	contracts[contractIndex] = newContract;
+
+	return newContract;
+}
+
+
+/**
+* Allows the given wasp to propose joining the given contract to this wasp.
+* Returns true if that proposal was accepted. In that case,
+* the function already adds this wasp to the list of partners.
+*/
+bool Wasp::receiveContractJoinProposal(Wasp* proposer, Contracts::Contract* contract)
+{
+	int contractIndex = getAvailableContractIndex();
+	if (contractIndex == -1) { return false; }
+
+	bool accepted = considerAcceptingContract(proposer, contract->getType());
+	if (!accepted) { return false; }
+
+	contracts[contractIndex] = contract;
+	contract->addPartner(this);
+	return true;
+}
+
+/**
+* Considers interest in the contract based on type-specific conditions and returns
+* whether the wasp should accept (true) or reject (false) the proposal.
+* Note: Checking whether an available slot for the contract is even free is the
+* responsibility of the caller.
+*/
+bool Wasp::considerAcceptingContract(Wasp* proposer, Contracts::ContractType type)
+{
+	if (getContractIndexByType(type) != -1) { return false;} // Max. 1 contract per type.
 
 	// A base likelihood to accept the contract is generated and can then be
 	// updated by further conditions before the final outcome is determined.
@@ -289,13 +318,7 @@ Contracts::Contract* Wasp::proposeContract(Wasp* proposer, Contracts::ContractTy
 	}
 
 	const float ACCEPTANCE_THRESHOLD = 0.5;
-	bool accepted = interest * unboundGenes.contractDesire >= ACCEPTANCE_THRESHOLD;
-	if (!accepted) { return nullptr; }
-
-	Contracts::Contract* newContract = Contracts::Contract::negotiateTerms(type, this, proposer);
-	contracts[contractIndex] = newContract;
-
-	return newContract;
+	return interest * unboundGenes.contractDesire >= ACCEPTANCE_THRESHOLD;
 }
 
 /**
@@ -310,9 +333,6 @@ void Wasp::tryProposeContract(double deltaTime)
 
 	// A wasp is only allowed to try for a contract while it is privileged.
 	if (!isPrivileged) { return; }
-
-	int contractIndex = getAvailableContractIndex();
-	if (contractIndex == -1) { return; }
 
 	// If a contract index is available, the wasp has a random chance of wanting to propose one.
 	if (RNG::randBetween(0.0, 1.0) > unboundGenes.contractDesire) { return; }
@@ -334,13 +354,26 @@ void Wasp::tryProposeContract(double deltaTime)
 
 	// TODO: Type logic once there are more contract types
 	Contracts::ContractType type = Contracts::ContractType::FoodSharingContract;
-	if (getContractIndexByType(type) != -1) { return; } // Only one contract per type allowed.
 
+	int contractIndex = getContractIndexByType(type);
 
-	Contracts::Contract* newContract = partner->proposeContract(this, type);
-	if (newContract != nullptr)
+	// Propose adding the partner to the existing contract
+	if (contractIndex != -1) 
+	{ 
+		bool _accepted = partner->receiveContractJoinProposal(this, contracts[contractIndex]);
+	}
+
+	// Propose a new contract with the partner
+	else
 	{
-		contracts[contractIndex] = newContract;
+		contractIndex = getAvailableContractIndex();
+		if (contractIndex == -1) { return; }
+
+		Contracts::Contract* newContract = partner->receiveNewContractProposal(this, type);
+		if (newContract != nullptr)
+		{
+			contracts[contractIndex] = newContract;
+		}
 	}
 
 	timeSinceLastProposal = 0.0;

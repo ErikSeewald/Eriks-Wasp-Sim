@@ -58,7 +58,14 @@ class Wasp : Updatable
 		* Performs the terms negotiation and creates the contract if the proposal was accepted.
 		* Returns a pointer to the newly created contract or nullptr if the proposal was rejected.
 		*/
-		Contracts::Contract* proposeContract(Wasp* proposer, Contracts::ContractType type);
+		Contracts::Contract* receiveNewContractProposal(Wasp* proposer, Contracts::ContractType type);
+
+		/**
+		* Allows the given wasp to propose joining the given contract to this wasp.
+		* Returns true if that proposal was accepted. In that case,
+		* the function already adds this wasp to the list of partners.
+		*/
+		bool receiveContractJoinProposal(Wasp* proposer, Contracts::Contract* contract);
 
 		// ---MOVEMENT---
 		glm::vec3 position;
@@ -123,6 +130,14 @@ class Wasp : Updatable
 		 * By random chance the wasp can try to propose a contract with another wasp in its vicinity.
 		 */
 		void tryProposeContract(double deltaTime);
+
+		/**
+		* Considers interest in the contract based on type-specific conditions and returns
+		* whether the wasp should accept (true) or reject (false) the proposal.
+		* Note: Checking whether an available slot for the contract is even free is the
+		* responsibility of the caller.
+		*/
+		bool considerAcceptingContract(Wasp* proposer, Contracts::ContractType type);
 
 		/**
 		* Gives the given amount of food to the queen and thereby decreases the wasp's own hungerSaturation.
