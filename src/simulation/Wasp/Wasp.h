@@ -89,6 +89,14 @@ class Wasp : Updatable
 
 		void onFoodReached();
 
+		/**
+		* Adds the given amount of points to the wasp's hunger saturation
+		* while limiting itself to its maxHungerSaturation.
+		* Returns the amount of points that could not be consumed due to
+		* going over the maximum.
+		*/
+		int addHungerSaturationBounded(int saturationPoints);
+
 		//GOAL
 		glm::vec3* currentGoal;
 		Food::FoodEntity* currentGoalFoodEntity;

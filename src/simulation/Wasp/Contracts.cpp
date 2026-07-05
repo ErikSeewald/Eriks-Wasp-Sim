@@ -97,7 +97,7 @@ const char* Contracts::contractTypeAsStr(ContractType type)
 {
     switch (type)
     {
-        case ContractType::FoodSharingContract:
+        case ContractType::FoodSharingContractType:
             return "FoodSharingContract";
         default:
             return "UNKNOWN";
@@ -140,7 +140,7 @@ Contract* Contract::negotiateTerms(ContractType type, Wasp* partner1, Wasp* part
 {
     switch (type)
     {
-        case ContractType::FoodSharingContract:
+        case ContractType::FoodSharingContractType:
             return FoodSharingContract::negotiateTermsImpl(partner1, partner2);
     }
     return nullptr;
@@ -262,7 +262,7 @@ Contract* FoodSharingContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2
     int hungerSaturationAllowance = RNG::randMod(smallerMaxSaturation);
 
     // SHARING RATE
-    float sharingRate = RNG::randBetween(0.0, 1.0);
+    float sharingRate = RNG::randBetween(0.5, 1.0);
 
     return new FoodSharingContract(partner1, partner2, validForSeconds, hungerSaturationAllowance, sharingRate);
 }
@@ -273,5 +273,35 @@ Contract* FoodSharingContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2
  */
 void FoodSharingContract::handleFoodEncounter(Wasp* initiator, Food::FoodEntity* food)
 {
-    // TODO   
+    // Since a wasp can only ever have one FoodSharingContract, all the food can be divided
+    // amongst the partners of this specific contract without worry.
+
+    // Deal with hungerSaturationAllowance first
+    if (initiator->hungerSaturation < hungerSaturationAllowance)
+    {
+        int foodToFillAllowance = hungerSaturationAllowance - initiator->hungerSaturation;
+        int payout = std::min(food->hungerPoints, foodToFillAllowance);
+        int leftovers = initiator->addHungerSaturationBounded(payout);
+        food->hungerPoints -= (payout - leftovers);
+    }
+
+    // Then divide up food beyond the allowance
+    int amountToShare = food->hungerPoints * sharingRate;
+    int leftovers = initiator->addHungerSaturationBounded(food->hungerPoints - amountToShare);
+    food->hungerPoints = amountToShare + leftovers;
+
+    int receivers = partners.size() - 1;
+    int amountForEach = receivers > 0 ? food->hungerPoints / receivers : 0;
+
+    for (Wasp* partner : partners)
+    {
+        if (partner == initiator) { continue; }
+
+        int leftovers = partner->addHungerSaturationBounded(amountForEach);
+        food->hungerPoints -= (amountForEach - leftovers);
+        
+    }
+
+    // Everything that is left in food->hungerPoints at this point can be eaten by the initiator
+    // after the end of this function.
 }

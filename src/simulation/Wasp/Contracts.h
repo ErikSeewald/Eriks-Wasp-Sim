@@ -40,7 +40,7 @@ namespace Contracts
     */
     enum ContractType
     { 
-        FoodSharingContract
+        FoodSharingContractType
     };
 
     /**
@@ -120,12 +120,13 @@ namespace Contracts
             */
             void addPartner(Wasp* partner);
 
+        protected:
+            std::vector<Wasp*> partners;
+
         private:
             
             const double validityStart; // Value of the global contract timer at the start of validity
-            double validityEnd; // Value of the global contract timer at the end of validity
-
-            std::vector<Wasp*> partners;
+            double validityEnd; // Value of the global contract timer at the end of validity   
     };
 
     /**
@@ -143,7 +144,7 @@ namespace Contracts
             // The relative amount of any new chunk of acquired food that needs to be shared.
             const float sharingRate;
 
-            ContractType getType() const override { return ContractType::FoodSharingContract; }
+            ContractType getType() const override { return ContractType::FoodSharingContractType; }
 
             FoodSharingContract(
                 Wasp* partner1, Wasp* partner2, double validForSeconds,

@@ -60,17 +60,40 @@ void Wasp::onFoodReached()
 {
 	if (Simulation::attemptEatFoodMutex(currentGoalFoodEntity))
 	{
-		// TODO: FoodContract
-
-		hungerSaturation += currentGoalFoodEntity->hungerPoints;
-
-		if (hungerSaturation > 100)
+		for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
 		{
-			hungerSaturation = 100;
+			if (contracts[i] != nullptr && contracts[i]->getType() == Contracts::ContractType::FoodSharingContractType)
+			{
+				Contracts::FoodSharingContract* fsc = (Contracts::FoodSharingContract*) contracts[i];
+				fsc->handleFoodEncounter(this, currentGoalFoodEntity);
+				break;
+			}
 		}
+
+		int _leftovers = addHungerSaturationBounded(currentGoalFoodEntity->hungerPoints);
+		// In this case the leftovers are just discarded
 	}
 
 	currentGoalFoodEntity = nullptr;
+}
+
+/**
+* Adds the given amount of points to the wasp's hunger saturation
+* while limiting itself to its maxHungerSaturation.
+* Returns the amount of points that could not be consumed due to
+* going over the maximum.
+*/
+int Wasp::addHungerSaturationBounded(int saturationPoints)
+{
+	hungerSaturation += saturationPoints;
+
+	if (hungerSaturation > balancedGenes.maxHungerSaturation)
+	{
+		int leftovers = hungerSaturation - balancedGenes.maxHungerSaturation;
+		hungerSaturation = balancedGenes.maxHungerSaturation;
+		return leftovers;
+	}
+	return 0;
 }
 
 /**
@@ -310,7 +333,7 @@ bool Wasp::considerAcceptingContract(Wasp* proposer, Contracts::ContractType typ
 
 	switch (type)
 	{
-		case Contracts::ContractType::FoodSharingContract:
+		case Contracts::ContractType::FoodSharingContractType:
 			// Scale interest by how much food the proposer has in relation to one self
 			if (hungerSaturation < 1) { interest = INFINITY;}
 			else {interest *= (float) proposer->hungerSaturation / (float) hungerSaturation; }
@@ -353,7 +376,7 @@ void Wasp::tryProposeContract(double deltaTime)
 	if (partner == nullptr) { return; }
 
 	// TODO: Type logic once there are more contract types
-	Contracts::ContractType type = Contracts::ContractType::FoodSharingContract;
+	Contracts::ContractType type = Contracts::ContractType::FoodSharingContractType;
 
 	int contractIndex = getContractIndexByType(type);
 
