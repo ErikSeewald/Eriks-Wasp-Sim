@@ -206,7 +206,7 @@ FoodEntity* Simulation::getRandomAvailableFood()
 */
 bool Simulation::attemptEatFoodMutex(FoodEntity* food)
 {
-    // TODO: Currently only one mutex for all food. Not sure whether the trade of for
+    // Currently only one mutex for all food. Not sure whether the trade of for
     // individual mutexes for individual food entites would be worth it.
     static std::mutex foodMutex;
 

@@ -20,7 +20,7 @@ class Wasp : Updatable
 		// CONSTANTS
 		static constexpr int VIEW_RANGE = 10; // How far the wasp can see other entities
 		static constexpr std::chrono::milliseconds RESOURCE_TICK_INTERVAL{2000}; // How often do resource attributes like hp and hunger get ticked
-		static constexpr int MAX_NUM_CONTRACTS = 8; // A limit here should make for more interestic cost-benefit decisions
+		static constexpr int MAX_NUM_CONTRACTS = 4; // A limit here should make for more interestic cost-benefit decisions
 		const int w_Index; // Position in the wasp vector
 
 		/**
@@ -107,13 +107,15 @@ class Wasp : Updatable
 	// Note: While I would prefer more attributes to be private, the overhead of getter functions
 	// is just not worth it at very high wasp counts
 	private:
+		// QUEEN INTERACTION
 		Queen& queen;
 		const int QUEEN_INTERACTION_TIMEOUT = 1000; 
 		int queenInteractionCountdown;
 		
+		// NORMAL INTERACTION AND PRIVILEGE 
 		std::chrono::steady_clock::time_point lastResourceTick;
-
 		bool isPrivileged; // Whether the wasp is currently allowed to perform certain expensive computations
+
 
 		void initialize();
 

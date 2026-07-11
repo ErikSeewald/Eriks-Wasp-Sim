@@ -282,8 +282,6 @@ inline void Wasp::turnTowardsGoal()
 */
 Contracts::Contract* Wasp::receiveNewContractProposal(Wasp* proposer, Contracts::ContractType type)
 {
-	// TODO: Maybe mutex lock all this contract stuff eventually to be thread safe.
-
 	int contractIndex = getAvailableContractIndex();
 	if (contractIndex == -1) { return nullptr; }
 
