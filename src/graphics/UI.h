@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Wasp.h"
+#include "Contracts.h"
 #include "RenderMode.h"
 #include <string>
 
@@ -25,6 +26,7 @@ namespace UI
 		bool drawGrid = true;
 		bool isPaused = false;
 		RenderMode::WaspRenderMode waspRenderMode = RenderMode::WaspRenderMode::RandomOranges;
+		Contracts::Contract* selectedContract;
 	};
 
 	UI_STATE* getUIState();
@@ -32,6 +34,8 @@ namespace UI
 	void drawUI();
 
 	void _drawSelectedWaspUI();
+
+	void _drawContractUI();
 
 	void _drawPerformanceUI();
 

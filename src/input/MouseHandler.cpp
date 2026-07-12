@@ -20,6 +20,23 @@ void MouseHandler::mouseClick(int button, int state, int x, int y)
     //LEFT CLICK
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
+        Wasp* oldSelected = uiState->selectedWasp;
         uiState->selectedWasp = MouseRayCast::selectWasp(x, y);
+        
+        // Clear the selected contract if the newly selected wasp is not a partner in it.
+        // (Too much risk for confusion otherwise)
+        if (uiState->selectedContract != nullptr) 
+        {
+            bool isPartner = false;
+            for (const Wasp* partner : uiState->selectedContract->getPartners())
+            {
+                if (partner == uiState->selectedWasp) 
+                { 
+                    isPartner = true;
+                    break;
+                }
+            }
+            if (!isPartner) { uiState->selectedContract = nullptr; }
+        }
     }
 }

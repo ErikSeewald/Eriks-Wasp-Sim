@@ -159,6 +159,16 @@ void Wasp::update()
 		}
 	}
 
+	// Override the goal while the wasp is out of range in a CliqueContract
+	for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
+	{
+		if (contracts[i] != nullptr && contracts[i]->getType() == Contracts::ContractType::CliqueContractType)
+		{
+			((Contracts::CliqueContract*) contracts[i])->overrideGoalIfOutOfRange(this);
+			break;
+		}
+	}
+
 
 	// --- SPEEDS ---
 	if (currentGoal != nullptr) { turnTowardsGoal(); }
@@ -373,8 +383,8 @@ void Wasp::tryProposeContract(double deltaTime)
 	}
 	if (partner == nullptr) { return; }
 
-	// TODO: Type logic once there are more contract types
-	Contracts::ContractType type = Contracts::ContractType::FoodSharingContractType;
+	Contracts::ContractType type = RNG::randMod(2) == 1 ? 
+			Contracts::ContractType::FoodSharingContractType : Contracts::ContractType::CliqueContractType;
 
 	int contractIndex = getContractIndexByType(type);
 

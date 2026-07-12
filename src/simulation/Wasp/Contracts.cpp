@@ -1,6 +1,7 @@
 #include "Contracts.h"
 #include "Wasp.h"
 #include "RNG.h"
+#include "UI.h"
 #include <stdexcept>
 #include <algorithm>
 #include <iostream>
@@ -39,6 +40,8 @@ int Contracts::getNumActiveContracts()
 */
 void Contracts::cleanupExpiredContracts()
 {
+    UI::UI_STATE* uiState = UI::getUIState();
+
     for (int i = 0; i < _activeContracts.size(); i++)
     {
         if (_activeContracts[i]->isValid()) 
@@ -63,6 +66,10 @@ void Contracts::cleanupExpiredContracts()
                 }
             }
         }
+
+        // Potentially remove the pointer from uiState
+        if (uiState->selectedContract == _activeContracts[i])
+        { uiState->selectedContract = nullptr; }
 
         delete _activeContracts[i];
         _activeContracts[i] = nullptr;
@@ -99,6 +106,8 @@ const char* Contracts::contractTypeAsStr(ContractType type)
     {
         case ContractType::FoodSharingContractType:
             return "FoodSharingContract";
+        case ContractType::CliqueContractType:
+            return "CliqueContract";
         default:
             return "UNKNOWN";
     }
@@ -138,10 +147,15 @@ Contract::Contract(Wasp* partner1, Wasp* partner2, double validForSeconds) : val
  */
 Contract* Contract::negotiateTerms(ContractType type, Wasp* partner1, Wasp* partner2)
 {
+    // I am doing this instead of overrides of the negtiateTerms function because I want
+    // all the contract decision code prior to work on 'ContractType' and only map
+    // to the actual class for that type at this point.
     switch (type)
     {
         case ContractType::FoodSharingContractType:
             return FoodSharingContract::negotiateTermsImpl(partner1, partner2);
+        case ContractType::CliqueContractType:
+            return CliqueContract::negotiateTermsImpl(partner1, partner2);
     }
     return nullptr;
 }
@@ -255,7 +269,7 @@ Contract* FoodSharingContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2
     // TODO: More interesting negotiation
 
     // VALID FOR SECONDS
-    double validForSeconds = RNG::randBetween(0.0, 100.0);
+    double validForSeconds = RNG::randBetween(0.0, 200.0);
 
     // HUNGER SATURATION ALLOWANCE
     int smallerMaxSaturation = std::min(partner1->balancedGenes.maxHungerSaturation, partner2->balancedGenes.maxHungerSaturation);
@@ -273,6 +287,8 @@ Contract* FoodSharingContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2
  */
 void FoodSharingContract::handleFoodEncounter(Wasp* initiator, Food::FoodEntity* food)
 {
+    if (!isValid()) { return; }
+
     // Since a wasp can only ever have one FoodSharingContract, all the food can be divided
     // amongst the partners of this specific contract without worry.
 
@@ -304,4 +320,43 @@ void FoodSharingContract::handleFoodEncounter(Wasp* initiator, Food::FoodEntity*
 
     // Everything that is left in food->hungerPoints at this point can be eaten by the initiator
     // after the end of this function.
+}
+
+
+//-------------------------------------
+//----------CLIQUE CONTRACT------------
+//-------------------------------------
+using Contracts::CliqueContract;
+
+/**
+* Type-specific implementation of Contract::negotiateTerms().
+*/
+Contract* CliqueContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2)
+{
+    // TODO: More interesting negotiation
+
+    // VALID FOR SECONDS
+    double validForSeconds = RNG::randBetween(0.0, 200.0);
+
+    // RANGE
+    float range = RNG::randBetween(2.0, 20.0);
+
+    return new CliqueContract(partner1, partner2, validForSeconds, range);
+}
+
+/**
+ * If the given wasp is out of range of partner 1, this function overrides its current
+ * goal with the position of partner 1. Does nothing otherwise.
+ */
+void CliqueContract::overrideGoalIfOutOfRange(Wasp* partner)
+{
+    if (!isValid()) { return; }
+
+    Wasp* p1 = partners.at(0);
+
+    float distance = glm::distance(p1->position, partner->position);
+    if (distance > range)
+    {
+        partner->currentGoal = &p1->position;
+    }
 }

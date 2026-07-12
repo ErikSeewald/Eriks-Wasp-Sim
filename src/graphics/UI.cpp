@@ -20,6 +20,7 @@ void UI::drawUI()
     ImGui::NewFrame();
 
     _drawSelectedWaspUI();
+    _drawContractUI();
     _drawPerformanceUI();
     _drawHiveUI();
     _drawCameraUI();
@@ -148,12 +149,11 @@ void UI::_drawSelectedWaspUI()
         // CONTRACTS
         if (ImGui::CollapsingHeader("Contracts"))
         {
-            if (ImGui::BeginTable("Contracts", 3, ImGuiTableFlags_Borders))
+            if (ImGui::BeginTable("Contracts", 2, ImGuiTableFlags_Borders))
             {
                 ImGui::TableHeadersRow();
                 ImGui::TableSetColumnIndex(0); ImGui::Text("Contract type");
-                ImGui::TableSetColumnIndex(1); ImGui::Text("Partners (w_Index)");
-                ImGui::TableSetColumnIndex(2); ImGui::Text("Valid for (s)");
+                ImGui::TableSetColumnIndex(1); ImGui::Text("Valid for (s)");
 
                 for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
                 {
@@ -161,24 +161,89 @@ void UI::_drawSelectedWaspUI()
                     if (contract == nullptr) { continue; }
                     
                     ImGui::TableNextRow();
-                    ImGui::TableSetColumnIndex(0); ImGui::Text("%s", Contracts::contractTypeAsStr(contract->getType()));
+                    ImGui::TableSetColumnIndex(0);
 
-                    std::string partnerList;
-                    const std::vector<Wasp*>& partners = contract->getPartners();
-                    for (size_t i = 0; i < partners.size(); ++i)
+                    bool isSelected = (uiState.selectedContract == contract);
+                    if (ImGui::Selectable(Contracts::contractTypeAsStr(contract->getType()),
+                            isSelected, ImGuiSelectableFlags_SpanAllColumns))
                     {
-                        Wasp* partner = partners[i];
-                        if (partner == wasp) { continue; }
-
-                        if (!partnerList.empty()) { partnerList += ", "; }
-                        partnerList += std::to_string(partner->w_Index);
+                        uiState.selectedContract = contract;
                     }
-                    ImGui::TableSetColumnIndex(1); ImGui::Text("%s", partnerList.c_str());
-                    ImGui::TableSetColumnIndex(2); ImGui::Text("%.1f", contract->getRemainingValiditySeconds());
 
+                    ImGui::TableSetColumnIndex(1); ImGui::Text("%.1f", contract->getRemainingValiditySeconds());
                 }
 
                 ImGui::EndTable();
+            }
+        }
+    }
+
+    ImGui::End();
+}
+
+void UI::_drawContractUI()
+{
+    Contracts::Contract* contract = uiState.selectedContract;
+    if (contract == nullptr)
+    {
+        return;
+    }
+    const std::vector<Wasp*>& partners = contract->getPartners();
+
+    // Initial size and position
+    const static ImVec2 initSize(300, 500);
+    const static ImVec2 initPos(320,10);
+    ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
+    ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
+
+    if (ImGui::Begin("Contract"))
+    {
+        if (ImGui::CollapsingHeader("General information", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::Text("Valid for (s): %.1f", contract->getRemainingValiditySeconds());
+
+            // Selectable list of partners
+            ImGui::Separator();
+            ImGui::Text("Partners (%zu)", partners.size());
+            if (ImGui::BeginChild("PartnersList", ImVec2(0.0f, 100.0f), true))
+            {
+                for (Wasp* partner : partners)
+                {
+                    ImGui::Bullet();
+                    ImGui::SameLine();
+
+                    std::string label = "Wasp " + std::to_string(partner->w_Index);
+                    if (ImGui::Selectable(label.c_str()))
+                    {
+                        SimVisualizer::jumpToAndLookAt(partner->position);
+                        uiState.selectedWasp = partner;
+                    }
+                }
+            }
+            ImGui::EndChild();
+        }
+
+        // TODO: Even better contract UI
+        Contracts::ContractType type = contract->getType();
+        if (ImGui::CollapsingHeader(Contracts::contractTypeAsStr(type), ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            switch (type)
+            {
+                case Contracts::ContractType::FoodSharingContractType:
+                {
+                    Contracts::FoodSharingContract* fsc = (Contracts::FoodSharingContract*) contract;
+                    ImGui::Text("hungerSaturationAllowance: %i", fsc->hungerSaturationAllowance);   
+                    ImGui::Text("sharingRate: %.1f", fsc->sharingRate);
+                    break;
+                }
+
+                case Contracts::ContractType::CliqueContractType:
+                {
+                    Contracts::CliqueContract* cc = (Contracts::CliqueContract*) contract;
+                    ImGui::Text("Partner 1: %i", partners.at(0)->w_Index);   
+                    ImGui::Text("Range: %.1f", cc->range);
+                    break;
+                }
             }
         }
     }

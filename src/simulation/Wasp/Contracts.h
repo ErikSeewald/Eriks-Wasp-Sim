@@ -40,7 +40,7 @@ namespace Contracts
     */
     enum ContractType
     { 
-        FoodSharingContractType
+        FoodSharingContractType, CliqueContractType
     };
 
     /**
@@ -163,4 +163,36 @@ namespace Contracts
              */
             void handleFoodEncounter(Wasp* initiator, Food::FoodEntity* food);
     };
+
+    /**
+    * @class CliqueContract
+    * @brief A contract that requires all of the involved partners to stay within a certain range of partner 1
+    *        (the first partner in the partners array - can change depending on deaths, etc.).
+    */
+    class CliqueContract : public Contract
+    {
+        public:
+
+            // When being futher away from partner 1 than this range, a partner must set its current goal
+            // to be partner 1.
+            const double range;
+
+            ContractType getType() const override { return ContractType::CliqueContractType; }
+
+            CliqueContract(
+                Wasp* partner1, Wasp* partner2, double validForSeconds, double range
+            ) : Contract(partner1, partner2, validForSeconds), range(range) {}
+
+            /**
+            * Type-specific implementation of Contract::negotiateTerms().
+            */
+            static Contract* negotiateTermsImpl(Wasp* partner1, Wasp* partner2);
+
+            /**
+             * If the given wasp is out of range of partner 1, this function overrides its current
+             * goal with the position of partner 1. Does nothing otherwise.
+             */
+            void overrideGoalIfOutOfRange(Wasp* partner);
+    };
 };
+
