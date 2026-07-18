@@ -135,10 +135,18 @@ bool WaspSlots::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strateg
 
         if (strategy == SpawnStrategy::RANDOM)
         {
-            double x = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
-            double y = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
-            double z = ((((float)std::rand() / RAND_MAX) * 2.0) - 1.0) * spawnRadius;
-            wasp->position = glm::vec3(position.x + x, position.y + y, position.z + z);
+            // Generate randomly on a cube of side length spawnRadius and then clamp it back onto
+            // a sphere of that radius
+            glm::vec3 offset(
+                ((((float)std::rand() / RAND_MAX) * 2.0f) - 1.0f) * spawnRadius,
+                ((((float)std::rand() / RAND_MAX) * 2.0f) - 1.0f) * spawnRadius,
+                ((((float)std::rand() / RAND_MAX) * 2.0f) - 1.0f) * spawnRadius
+            );
+
+            float len = glm::length(offset);
+            if (len > spawnRadius) { offset = (offset / len) * spawnRadius; }
+
+            wasp->position = position + offset;
         }
 
         else

@@ -31,7 +31,7 @@ const BalancedGenes B_GENE_COSTS =
 {
     .maxHP = 1.0,
     .maxHungerSaturation = 1.0,
-    .flyingSpeed = 50.0
+    .flyingSpeed = 10.0
 };
 
 // Uses the BalancedGenes struct as a map.

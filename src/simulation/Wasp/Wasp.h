@@ -137,17 +137,18 @@ class Wasp : Updatable
 		int getContractIndexByType(Contracts::ContractType type);
 
 		/**
-		 * By random chance the wasp can try to propose a contract with another wasp in its vicinity.
+		 * By random chance the wasp can try to propose a contract to another wasp.
 		 */
 		void tryProposeContract(double deltaTime);
 
 		/**
 		* Considers interest in the contract based on type-specific conditions and returns
 		* whether the wasp should accept (true) or reject (false) the proposal.
+		* The given interestFactor can be used to scale the base interest in the contract.
 		* Note: Checking whether an available slot for the contract is even free is the
 		* responsibility of the caller.
 		*/
-		bool considerAcceptingContract(Wasp* proposer, Contracts::ContractType type);
+		bool considerAcceptingContract(Wasp* proposer, Contracts::ContractType type, float interestFactor);
 
 		/**
 		* Gives the given amount of food to the queen and thereby decreases the wasp's own hungerSaturation.

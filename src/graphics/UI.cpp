@@ -109,7 +109,7 @@ void UI::_drawSelectedWaspUI()
         }
 
         // GENES
-        if (ImGui::CollapsingHeader("Genes", ImGuiTreeNodeFlags_DefaultOpen))
+        if (ImGui::CollapsingHeader("Genes"))
         {
             if (ImGui::CollapsingHeader("Unbound Genes"))
             {
@@ -147,7 +147,7 @@ void UI::_drawSelectedWaspUI()
         }
 
         // CONTRACTS
-        if (ImGui::CollapsingHeader("Contracts"))
+        if (ImGui::CollapsingHeader("Contracts", ImGuiTreeNodeFlags_DefaultOpen))
         {
             if (ImGui::BeginTable("Contracts", 2, ImGuiTableFlags_Borders))
             {
@@ -191,7 +191,7 @@ void UI::_drawContractUI()
     const std::vector<Wasp*>& partners = contract->getPartners();
 
     // Initial size and position
-    const static ImVec2 initSize(300, 500);
+    const static ImVec2 initSize(300, 300);
     const static ImVec2 initPos(320,10);
     ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
@@ -232,16 +232,37 @@ void UI::_drawContractUI()
                 case Contracts::ContractType::FoodSharingContractType:
                 {
                     Contracts::FoodSharingContract* fsc = (Contracts::FoodSharingContract*) contract;
-                    ImGui::Text("hungerSaturationAllowance: %i", fsc->hungerSaturationAllowance);   
-                    ImGui::Text("sharingRate: %.1f", fsc->sharingRate);
+                    if (ImGui::BeginTable("FoodSharingContract", 2, ImGuiTableFlags_Borders))
+                    {
+                        ImGui::TableNextRow();
+                        ImGui::TableSetColumnIndex(0); ImGui::Text("hungerAllowance");
+                        ImGui::TableSetColumnIndex(1); ImGui::Text("%i", fsc->hungerSaturationAllowance);
+                    
+                        ImGui::TableNextRow();
+                        ImGui::TableSetColumnIndex(0); ImGui::Text("sharingRate");
+                        ImGui::TableSetColumnIndex(1); ImGui::Text("%.1f", fsc->sharingRate);
+
+                        ImGui::EndTable();
+                    }
                     break;
                 }
 
                 case Contracts::ContractType::CliqueContractType:
                 {
                     Contracts::CliqueContract* cc = (Contracts::CliqueContract*) contract;
-                    ImGui::Text("Partner 1: %i", partners.at(0)->w_Index);   
-                    ImGui::Text("Range: %.1f", cc->range);
+
+                    if (ImGui::BeginTable("CliqueContract", 2, ImGuiTableFlags_Borders))
+                    {
+                        ImGui::TableNextRow();
+                        ImGui::TableSetColumnIndex(0); ImGui::Text("Partner 1");
+                        ImGui::TableSetColumnIndex(1); ImGui::Text("Wasp %i", partners.at(0)->w_Index);
+                    
+                        ImGui::TableNextRow();
+                        ImGui::TableSetColumnIndex(0); ImGui::Text("Range");
+                        ImGui::TableSetColumnIndex(1); ImGui::Text("%.1f", cc->range);
+
+                        ImGui::EndTable();
+                    }
                     break;
                 }
             }

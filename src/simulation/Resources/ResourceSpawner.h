@@ -16,7 +16,7 @@ namespace ResourceSpawner
 	struct ResourceSettings
 	{
 		float foodSpawnedPerSecond = 20;
-		float foodSpawnRadius = 50; 
+		float foodSpawnRadius = 100; 
 	};
 
 	ResourceSettings* getResourceSettings();

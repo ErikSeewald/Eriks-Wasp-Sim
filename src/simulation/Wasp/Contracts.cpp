@@ -15,6 +15,13 @@ std::vector<Contract*> _activeContracts;
 // Should be fine as long as noone leaves this sim running for a million years.
 double _contractTimerSeconds;
 
+
+std::mutex* Contracts::getContractMutex()
+{
+    static std::mutex _contractMutex;
+    return &_contractMutex;
+}
+
 /**
 * All contracts use a shared timer for their duration calculations. This function updates it.
 * I chose against using std::chrono::time_point to make this work better with pausing and debugging.
@@ -269,7 +276,7 @@ Contract* FoodSharingContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2
     // TODO: More interesting negotiation
 
     // VALID FOR SECONDS
-    double validForSeconds = RNG::randBetween(0.0, 200.0);
+    double validForSeconds = RNG::randBetween(0.0, 500.0);
 
     // HUNGER SATURATION ALLOWANCE
     int smallerMaxSaturation = std::min(partner1->balancedGenes.maxHungerSaturation, partner2->balancedGenes.maxHungerSaturation);
@@ -336,7 +343,7 @@ Contract* CliqueContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2)
     // TODO: More interesting negotiation
 
     // VALID FOR SECONDS
-    double validForSeconds = RNG::randBetween(0.0, 200.0);
+    double validForSeconds = RNG::randBetween(0.0, 500.0);
 
     // RANGE
     float range = RNG::randBetween(2.0, 20.0);

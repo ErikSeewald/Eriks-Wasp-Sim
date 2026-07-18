@@ -295,7 +295,8 @@ Contracts::Contract* Wasp::receiveNewContractProposal(Wasp* proposer, Contracts:
 	int contractIndex = getAvailableContractIndex();
 	if (contractIndex == -1) { return nullptr; }
 
-	bool accepted = considerAcceptingContract(proposer, type);
+	float interestFactor = 1.0; // No special factor for a new contract.
+	bool accepted = considerAcceptingContract(proposer, type, interestFactor);
 	if (!accepted) { return nullptr; }
 
 	// Yes, term negotiations take place after both parties have already agreed to form a contract.
@@ -317,7 +318,13 @@ bool Wasp::receiveContractJoinProposal(Wasp* proposer, Contracts::Contract* cont
 	int contractIndex = getAvailableContractIndex();
 	if (contractIndex == -1) { return false; }
 
-	bool accepted = considerAcceptingContract(proposer, contract->getType());
+	// Scale by how many wasps are already in the contract.
+	// Contracts with larger partner counts have "proven" themselves to be worthwhile.
+	// NOTE: Scaling function falls off in intensity with increasing partner counts
+	// so that it never becomes a guaranteed accept response.
+	float interestFactor = 1.0 + 5.0 * log(contract->getPartners().size());
+
+	bool accepted = considerAcceptingContract(proposer, contract->getType(), interestFactor);
 	if (!accepted) { return false; }
 
 	contracts[contractIndex] = contract;
@@ -328,16 +335,18 @@ bool Wasp::receiveContractJoinProposal(Wasp* proposer, Contracts::Contract* cont
 /**
 * Considers interest in the contract based on type-specific conditions and returns
 * whether the wasp should accept (true) or reject (false) the proposal.
+* The given interestFactor can be used to scale the base interest in the contract.
 * Note: Checking whether an available slot for the contract is even free is the
 * responsibility of the caller.
 */
-bool Wasp::considerAcceptingContract(Wasp* proposer, Contracts::ContractType type)
+bool Wasp::considerAcceptingContract(Wasp* proposer, Contracts::ContractType type, float interestFactor)
 {
 	if (getContractIndexByType(type) != -1) { return false;} // Max. 1 contract per type.
 
 	// A base likelihood to accept the contract is generated and can then be
 	// updated by further conditions before the final outcome is determined.
 	float interest = RNG::randBetween(0.0, 1.0);
+	interest *= interestFactor;
 
 	switch (type)
 	{
@@ -346,6 +355,10 @@ bool Wasp::considerAcceptingContract(Wasp* proposer, Contracts::ContractType typ
 			if (hungerSaturation < 1) { interest = INFINITY;}
 			else {interest *= (float) proposer->hungerSaturation / (float) hungerSaturation; }
 			break;
+		case Contracts::ContractType::CliqueContractType:
+		 	// Wasps have a higher base interest in clique contracts because the don't give up much for it
+			interest *= 3.0;
+			break;
 	}
 
 	const float ACCEPTANCE_THRESHOLD = 0.5;
@@ -353,7 +366,7 @@ bool Wasp::considerAcceptingContract(Wasp* proposer, Contracts::ContractType typ
 }
 
 /**
- * By random chance the wasp can try to propose a contract with another wasp in its vicinity.
+ * By random chance the wasp can try to propose a contract to another wasp.
  */
 void Wasp::tryProposeContract(double deltaTime)
 {
@@ -362,30 +375,24 @@ void Wasp::tryProposeContract(double deltaTime)
 	timeSinceLastProposal += deltaTime;
 	if (timeSinceLastProposal < SECONDS_BETWEEN_PROPOSALS) { return; }
 
-	// A wasp is only allowed to try for a contract while it is privileged.
-	if (!isPrivileged) { return; }
-
 	// If a contract index is available, the wasp has a random chance of wanting to propose one.
 	if (RNG::randBetween(0.0, 1.0) > unboundGenes.contractDesire) { return; }
 
-	// Find a wasp in range to propose to (chooses the first one found, does not need to be the closest)
+	// The lock only needs to be acquired here because all contract creation functions will be
+	// called from the same thread (e.g., considerAcceptingContract).
+	std::lock_guard<std::mutex> lock(*Contracts::getContractMutex());
+
+	// Chooses a random wasp to propose to. Finding one in range would be too much of a toll on performance.
+	// Clique contracts should take care of interesting range behavior anyway.
     std::vector<Wasp>* wasps = WaspSlots::getWasps();
     int maxIndex = WaspSlots::getMaxIndex();
-	Wasp* partner = nullptr;
-	for (int i = 0; i < maxIndex; i++)
-	{
-		Wasp* w = &(*wasps)[i];
-		if (w != this && glm::distance(position, w->position) < Wasp::VIEW_RANGE)
-		{
-			partner = w;
-			break;
-		}
-	}
-	if (partner == nullptr) { return; }
+	Wasp* partner = &(*wasps)[RNG::randMod(maxIndex)];
+
+	// Treat these as another random chance for not proposing a contract.
+	if (!partner->isAlive || partner == this) { return; }
 
 	Contracts::ContractType type = RNG::randMod(2) == 1 ? 
 			Contracts::ContractType::FoodSharingContractType : Contracts::ContractType::CliqueContractType;
-
 	int contractIndex = getContractIndexByType(type);
 
 	// Propose adding the partner to the existing contract

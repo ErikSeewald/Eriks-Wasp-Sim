@@ -36,7 +36,7 @@ namespace WaspGenes
     {
         float maxHP = 100.0;
         float maxHungerSaturation = 100.0;
-        float flyingSpeed = 0.8;
+        float flyingSpeed = 5.0;
     };
 
     /**

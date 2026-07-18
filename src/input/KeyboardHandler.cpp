@@ -16,6 +16,8 @@ void KeyboardHandler::updateCamera(Camera* camera)
     float cameraSpeed = 6.0f * deltaTime;
     float radAngleSpeed = 2.0f * deltaTime;
 
+    if (keyStates[' ']) { cameraSpeed *= 5.0f; }
+
     if (keyStates['w'])
     {
         camera->position.x += camera->direction.x * cameraSpeed;
@@ -77,6 +79,7 @@ void KeyboardHandler::keyboardDown(unsigned char key, int x, int y)
     }
 
     keyStates[key] = true;
+
 }
 
 /**

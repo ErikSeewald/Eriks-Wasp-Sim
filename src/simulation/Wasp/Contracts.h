@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <mutex>
 #include "Food.h"
 
 // Forward declarations
@@ -14,6 +15,8 @@ class Wasp;
 */
 namespace Contracts
 {
+
+    std::mutex* getContractMutex();
 
     /**
     * All contracts use a shared timer for their duration calculations. This function updates it.
