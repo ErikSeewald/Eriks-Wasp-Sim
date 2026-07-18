@@ -278,11 +278,14 @@ void UI::_drawPerformanceUI()
     static int lastUpdateTime = 0;
 
     const static ImVec2 initSize(150, 85);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 10);
-    ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
-    if (ImGui::Begin("Performance"))
+    ImGuiViewport* vp = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(
+        ImVec2(vp->WorkPos.x + vp->WorkSize.x - 10, vp->WorkPos.y + 10),
+        ImGuiCond_Always, ImVec2(1.0f, 0.0f));
+
+    if (ImGui::Begin("Performance", nullptr, ImGuiWindowFlags_NoResize))
     {
         // only sample framerate every 500 ms
         int currentTime = glutGet(GLUT_ELAPSED_TIME);
@@ -303,11 +306,14 @@ void UI::_drawPerformanceUI()
 void UI::_drawHiveUI()
 {
     const static ImVec2 initSize(150, 150);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 105);
-    ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
-    if (ImGui::Begin("Hive"))
+    ImGuiViewport* vp = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(
+        ImVec2(vp->WorkPos.x + vp->WorkSize.x - 10, vp->WorkPos.y + 105),
+        ImGuiCond_Always, ImVec2(1.0f, 0.0f));
+
+    if (ImGui::Begin("Hive", nullptr, ImGuiWindowFlags_NoResize))
     {
         int aliveCount = WaspSlots::getAliveCount();
         int deadCount = WaspSlots::getDeadCount();
@@ -329,11 +335,14 @@ void UI::_drawHiveUI()
 void UI::_drawCameraUI()
 {
     const static ImVec2 initSize(150, 190);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 265);
-    ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
-    if (ImGui::Begin("Camera"))
+    ImGuiViewport* vp = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(
+        ImVec2(vp->WorkPos.x + vp->WorkSize.x - 10, vp->WorkPos.y + 265),
+        ImGuiCond_Always, ImVec2(1.0f, 0.0f));
+
+    if (ImGui::Begin("Camera", nullptr, ImGuiWindowFlags_NoResize))
     {
         Camera camera = SimVisualizer::getCamera();
 
@@ -354,11 +363,14 @@ void UI::_drawCameraUI()
 void UI::_drawOptionsUI()
 {
     const static ImVec2 initSize(150, 150);
-    const static ImVec2 initPos(glutGet(GLUT_WINDOW_WIDTH) - initSize.x - 10, 465);
-    ImGui::SetNextWindowPos(initPos, ImGuiCond_Once);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
-    if (ImGui::Begin("Options"))
+    ImGuiViewport* vp = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(
+        ImVec2(vp->WorkPos.x + vp->WorkSize.x - 10, vp->WorkPos.y + 465),
+        ImGuiCond_Always, ImVec2(1.0f, 0.0f));
+
+    if (ImGui::Begin("Options", nullptr, ImGuiWindowFlags_NoResize))
     {
         ImGui::Checkbox("Pause sim", &uiState.isPaused);
         ImGui::Checkbox("Draw grid", &uiState.drawGrid);
