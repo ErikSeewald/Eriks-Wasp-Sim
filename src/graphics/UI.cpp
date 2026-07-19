@@ -149,6 +149,7 @@ void UI::_drawSelectedWaspUI()
         // CONTRACTS
         if (ImGui::CollapsingHeader("Contracts", ImGuiTreeNodeFlags_DefaultOpen))
         {
+            std::lock_guard<std::mutex> lock(*Contracts::getContractMutex());
             if (ImGui::BeginTable("Contracts", 2, ImGuiTableFlags_Borders))
             {
                 ImGui::TableHeadersRow();
@@ -183,6 +184,7 @@ void UI::_drawSelectedWaspUI()
 
 void UI::_drawContractUI()
 {
+    std::lock_guard<std::mutex> lock(*Contracts::getContractMutex());
     Contracts::Contract* contract = uiState.selectedContract;
     if (contract == nullptr)
     {
@@ -223,7 +225,6 @@ void UI::_drawContractUI()
             ImGui::EndChild();
         }
 
-        // TODO: Even better contract UI
         Contracts::ContractType type = contract->getType();
         if (ImGui::CollapsingHeader(Contracts::contractTypeAsStr(type), ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -247,15 +248,16 @@ void UI::_drawContractUI()
                     break;
                 }
 
-                case Contracts::ContractType::CliqueContractType:
+                case Contracts::ContractType::SwarmContractType:
                 {
-                    Contracts::CliqueContract* cc = (Contracts::CliqueContract*) contract;
+                    Contracts::SwarmContract* cc = (Contracts::SwarmContract*) contract;
 
-                    if (ImGui::BeginTable("CliqueContract", 2, ImGuiTableFlags_Borders))
+                    if (ImGui::BeginTable("SwarmContract", 2, ImGuiTableFlags_Borders))
                     {
                         ImGui::TableNextRow();
                         ImGui::TableSetColumnIndex(0); ImGui::Text("Partner 1");
-                        ImGui::TableSetColumnIndex(1); ImGui::Text("Wasp %i", partners.at(0)->w_Index);
+                        if (partners.size() > 0) { ImGui::TableSetColumnIndex(1); ImGui::Text("Wasp %i", partners[0]->w_Index); }
+                        // ^ Size 0 can happen if all wasps in the contract die before the contract cleanup function takes care of the select contract
                     
                         ImGui::TableNextRow();
                         ImGui::TableSetColumnIndex(0); ImGui::Text("Range");
@@ -277,7 +279,7 @@ void UI::_drawPerformanceUI()
     static float fps = 0.0f;
     static int lastUpdateTime = 0;
 
-    const static ImVec2 initSize(150, 85);
+    const static ImVec2 initSize(170, 85);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
     ImGuiViewport* vp = ImGui::GetMainViewport();
@@ -305,7 +307,7 @@ void UI::_drawPerformanceUI()
 
 void UI::_drawHiveUI()
 {
-    const static ImVec2 initSize(150, 150);
+    const static ImVec2 initSize(170, 180);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
     ImGuiViewport* vp = ImGui::GetMainViewport();
@@ -325,7 +327,8 @@ void UI::_drawHiveUI()
         ImGui::Text("QueenFoodStorage:\n%d", WaspSlots::getQueen().getStoredFoodAmount());
 
         ImGui::Separator();
-        ImGui::Text("Contracts: \n%d", Contracts::getNumActiveContracts());
+        ImGui::Text("Active Contracts: \n%d", Contracts::getNumActiveContracts());
+        ImGui::Text("Undeleted Contracts: \n%d", Contracts::getNumUndeletedContracts());
     }
 
     ImGui::End();
@@ -334,12 +337,12 @@ void UI::_drawHiveUI()
 
 void UI::_drawCameraUI()
 {
-    const static ImVec2 initSize(150, 190);
+    const static ImVec2 initSize(170, 190);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
     ImGuiViewport* vp = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(
-        ImVec2(vp->WorkPos.x + vp->WorkSize.x - 10, vp->WorkPos.y + 265),
+        ImVec2(vp->WorkPos.x + vp->WorkSize.x - 10, vp->WorkPos.y + 295),
         ImGuiCond_Always, ImVec2(1.0f, 0.0f));
 
     if (ImGui::Begin("Camera", nullptr, ImGuiWindowFlags_NoResize))
@@ -362,12 +365,12 @@ void UI::_drawCameraUI()
 
 void UI::_drawOptionsUI()
 {
-    const static ImVec2 initSize(150, 150);
+    const static ImVec2 initSize(170, 150);
     ImGui::SetNextWindowSize(initSize, ImGuiCond_Once);
 
     ImGuiViewport* vp = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(
-        ImVec2(vp->WorkPos.x + vp->WorkSize.x - 10, vp->WorkPos.y + 465),
+        ImVec2(vp->WorkPos.x + vp->WorkSize.x - 10, vp->WorkPos.y + 495),
         ImGuiCond_Always, ImVec2(1.0f, 0.0f));
 
     if (ImGui::Begin("Options", nullptr, ImGuiWindowFlags_NoResize))

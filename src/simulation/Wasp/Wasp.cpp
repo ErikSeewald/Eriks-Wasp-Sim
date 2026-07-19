@@ -159,12 +159,12 @@ void Wasp::update()
 		}
 	}
 
-	// Override the goal while the wasp is out of range in a CliqueContract
+	// Override the goal while the wasp is out of range in a SwarmContract
 	for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
 	{
-		if (contracts[i] != nullptr && contracts[i]->getType() == Contracts::ContractType::CliqueContractType)
+		if (contracts[i] != nullptr && contracts[i]->getType() == Contracts::ContractType::SwarmContractType)
 		{
-			((Contracts::CliqueContract*) contracts[i])->overrideGoalIfOutOfRange(this);
+			((Contracts::SwarmContract*) contracts[i])->overrideGoalIfOutOfRange(this);
 			break;
 		}
 	}
@@ -355,8 +355,8 @@ bool Wasp::considerAcceptingContract(Wasp* proposer, Contracts::ContractType typ
 			if (hungerSaturation < 1) { interest = INFINITY;}
 			else {interest *= (float) proposer->hungerSaturation / (float) hungerSaturation; }
 			break;
-		case Contracts::ContractType::CliqueContractType:
-		 	// Wasps have a higher base interest in clique contracts because the don't give up much for it
+		case Contracts::ContractType::SwarmContractType:
+		 	// Wasps have a higher base interest in swarm contracts because the don't give up much for it
 			interest *= 3.0;
 			break;
 	}
@@ -383,16 +383,17 @@ void Wasp::tryProposeContract(double deltaTime)
 	std::lock_guard<std::mutex> lock(*Contracts::getContractMutex());
 
 	// Chooses a random wasp to propose to. Finding one in range would be too much of a toll on performance.
-	// Clique contracts should take care of interesting range behavior anyway.
+	// Swarm contracts should take care of interesting range behavior anyway.
     std::vector<Wasp>* wasps = WaspSlots::getWasps();
     int maxIndex = WaspSlots::getMaxIndex();
+	if (maxIndex < 1) { return; }
 	Wasp* partner = &(*wasps)[RNG::randMod(maxIndex)];
 
 	// Treat these as another random chance for not proposing a contract.
 	if (!partner->isAlive || partner == this) { return; }
 
 	Contracts::ContractType type = RNG::randMod(2) == 1 ? 
-			Contracts::ContractType::FoodSharingContractType : Contracts::ContractType::CliqueContractType;
+			Contracts::ContractType::FoodSharingContractType : Contracts::ContractType::SwarmContractType;
 	int contractIndex = getContractIndexByType(type);
 
 	// Propose adding the partner to the existing contract

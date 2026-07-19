@@ -11,6 +11,7 @@ using Contracts::Contract;
 using Contracts::ContractType;
 
 std::vector<Contract*> _activeContracts;
+std::vector<Contract*> _dueDeletionContracts;
 
 // Should be fine as long as noone leaves this sim running for a million years.
 double _contractTimerSeconds;
@@ -41,14 +42,33 @@ int Contracts::getNumActiveContracts()
 }
 
 /**
+* Returns the number of contract due for deletion as was determined during the last run of cleanupExpiredContracts().
+* May be out of date.
+*/
+int Contracts::getNumUndeletedContracts()
+{
+    return _dueDeletionContracts.size();
+}
+
+/**
 * The implementation file for the Contracts namespace has static ownership of all exisiting contracts.
 * Therefore, it must also be the one to clean up expired contracts and remove references to them.
 * This function should be run periodically.
 */
 void Contracts::cleanupExpiredContracts()
 {
-    UI::UI_STATE* uiState = UI::getUIState();
+    std::lock_guard<std::mutex> lock(*Contracts::getContractMutex());
 
+    // Only delete contracts in the deletion list on new iterations so all threads that use a pointer to them have 
+    // time to finish their work and realize that they are no longer active before the object is deleted.
+    for (int i = 0; i < _dueDeletionContracts.size(); i++)
+    {
+        delete _dueDeletionContracts[i];
+        _dueDeletionContracts[i] = nullptr;
+    }
+
+    // Find contracts to add to _dueDeletionContracts and remove references to them.
+    UI::UI_STATE* uiState = UI::getUIState();
     for (int i = 0; i < _activeContracts.size(); i++)
     {
         if (_activeContracts[i]->isValid()) 
@@ -78,12 +98,13 @@ void Contracts::cleanupExpiredContracts()
         if (uiState->selectedContract == _activeContracts[i])
         { uiState->selectedContract = nullptr; }
 
-        delete _activeContracts[i];
+        _dueDeletionContracts.push_back(_activeContracts[i]);
         _activeContracts[i] = nullptr;
     }
 
     // Remove nullptrs
     _activeContracts.erase(std::remove(_activeContracts.begin(), _activeContracts.end(), nullptr), _activeContracts.end());
+    _dueDeletionContracts.erase(std::remove(_dueDeletionContracts.begin(), _dueDeletionContracts.end(), nullptr), _dueDeletionContracts.end());
 }
 
 /**
@@ -113,8 +134,8 @@ const char* Contracts::contractTypeAsStr(ContractType type)
     {
         case ContractType::FoodSharingContractType:
             return "FoodSharingContract";
-        case ContractType::CliqueContractType:
-            return "CliqueContract";
+        case ContractType::SwarmContractType:
+            return "SwarmContract";
         default:
             return "UNKNOWN";
     }
@@ -161,8 +182,8 @@ Contract* Contract::negotiateTerms(ContractType type, Wasp* partner1, Wasp* part
     {
         case ContractType::FoodSharingContractType:
             return FoodSharingContract::negotiateTermsImpl(partner1, partner2);
-        case ContractType::CliqueContractType:
-            return CliqueContract::negotiateTermsImpl(partner1, partner2);
+        case ContractType::SwarmContractType:
+            return SwarmContract::negotiateTermsImpl(partner1, partner2);
     }
     return nullptr;
 }
@@ -280,6 +301,7 @@ Contract* FoodSharingContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2
 
     // HUNGER SATURATION ALLOWANCE
     int smallerMaxSaturation = std::min(partner1->balancedGenes.maxHungerSaturation, partner2->balancedGenes.maxHungerSaturation);
+    if (smallerMaxSaturation < 1) { smallerMaxSaturation = 1; } // Yes, some wasps can have very bad genes
     int hungerSaturationAllowance = RNG::randMod(smallerMaxSaturation);
 
     // SHARING RATE
@@ -331,14 +353,14 @@ void FoodSharingContract::handleFoodEncounter(Wasp* initiator, Food::FoodEntity*
 
 
 //-------------------------------------
-//----------CLIQUE CONTRACT------------
+//----------SWARM CONTRACT------------
 //-------------------------------------
-using Contracts::CliqueContract;
+using Contracts::SwarmContract;
 
 /**
 * Type-specific implementation of Contract::negotiateTerms().
 */
-Contract* CliqueContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2)
+Contract* SwarmContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2)
 {
     // TODO: More interesting negotiation
 
@@ -346,24 +368,27 @@ Contract* CliqueContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2)
     double validForSeconds = RNG::randBetween(0.0, 500.0);
 
     // RANGE
-    float range = RNG::randBetween(2.0, 20.0);
+    float range = RNG::randBetween(2.0, 50.0);
 
-    return new CliqueContract(partner1, partner2, validForSeconds, range);
+    return new SwarmContract(partner1, partner2, validForSeconds, range);
 }
 
 /**
  * If the given wasp is out of range of partner 1, this function overrides its current
- * goal with the position of partner 1. Does nothing otherwise.
+ * goal with the goal (or position if no goal available) of partner 1. Does nothing otherwise.
  */
-void CliqueContract::overrideGoalIfOutOfRange(Wasp* partner)
+void SwarmContract::overrideGoalIfOutOfRange(Wasp* partner)
 {
     if (!isValid()) { return; }
 
-    Wasp* p1 = partners.at(0);
+    Wasp* p1 = partners[0];
 
     float distance = glm::distance(p1->position, partner->position);
     if (distance > range)
     {
-        partner->currentGoal = &p1->position;
+        // Preferring the goal of partner 1 over its position means less clustering of all
+        // the partners that are trying to get back in range
+        if (p1->currentGoal != nullptr) { partner->currentGoal = p1->currentGoal; }
+        else { partner->currentGoal = &p1->position; }
     }
 }

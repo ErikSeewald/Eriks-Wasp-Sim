@@ -36,6 +36,12 @@ namespace Contracts
     * May be out of date.
     */
     int getNumActiveContracts();
+
+    /**
+    * Returns the number of contract due for deletion as was determined during the last run of cleanupExpiredContracts().
+    * May be out of date.
+    */
+    int getNumUndeletedContracts();
     
     /**
     * @enum ContractType
@@ -43,7 +49,7 @@ namespace Contracts
     */
     enum ContractType
     { 
-        FoodSharingContractType, CliqueContractType
+        FoodSharingContractType, SwarmContractType
     };
 
     /**
@@ -168,21 +174,21 @@ namespace Contracts
     };
 
     /**
-    * @class CliqueContract
+    * @class SwarmContract
     * @brief A contract that requires all of the involved partners to stay within a certain range of partner 1
     *        (the first partner in the partners array - can change depending on deaths, etc.).
     */
-    class CliqueContract : public Contract
+    class SwarmContract : public Contract
     {
         public:
 
             // When being futher away from partner 1 than this range, a partner must set its current goal
-            // to be partner 1.
+            // to be the goal of partner 1 (or its position if it currently has no goal).
             const double range;
 
-            ContractType getType() const override { return ContractType::CliqueContractType; }
+            ContractType getType() const override { return ContractType::SwarmContractType; }
 
-            CliqueContract(
+            SwarmContract(
                 Wasp* partner1, Wasp* partner2, double validForSeconds, double range
             ) : Contract(partner1, partner2, validForSeconds), range(range) {}
 
@@ -193,7 +199,7 @@ namespace Contracts
 
             /**
              * If the given wasp is out of range of partner 1, this function overrides its current
-             * goal with the position of partner 1. Does nothing otherwise.
+             * goal with the goal (or position if no goal available) of partner 1. Does nothing otherwise.
              */
             void overrideGoalIfOutOfRange(Wasp* partner);
     };
