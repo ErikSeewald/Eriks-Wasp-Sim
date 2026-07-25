@@ -1,5 +1,6 @@
 #include "Food.h"
 #include <cstdlib>
+#include <mutex>
 
 using Food::FoodEntity;
 
@@ -9,6 +10,9 @@ const static int SLOT_COUNT = 10000;
 
 int food_maxIndex = 0;
 int uneatenFoodCount = 0;
+
+static std::mutex foodMutex; // A single mutex for all food operations that need to be lockable.
+
 
 std::vector<FoodEntity> foodEntities(SLOT_COUNT, {0, glm::vec3(0,0,0), true});
 
@@ -47,6 +51,7 @@ void Food::updateMaxIndex()
 */
 bool Food::spaceAvailable(int foodAddAmount)
 {
+    std::lock_guard<std::mutex> lock(foodMutex);
     return uneatenFoodCount + foodAddAmount <= SLOT_COUNT;
 }
 
@@ -55,6 +60,7 @@ bool Food::spaceAvailable(int foodAddAmount)
 */
 void Food::registerEntityEaten()
 {
+    std::lock_guard<std::mutex> lock(foodMutex);
     uneatenFoodCount--;
 }
 
@@ -64,6 +70,8 @@ bool Food::spawnFood(glm::vec3 position, int amount, SpawnStrategy strategy, flo
     {
         return false;
     }
+
+    std::lock_guard<std::mutex> lock(foodMutex);
     int spawnedAmount = 0;
 
     for (int i = 0; i < SLOT_COUNT && spawnedAmount < amount; ++i)
@@ -108,8 +116,10 @@ int Food::killFood(int amountToKill, KillStrategy strategy)
     {
         amountToKill = -1;
     }
+    
+    // This can be locked because registerEntityEaten(), which also tries to lock, is never called.
+    std::lock_guard<std::mutex> lock(foodMutex);
     int killedAmount = 0;
-
 
     // Note: Even though the default KillStrategy is named 'RANDOM', in reality food is
     // always killed based on its index starting from the back of the vector. This ensures

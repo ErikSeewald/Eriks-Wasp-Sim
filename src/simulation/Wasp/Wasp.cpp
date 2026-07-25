@@ -186,6 +186,7 @@ void Wasp::update()
 
 	// --- POSITION ---
 	float speedMultiplier = balancedGenes.flyingSpeed * deltaTime;
+	if (abs(turnSpeed) > 0) { speedMultiplier /= abs(turnSpeed); }
 	position.x += viewingVector.x * speedMultiplier;
 	position.y += viewingVector.y * speedMultiplier;
 	position.z += viewingVector.z * speedMultiplier;
@@ -207,7 +208,13 @@ void Wasp::update()
 	{
 		lastResourceTick = *now;
 
-		if (hungerSaturation > 0) { hungerSaturation--; }
+		if (hungerSaturation > 0) 
+		{ 
+			hungerSaturation--; 
+
+			// Regenerate while not out of food
+			hp = std::min((int) balancedGenes.maxHP, hp + 1);
+		}
 		else if (hp >0) { hp--; }
 	}
 
@@ -217,6 +224,7 @@ void Wasp::update()
 	// --- QUEEN INTERACTION ---
 	if (w_Index != Queen::W_INDEX && queen.isAlive)
 	{
+		
 		if (queenInteractionCountdown > 0) { queenInteractionCountdown--; }
 
 		else
@@ -281,8 +289,8 @@ inline void Wasp::turnTowardsGoal()
 
 	float angle = VectorMath::angleXZ(viewingVector, *currentGoal - position);
 
-	float speed = angle / 2;
-	turnSpeed = angle > 0 ? -speed : speed;
+	float ts = angle;
+	turnSpeed = angle > 0 ? -ts : ts;
 }
 
 /**
@@ -370,10 +378,8 @@ bool Wasp::considerAcceptingContract(Wasp* proposer, Contracts::ContractType typ
  */
 void Wasp::tryProposeContract(double deltaTime)
 {
-	const double SECONDS_BETWEEN_PROPOSALS = 5.0;
-	static double timeSinceLastProposal = SECONDS_BETWEEN_PROPOSALS;
-	timeSinceLastProposal += deltaTime;
-	if (timeSinceLastProposal < SECONDS_BETWEEN_PROPOSALS) { return; }
+	timeSinceLastContractProposal += deltaTime;
+	if (timeSinceLastContractProposal < SECONDS_BETWEEN_CONTRACT_PROPOSALS) { return; }
 
 	// If a contract index is available, the wasp has a random chance of wanting to propose one.
 	if (RNG::randBetween(0.0, 1.0) > unboundGenes.contractDesire) { return; }
@@ -415,7 +421,7 @@ void Wasp::tryProposeContract(double deltaTime)
 		}
 	}
 
-	timeSinceLastProposal = 0.0;
+	timeSinceLastContractProposal = 0.0;
 }
 
 /**

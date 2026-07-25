@@ -113,6 +113,10 @@ void Contracts::cleanupExpiredContracts()
 */
 void _registerActiveContract(Contract* contract)
 {
+    // There should be no need for a mutex lock here since all
+    // contract creation functions at the wasp level are already
+    // locking the contract mutex.
+    
     for (int i = 0; i < _activeContracts.size(); i++)
     {
         if (_activeContracts[i] == nullptr)

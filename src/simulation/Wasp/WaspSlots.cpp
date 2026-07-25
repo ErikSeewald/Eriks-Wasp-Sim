@@ -1,5 +1,6 @@
 #include "WaspSlots.h"
 #include <cstdlib>
+#include <mutex>
 
 using Strategies::SpawnStrategy;
 using Strategies::KillStrategy;
@@ -12,6 +13,8 @@ const static int SLOT_COUNT = 100000;
 int wasp_maxIndex = 0; // Tracks the highest index containing a living wasp to optimize loops
 int aliveCount = 0; // Number of currently living wasps
 long deadCount = 0; // Total number of deaths
+
+static std::mutex waspSlotMutex; // A single mutex for all wasp slot operations that need to be lockable.
 
 // All wasp objects are created immediately and then kept in memory until the end of the program.
 // When wasps are killed they are 'deactivated' and thereby will no longer be updated or rendered.
@@ -110,6 +113,7 @@ long WaspSlots::getDeadCount()
 */
 void WaspSlots::registerDeath()
 {
+    std::lock_guard<std::mutex> lock(waspSlotMutex);
     aliveCount--;
     deadCount++;
 }
@@ -122,6 +126,7 @@ void WaspSlots::registerDeath()
 */
 bool WaspSlots::spawnWasps(glm::vec3 position, int amount, SpawnStrategy strategy, float spawnRadius)
 {
+    std::lock_guard<std::mutex> lock(waspSlotMutex);
     if (!spaceAvailable(amount))
     {
         return false;

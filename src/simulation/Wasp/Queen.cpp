@@ -85,6 +85,7 @@ Queen::InteractionResponse Queen::receiveFood(int amount, int w_Index)
 {
     if (!isAlive) { throw std::runtime_error("Wasp " + std::to_string(w_Index) + " tried to give food to a dead queen."); } 
     if (interactionsLeft <= 0) { return InteractionResponse::Denied; }
+    interactionsLeft--;
 
     hungerSaturation += amount;
     updateWorkerScore(w_Index, amount);

@@ -110,12 +110,15 @@ class Wasp : Updatable
 		// QUEEN INTERACTION
 		Queen& queen;
 		const int QUEEN_INTERACTION_TIMEOUT = 1000; 
-		int queenInteractionCountdown;
+		int queenInteractionCountdown = 0;
 		
 		// NORMAL INTERACTION AND PRIVILEGE 
 		std::chrono::steady_clock::time_point lastResourceTick;
 		bool isPrivileged; // Whether the wasp is currently allowed to perform certain expensive computations
 
+		// CONTRACT
+		const double SECONDS_BETWEEN_CONTRACT_PROPOSALS = 5.0;
+		double timeSinceLastContractProposal = SECONDS_BETWEEN_CONTRACT_PROPOSALS;
 
 		void initialize();
 
