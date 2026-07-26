@@ -1,5 +1,85 @@
 # Eriks-Wasp-Sim
-This is an unrealistic wasp colony simulator that I mostly use to experiment with computational optimization.
+This is a simulation of a contract-based, tax-monarchical wasp society. Wasps explore, eat food, pay taxes to their queen and establish formal contracts with each other, all rendered using OpenGL.
+
+## Wasps
+TODO: Explanation here (properties, knowledge, desires, behavior)
+
+#### Queen
+TODO: Explanation here (what makes the queen unique)
+
+## Genes
+The simulation uses a sort of gene structure to define randomizable (inheritable?) traits of single wasps.
+These genes fit into two types: **BalancedGenes**, which can be mutated only through a trade-off mutation in another gene, and **UnboundGenes**, which can mutate freely.
+For now, mutation happens randomly at the start of a wasp's livespan, with the gene values remaining constant for the rest of it.
+
+#### BalancedGenes
+Balanced genes are genes that can be mutated only through a trade-off mutation in another gene.
+Every gene has a cost and an orientation associated with it. The former defines how costly a mutation +-1.0 is, and the latter defines whether the (assumed) benefitial direction of change is positive or negative.
+For example, a mutation to the maximum hp of the wasp has a positive orientation because it is assumed that more hp are benefitial. This matters for the balancing function. A good change of a specific cost needs
+to be balanced by a bad change of equivalent cost in another gene. For two positively oriented genes, geneA with a cost of 1.0 and geneB with a cost of 20.0, a good change in geneB needs to be balanced out by a bad
+change in geneA with 20 times the intensity.
+
+The following balanced genes currently exist in the simulation (for costs, orientation and default values, see [WaspGenes.h](/src/simulation/Wasp/WaspGenes.h) and [WaspGenes.cpp](/src/simulation/Wasp/WaspGenes.cpp)):
+- **maxHP**: The maximum health points of a wasp (up to which it can be healed and regenerated).
+- **maxHungerSaturation**: The maximum amount of "stored" food a wasp can eat or receive.
+- **flyingSpeed**: A multiplier applied to the speed of most movement actions of a wasp.
+
+#### UnboundGenes
+Unbound genes are genes that can be mutated freely without consideration for other genes. Every unbound gene has a "range" associated with it. This range defines how strongly the gene value can change in a single mutation.
+
+The following unbound genes currently exist in the simulation (for costs, orientation and default values, see [WaspGenes.h](/src/simulation/Wasp/WaspGenes.h) and [WaspGenes.cpp](/src/simulation/Wasp/WaspGenes.cpp)):
+- **queenLoyalty**: This loyalty factor affects how devoted the wasp is to its queen (e.g., how likely is it to choose to fly close to the queen; how much food is it willing to gift the queen).
+- **contractDesire**: A factor defining how likely a wasp is to both propose and accept contracts.
+
+## Contracts
+A contract is an agreement between two or more wasps with the following properties:
+- A validity period after which the the contract expires
+- An ordered list of contractual partners
+- A set of rules and properties that are specific to the type of contract
+
+Wasps can propose contracts to other wasps, which are then allowed to accept or reject the proposal.
+Such a proposal can either be for inviting a wasp to an existing contract, thereby expanding the list of partners,
+or for establishing a new contract, in which case the terms of the contract need to be negotiated.
+
+As long as a contract is valid, every partner is obligated by the basic laws of the universe (my assumptions in the code base) to follow its
+rules. Not only the expiration of the validity period, but also the death of partners, leading to less than two partners, can cause a contract to be
+invalidated.
+
+(Note that the simulation only clears expired contracts from memory in discrete intervals, meaning that the GUI may show a contract with a negative "Valid for (s)" timer for a short moment. Such a contract is already being treated as invalid, it just has not been cleared yet.)
+
+(Note that the *WaspRenderMode* selection in the *Options* GUI features a mode called *IsContractPartner* that shows all partners of the currently selected wasp in green.) 
+
+#### Contract types
+What follows is a short summary of the contract types that currently exist in the simulation. The properties shared between all contracts (e.g., validity period) are not listed again.
+
+1. **FoodSharingContract**: A contract that stipulates a minimum level of hunger saturation (allowance) beyond which a certain percentage of acquired food is shared between all partners.
+   - *hungerSaturationAllowance*: This negotiable parameter dictates how much food saturation a parter is allowed to have before it needs to share newly acquired foor
+   - *sharingRate*: This negotiable parameter describes the relative amount of any new chunk of acquired foor that needs to be shared with the other partners.
+   - The chunk of food that needs to be shared is divided amongst all other partners evenly.
+2. **SwarmContract**: A contract that requires all of the involved partners to stay within a certain range of partner 1 (the first partner in the partners list - can change depending on deaths, etc.).
+   - *range*: When further away from partner 1 than this negotiable parameter dictates, a partner must set its current goal to be the goal of partner 1 (or its position if it currently has no goal).
+   - Through this goal sharing, a sort of swarming behavior is created.
+
+## Commands
+The Wasp-Sim uses a CLI that opens alongside the OpenGL window at startup. Type 'help' to see a list of available commands or look through [commands.json](assets/commands/Commands.json) for more information.
+
+Each command has the following attributes: 
+- Name and explanation, which are printed by the 'help' command
+- Syntax, which can be displayed by typing ```syntax [command] {subcommand}*``` (e.g., ```syntax wasp sethp```)
+- List of subcommands (e.g., 'kill', 'sethp', ... for the 'wasp' command)
+
+Sometimes 'syntax' makes use of command elements (e.g., \<position\> in ```wasp setpos <position>```). These are placeholders that may require a more specific explanation.
+By using the 'element' command (e.g., ```element position```) you can print that explanation.
+
+## Controls
+#### Movement
+- Use [W,A,S,D] to move
+- Use the arrow keys to rotate the camera.
+
+#### UI
+- Use your mouse to interact with, and optionally move/scale, the GUI
+- Left-click a wasp with your mouse to select it
+- Press 'p' to pause/unpause the simulation loop
 
 ## Build instructions
 #### Linux
@@ -30,27 +110,6 @@ Download the following dependencies and put them into `dependencies/` (create th
 - [tinyobjloader v1.0.6](https://github.com/tinyobjloader/tinyobjloader/releases/tag/v1.0.6): Put `tiny_obj_loader.h` into `dependencies/`
 - [nlohmann-json v3.11.3](https://github.com/nlohmann/json/releases): Download the `json.hpp` file and put it into `dependencies/`
 - [imgui-1.90.4](https://github.com/ocornut/imgui/releases/tag/v1.90.4): Download the `imgui` folder and put it into `dependencies/`
-
-## Commands
-The Wasp-Sim uses a CLI that opens alongside the OpenGL window at startup. Type 'help' to see a list of available commands or look through [commands.json](assets/commands/Commands.json) for more information.
-
-Each command has the following attributes: 
-- Name and explanation, which are printed by the 'help' command
-- Syntax, which can be displayed by typing ```syntax [command] {subcommand}*``` (e.g., ```syntax wasp sethp```)
-- List of subcommands (e.g., 'kill', 'sethp', ... for the 'wasp' command)
-
-Sometimes 'syntax' makes use of command elements (e.g., \<position\> in ```wasp setpos <position>```). These are placeholders that may require a more specific explanation.
-By using the 'element' command (e.g., ```element position```) you can print that explanation.
-
-## Controls
-#### Movement
-- Use [W,A,S,D] to move
-- Use the arrow keys to rotate the camera.
-
-#### UI
-- Use your mouse to interact with, and optionally move/scale, the GUI
-- Left-click a wasp with your mouse to select it
-- Press 'p' to pause/unpause the simulation loop
 
 ## Performance notes
 The Wasp-Sim makes use of multiple performance optimizations, some of which have a difficult tradeoff balance.
