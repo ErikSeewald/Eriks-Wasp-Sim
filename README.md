@@ -1,11 +1,48 @@
 # Eriks-Wasp-Sim
 This is a simulation of a contract-based, tax-monarchical wasp society. Wasps explore, eat food, pay taxes to their queen and establish formal contracts with each other, all rendered using OpenGL.
 
+Currently, the simulation supports an upper limit of 100 000 wasps. It is possible to increase the limit
+further by changing a single variable within the [code](/src/simulation/Wasp/WaspSlots.cpp), but I would not recommend it. All my testing (to ensure 60FPS on my machine) is done with this upper limit (see [performance notes](#performance-notes)). 
+
 ## Wasps
-TODO: Explanation here (properties, knowledge, desires, behavior)
+A wasp is an entity in 3D space that has a position, a viewing direction and, sometimes, a goal that it is heading toward. Its behavior is defined by desires related to attributes like health and hunger saturation.
+Every wasp knows its [queen](#queen), is born with specific [genes](#genes), and has the ability to create or enter [contracts](#contracts) with other wasps.
+
+The simulation has a fixed-size array of wasp objects. Therefore, each wasp has a *w_Index* within the array and thereby a unique identifier. A living wasp is represented by a boolean *isAlive* being set to true. Spawning a new wasp (within the limit of the maximum amount of wasps) is done by taking one of the wasp objects that has *isAlive* set to false and 'respawning' it with new attributes and genes. For more information on how and why this is done, see [performance notes](#performance-notes).
+
+#### Wasp attributes
+The following section describes the most important attributes that define a wasp.
+- **Position**: This 3D vector is the definitive location of the wasp and is used for all of its interactions.
+- **Viewing vector**: This is a normalized vector that defines where, from its position, the wasp is currently looking/heading. Forward movement is based on this vector.
+- **Current goal**: A 3D vector that defines the location that the wasp is currently flying towards (e.g., food, another wasp). This vector may be *null* if the wasp is currently exploring randomly.
+- **Genes**: Static attributes that the wasp is born with, see the [genes](#genes) section.
+- **Contracts**: The [contracts](#contracts) that the wasp is currently a partner in.
+- **Turn- and ascend speed**: Factors on top of the wasp's flying speed gene that affect how quickly the wasp is turning or ascending/descending respectively at the current point in time. 
+- **HP**: The number of health points that the wasp currently has. Once these reach zero, it dies. As long as the wasp is not starving, these points can slowly regenerate.
+- **Hunger saturation**: The amount of hunger points the wasp currently has. The more it has, the less hungry it is. These points decrease over time but can be replenished by finding or receiving food. Once these points reach zero, the wasp begins to starve, gradually losing hp.
+
+#### Behavior
+By default, wasps are randomly exploring their surrounings. If their food saturation falls below their maximum, they start becoming more likely to choose food entities as their current goal and flying towards them.
+
+This basic behavior can be affected by contracts, loyalty to the queen, and other unique situations that are explained later.
+
+To understand what a wasp is doing, make use of the [selected-wasp-window](#selected-wasp-window) in the UI. 
 
 #### Queen
-TODO: Explanation here (what makes the queen unique)
+The queen is a special wasp outside the wasp array. Its w_Index is -1. Only one queen can exist within the simulation and all wasps store a reference to it. The following behaviors are unique to the queen.
+- **Receiving food**: Other wasps, depending on their loyalty, may choose to gift some of their food to the queen. For this, they need to be in her interaction range. She can choose to accept or reject that gift.
+- **Worker scores**: The queen assigns every worker wasp that it interacts with a score. This score can be affected by actions like the worker giving her a certain amount of food. Wasps with high worker scores may receive special treatment from the queen like higher share in the food redistribution.
+- **Distributing food**: When the queen's hunger saturation grows beyond her maximum due to gifts from worker wasps, it goes into a special 'pot' (the QueenFoodStorage, see [Hive-window](#hive-window)) from which she regularly distributes the food points among her favorite workers based ont heir worker score.
+- **Swarming**: If the queen comes close to starving or dying for other reasons, loyal worker wasps will start heading for her location and swarming around her.
+
+## Resources
+Outside of wasps, another type of entity that exists in the simulation is a resource entity.
+Items that provide something to the wasps or represent some sort of desire.
+
+These resources are spawned based on various resource settings (see [commands.json](assets/commands/Commands.json)).
+
+#### Food
+The main resource in the simulation is food. A single food entity is represented by a point in space and can restore a varying number of hunger points. 
 
 ## Genes
 The simulation uses a sort of gene structure to define randomizable (inheritable?) traits of single wasps.
@@ -74,12 +111,68 @@ By using the 'element' command (e.g., ```element position```) you can print that
 ## Controls
 #### Movement
 - Use [W,A,S,D] to move
+- Hold SPACE to move more quickly
 - Use the arrow keys to rotate the camera.
 
-#### UI
+## UI
 - Use your mouse to interact with, and optionally move/scale, the GUI
 - Left-click a wasp with your mouse to select it
 - Press 'p' to pause/unpause the simulation loop
+
+#### Selected-wasp-window
+When you left-click a wasp with your mouse, that wasp is selected.
+It is now being drawn with a red wireframe and a "Selected wasp" UI window will have opened.
+Here you can see some of the following:
+- The wasp's w_Index (unique identifier, index in the wasp array)
+- The worker score that the queen has assigned to this wasp
+- The wasp's position, viewing vector and movement speed
+- The wasp's current goal/target (and an option to render a line from the wasp to that position)
+- The wasp's health and hunger points
+- The values of the wasp's [genes](#genes)
+- The contracts that the wasp is a partner in. Clicking one of them opens the [Contract-window](#contract-window)
+
+#### Contract-window
+When a contract has been selected from the [Selected-wasp-window](#selected-wasp-window), a window containing information on this specific contract opens with the following information:
+- How many remaining seconds of validity does it have
+- How many partners are a part of the contract
+- A list of these partners (clicking on one of selects them)
+- The type of the contract and specific information regarding it (see [Contract types](#contract-types))
+
+#### Performance-window
+At the top right of the screen, there is the performance window. It displays the following information:
+- **FPS**: The current frame rate of the simulation visualizer
+- **Max w_index**: The highest wasp index containing a living wasp (see [Performance notes](#performance-notes))
+- **Max f_index**: The highest food index containing uneaten food
+
+#### Hive-window
+Near the top right of the screen, there is the performance window. It displays the following information:
+- **Alive**: The number of living wasps at the current moment
+- **Dead**: The total number of wasps that have died since the start of the simulation. Note that this number can be greater than the maximum size of the wasp array as slots of dead wasps can be used to spawn new wasps.
+- **Total**: The total number of wasps that have been spawned since the start of the simulation.
+- **QueenFoodStorage**: The amount of food points that the queen currently holds beyond her own hunger saturation, ready to be distributed to her favorite workers.
+- **Active Contracts**: The number of active contracts in the simulation. This number is not guaranteed to always match the number of valid contracts as the contract cleanup routine runs in discrete intervals.
+- **Undeleted contracts**: The number of contracts that have been scheduled for deletion but still remain in memory.
+
+#### Camera-window
+On the right side of the screen, there is the camera window. It displays the current position and viewing vector of the camera.
+
+#### Options-window
+On the right side of the screen, there is the options window. It displays the following settings:
+- **Pause sim**: Allows pausing any updates to the simulation. Camera movement and UI interaction are still available.
+- **Draw grid**: Allows turning the rendering of the little grid at the center of the simulation on or off.
+- **WaspRenderMode**: Selects the mode with which the wasps are displayed:
+
+  | Mode | Description |
+  |------|-------------|
+  | **UniformFlat** | All wasps are orange and completely flat shaded. |
+  | **UniformColor** | All wasps are orange but use triangle-normal-based shading (all rendering modes use normals for shading unless specified otherwise). |
+  | **RandomOranges** | Individual wasps are rendered with unique orange colors. |
+  | **FullRandomColors** | Every wasp has a random color. |
+  | **GreenIfHasGoal** | Wasps are red if they do not currently have an active goal and green if they do. |
+  | **RelativeWorkerScore** | Wasps range from blue (low worker score) to red (high worker score) relative to the wasp with the highest worker score. The queen is green. |
+  | **RelativeHunger** | Wasps range from green (fully saturated) to red (starving). |
+  | **RelativeHealth** | Wasps range from green (full HP) to red (about to die). |
+  | **IsContractualPartner** | Wasps that are partners in contracts of the currently selected wasp are green. Others are bright red if they have contracts and dark red if they have no contracts. |
 
 ## Build instructions
 #### Linux
