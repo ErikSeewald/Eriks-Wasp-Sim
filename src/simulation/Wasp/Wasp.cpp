@@ -186,11 +186,27 @@ void Wasp::update()
 
 	// --- POSITION ---
 	float speedMultiplier = balancedGenes.flyingSpeed * deltaTime;
-	if (abs(turnSpeed) > 0) { speedMultiplier /= abs(turnSpeed); }
-	position.x += viewingVector.x * speedMultiplier;
-	position.y += viewingVector.y * speedMultiplier;
-	position.z += viewingVector.z * speedMultiplier;
 
+	// Counts for how many iterations the wasp has had a goal, reached that goal's
+	// y coordinate, and has been turning (i.e., has been orbiting around the goal 
+	// because its movement speed is too large relative to its turning speed).
+	// Decreases the speedMultiplier accordingly.
+	if (currentGoal != nullptr && ascendSpeed == 0.0 && abs(turnSpeed) > 0.0)
+	{
+		// Adjust the "close to the goal" range to the flying speed because that is
+		// the primary factor in the size of the orbit.
+		if (glm::distance(*currentGoal, position) < 2.0 * balancedGenes.flyingSpeed)
+		{
+			orbitingIterations++;
+			speedMultiplier -= 0.0001 * ((float) orbitingIterations);
+			if (speedMultiplier < 0) { speedMultiplier = 0; }
+		}
+	}
+	else { orbitingIterations = 0; }
+
+	position += viewingVector * speedMultiplier;
+
+	// --- GOAL REACHED ---
 	if (currentGoal != nullptr && glm::length(*currentGoal - position) < 1.5)
 	{
 		currentGoal = nullptr; 

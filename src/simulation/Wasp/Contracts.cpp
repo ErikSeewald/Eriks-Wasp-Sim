@@ -383,16 +383,31 @@ Contract* SwarmContract::negotiateTermsImpl(Wasp* partner1, Wasp* partner2)
  */
 void SwarmContract::overrideGoalIfOutOfRange(Wasp* partner)
 {
-    if (!isValid()) { return; }
+    Wasp* p1;
+    {
+        // If this part was not locked there would be rare cases where the partner
+        // list may become empty after isValid has been checked, leading to a 
+        // memory violation.
+        std::lock_guard<std::mutex> lock(*Contracts::getContractMutex());
+        
+        if (!isValid()) { return; }
+        p1 = partners[0];
 
-    Wasp* p1 = partners[0];
+        // Since the wasp objects do not get deleted when they die, it is fine to
+        // only lock the pointer aquisition. The worst case is following an incorrect
+        // goal for a single iteration. 
+    }
 
     float distance = glm::distance(p1->position, partner->position);
     if (distance > range)
     {
         // Preferring the goal of partner 1 over its position means less clustering of all
         // the partners that are trying to get back in range
-        if (p1->currentGoal != nullptr) { partner->currentGoal = p1->currentGoal; }
+        if (p1->currentGoal != nullptr) 
+        { 
+            partner->currentGoal = p1->currentGoal; 
+            partner->currentGoalFoodEntity = p1->currentGoalFoodEntity;
+        }
         else { partner->currentGoal = &p1->position; }
     }
 }

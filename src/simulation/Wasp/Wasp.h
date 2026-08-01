@@ -120,6 +120,9 @@ class Wasp : Updatable
 		const double SECONDS_BETWEEN_CONTRACT_PROPOSALS = 5.0;
 		double timeSinceLastContractProposal = SECONDS_BETWEEN_CONTRACT_PROPOSALS;
 
+		// Used to decrease forwars speed when spiraling/orbiting around a goal to avoid doing so forever
+		int orbitingIterations = 0;
+
 		void initialize();
 
 		inline void lookAroundRandomly(double deltaTime);
