@@ -22,7 +22,7 @@ The following section describes the most important attributes that define a wasp
 - **Hunger saturation**: The amount of hunger points the wasp currently has. The more it has, the less hungry it is. These points decrease over time but can be replenished by finding or receiving food. Once these points reach zero, the wasp begins to starve, gradually losing hp.
 
 #### Behavior
-By default, wasps are randomly exploring their surrounings. If their food saturation falls below their maximum, they start becoming more likely to choose food entities as their current goal and flying towards them.
+By default, wasps are randomly exploring their surroundings. If their food saturation falls below their maximum, they start becoming more likely to choose food entities as their current goal and fly towards them.
 
 This basic behavior can be affected by contracts, loyalty to the queen, and other unique situations that are explained later.
 
@@ -32,29 +32,29 @@ To understand what a wasp is doing, make use of the [selected-wasp-window](#sele
 The queen is a special wasp outside the wasp array. Its w_Index is -1. Only one queen can exist within the simulation and all wasps store a reference to it. The following behaviors are unique to the queen.
 - **Receiving food**: Other wasps, depending on their loyalty, may choose to gift some of their food to the queen. For this, they need to be in her interaction range. She can choose to accept or reject that gift.
 - **Worker scores**: The queen assigns every worker wasp that it interacts with a score. This score can be affected by actions like the worker giving her a certain amount of food. Wasps with high worker scores may receive special treatment from the queen like higher share in the food redistribution.
-- **Distributing food**: When the queen's hunger saturation grows beyond her maximum due to gifts from worker wasps, it goes into a special 'pot' (the QueenFoodStorage, see [Hive-window](#hive-window)) from which she regularly distributes the food points among her favorite workers based ont heir worker score.
-- **Swarming**: If the queen comes close to starving or dying for other reasons, loyal worker wasps will start heading for her location and swarming around her.
+- **Distributing food**: When the queen's hunger saturation grows beyond her maximum due to gifts from worker wasps, it goes into a special 'pot' (the QueenFoodStorage, see [Hive-window](#hive-window)) from which she regularly distributes the food points among her favorite workers based on their worker score.
+- **Swarming**: If the queen comes close to starving (or is dying for other reasons), loyal worker wasps will start heading for her location and swarming around her.
 
 ## Resources
 Outside of wasps, another type of entity that exists in the simulation is a resource entity.
 Items that provide something to the wasps or represent some sort of desire.
 
-These resources are spawned based on various resource settings (see [commands.json](assets/commands/Commands.json)).
+These resources are spawned automatically (or manually) based on various resource settings (see [commands.json](assets/commands/Commands.json)).
 
 #### Food
 The main resource in the simulation is food. A single food entity is represented by a point in space and can restore a varying number of hunger points. 
 
 ## Genes
-The simulation uses a sort of gene structure to define randomizable (inheritable?) traits of single wasps.
+The simulation uses a sort of gene structure to define randomizable (inheritable?) traits of individual wasps.
 These genes fit into two types: **BalancedGenes**, which can be mutated only through a trade-off mutation in another gene, and **UnboundGenes**, which can mutate freely.
-For now, mutation happens randomly at the start of a wasp's livespan, with the gene values remaining constant for the rest of it.
+For now, mutation happens randomly at the start of a wasp's lifespan, with the gene values remaining constant for the rest of it.
 
 #### BalancedGenes
 Balanced genes are genes that can be mutated only through a trade-off mutation in another gene.
-Every gene has a cost and an orientation associated with it. The former defines how costly a mutation +-1.0 is, and the latter defines whether the (assumed) benefitial direction of change is positive or negative.
-For example, a mutation to the maximum hp of the wasp has a positive orientation because it is assumed that more hp are benefitial. This matters for the balancing function. A good change of a specific cost needs
-to be balanced by a bad change of equivalent cost in another gene. For two positively oriented genes, geneA with a cost of 1.0 and geneB with a cost of 20.0, a good change in geneB needs to be balanced out by a bad
-change in geneA with 20 times the intensity.
+Every gene has a cost and an orientation associated with it. The former defines how costly a mutation +-1.0 is, and the latter defines whether the (assumed) beneficial direction of change is positive or negative.
+For example, a mutation to the maximum hp of the wasp has a positive orientation because it is assumed that more hp are beneficial. This matters for the balancing function. A good change of a specific cost needs
+to be balanced by a bad change of equivalent cost in another gene. For two positively oriented genes, *geneA* with a cost of 1.0 and *geneB* with a cost of 20.0, a good change in *geneB* needs to be balanced out by a bad
+change in *geneA* with 20 times the intensity.
 
 The following balanced genes currently exist in the simulation (for costs, orientation and default values, see [WaspGenes.h](/src/simulation/Wasp/WaspGenes.h) and [WaspGenes.cpp](/src/simulation/Wasp/WaspGenes.cpp)):
 - **maxHP**: The maximum health points of a wasp (up to which it can be healed and regenerated).
@@ -65,12 +65,12 @@ The following balanced genes currently exist in the simulation (for costs, orien
 Unbound genes are genes that can be mutated freely without consideration for other genes. Every unbound gene has a "range" associated with it. This range defines how strongly the gene value can change in a single mutation.
 
 The following unbound genes currently exist in the simulation (for costs, orientation and default values, see [WaspGenes.h](/src/simulation/Wasp/WaspGenes.h) and [WaspGenes.cpp](/src/simulation/Wasp/WaspGenes.cpp)):
-- **queenLoyalty**: This loyalty factor affects how devoted the wasp is to its queen (e.g., how likely is it to choose to fly close to the queen; how much food is it willing to gift the queen).
+- **queenLoyalty**: This loyalty factor affects how devoted the wasp is to its queen (e.g., how likely is it to choose to fly close to the queen; how much food is it willing to gift to the queen).
 - **contractDesire**: A factor defining how likely a wasp is to both propose and accept contracts.
 
 ## Contracts
 A contract is an agreement between two or more wasps with the following properties:
-- A validity period after which the the contract expires
+- A validity period after which the contract expires
 - An ordered list of contractual partners
 - A set of rules and properties that are specific to the type of contract
 
@@ -82,18 +82,18 @@ As long as a contract is valid, every partner is obligated by the basic laws of 
 rules. Not only the expiration of the validity period, but also the death of partners, leading to less than two partners, can cause a contract to be
 invalidated.
 
-(Note that the simulation only clears expired contracts from memory in discrete intervals, meaning that the GUI may show a contract with a negative "Valid for (s)" timer for a short moment. Such a contract is already being treated as invalid, it just has not been cleared yet.)
+(Note that the simulation only clears invalid contracts from memory in discrete intervals, meaning that the GUI may show a contract with a negative "Valid for (s)" timer for a short moment. Such a contract is already being treated as invalid, it just has not been cleared yet.)
 
-(Note that the *WaspRenderMode* selection in the *Options* GUI features a mode called *IsContractPartner* that shows all partners of the currently selected wasp in green.) 
+(The *WaspRenderMode* selection in the [Options-window](#options-window) features a mode called *IsContractPartner* that shows all partners of the currently selected wasp in green.) 
 
 #### Contract types
 What follows is a short summary of the contract types that currently exist in the simulation. The properties shared between all contracts (e.g., validity period) are not listed again.
 
 1. **FoodSharingContract**: A contract that stipulates a minimum level of hunger saturation (allowance) beyond which a certain percentage of acquired food is shared between all partners.
-   - *hungerSaturationAllowance*: This negotiable parameter dictates how much food saturation a parter is allowed to have before it needs to share newly acquired foor
-   - *sharingRate*: This negotiable parameter describes the relative amount of any new chunk of acquired foor that needs to be shared with the other partners.
-   - The chunk of food that needs to be shared is divided amongst all other partners evenly.
-2. **SwarmContract**: A contract that requires all of the involved partners to stay within a certain range of partner 1 (the first partner in the partners list - can change depending on deaths, etc.).
+   - *hungerSaturationAllowance*: This negotiable parameter dictates how much food saturation a parter is allowed to have before it needs to share newly acquired food.
+   - *sharingRate*: This negotiable parameter describes the relative amount of any new chunk of acquired food that needs to be shared with the other partners.
+   - The chunk of food that needs to be shared is divided among all other partners evenly.
+2. **SwarmContract**: A contract that requires all the involved partners to stay within a certain range of partner 1 (the first partner in the partners list - can change depending on deaths, etc.).
    - *range*: When further away from partner 1 than this negotiable parameter dictates, a partner must set its current goal to be the goal of partner 1 (or its position if it currently has no goal).
    - Through this goal sharing, a sort of swarming behavior is created.
 
@@ -104,7 +104,7 @@ Each command has the following attributes:
 - Name and explanation, which are printed by the 'help' command
 - Syntax, which can be displayed by typing ```syntax [command] {subcommand}*``` (e.g., ```syntax wasp sethp```)
 - List of subcommands (e.g., 'kill', 'sethp', ... for the 'wasp' command)
-
+)
 Sometimes 'syntax' makes use of command elements (e.g., \<position\> in ```wasp setpos <position>```). These are placeholders that may require a more specific explanation.
 By using the 'element' command (e.g., ```element position```) you can print that explanation.
 
@@ -134,8 +134,8 @@ Here you can see some of the following:
 #### Contract-window
 When a contract has been selected from the [Selected-wasp-window](#selected-wasp-window), a window containing information on this specific contract opens with the following information:
 - How many remaining seconds of validity does it have
-- How many partners are a part of the contract
-- A list of these partners (clicking on one of selects them)
+- How many contractual partners are there
+- A list of these partners (clicking on one of them selects that wasp)
 - The type of the contract and specific information regarding it (see [Contract types](#contract-types))
 
 #### Performance-window
@@ -164,7 +164,7 @@ On the right side of the screen, there is the options window. It displays the fo
 
   | Mode | Description |
   |------|-------------|
-  | **UniformFlat** | All wasps are orange and completely flat shaded. |
+  | **UniformFlat** | All wasps are orange and completely flat-shaded. |
   | **UniformColor** | All wasps are orange but use triangle-normal-based shading (all rendering modes use normals for shading unless specified otherwise). |
   | **RandomOranges** | Individual wasps are rendered with unique orange colors. |
   | **FullRandomColors** | Every wasp has a random color. |
@@ -205,7 +205,7 @@ Download the following dependencies and put them into `dependencies/` (create th
 - [imgui-1.90.4](https://github.com/ocornut/imgui/releases/tag/v1.90.4): Download the `imgui` folder and put it into `dependencies/`
 
 ## Performance notes
-The Wasp-Sim makes use of multiple performance optimizations, some of which have a difficult tradeoff balance.
+The Wasp-Sim makes use of multiple performance optimizations. This section is where I keep track of their trade-offs and why I chose them.
 
 (This approach is limited by its stateful, CPU-in-loop nature. For even larger entity counts, check out [Pronicula-Splesh](https://github.com/ErikSeewald/Pronicula?tab=readme-ov-file#splesh)) 
 
@@ -221,7 +221,7 @@ The Wasp-Sim makes use of multiple performance optimizations, some of which have
   Since the vector only grows at the start of the program and the memory stays locally fixed in one continuous block on the heap afterward, the initialization overhead can be ignored. 
   (At more than 100000 wasps an array can be ~20% faster, but this is not worth the extra stutter at lower amounts)
 * **Max indices**:
-  - To reduce the downsides caused by the fixed-size vector optimization the Wasp-Sim makes use of variables that keep track of the highest index of activated objects within the vector.
+  - To reduce the downsides caused by the fixed-size vector optimization, the Wasp-Sim makes use of variables that keep track of the highest index of activated objects within the vector.
   These indices are then used to limit loops over the vector (i.e., if the wasp vector has a size of 100000 but only the first 5000 wasps are alive, wasp_maxIndex is set to 5000 and the other slots are not iterated over).
   While this has huge performance benefits, it comes with the added responsibility of managing these indices carefully.
   - Whenever objects are de-/reactivated the indices should be updated properly. While
@@ -229,16 +229,15 @@ The Wasp-Sim makes use of multiple performance optimizations, some of which have
   a lot of redundant loop iterations if they all make a call to the index update procedure. This problem is addressed by running this procedure on a fixed schedule every few seconds and only making extra calls to it
   whenever commands like the ones mentioned before are used.
   - To make sure the max indices are always as small as possible (while being unable to reorder elements within the vector), procedures that deactivate entities (e.g., the 'kill' command) should, if possible,
-    kill entities at higher indices first. If there are exactly 100000 wasps, the max index is 100000 and ```kill wasp 95000``` is executed, the upper 95000 wasps should be killed so that the max index can be set to 5000.
+    kill entities at higher (indices) first. If there are exactly 100000 wasps, the max index is 100000, and ```kill wasp 95000``` is executed, the upper 95000 wasps should be killed so that the max index can be set to 5000.
   - There are some situations in which the max index can not be reduced as much as one would like. For example, if half of all wasps fail to find food, starve, and are then deactivated, it is very unlikely that all of their
     indices line up perfectly for the max index to be cut in half as well.
-* **Threading**: Not only does the OpenGL code run on a different thread than the simulation code, but both of these threads also occasionally spawn more child threads.
-  - The cpu needs to collect matrix information before sending it off to the gpu for hardware instancing. This is done with multiple threads looping over sections of the aforementioned localized entity vectors.
-    Usually, dividing the task into 4 threads yields the best results, but that is highly situational.
+* **Threading**: Not only does the OpenGL code run on a different thread than the simulation code, but both of these threads also occasionally use more child threads.
+  - The CPU needs to collect matrix information before sending it off to the GPU for hardware instancing. This is done with multiple threads looping over sections of the aforementioned localized entity vectors.
   - Threading is achieved using a custom [ThreadPool](src/util/ThreadPool.h) class. Instead of creating new threads each time they are used, a pool of threads is constantly waiting (BLOCKED) for new tasks
     that can be enqueued
   - For now it seems that multithreading is hugely beneficial in the rendering loop but has mixed results in the simulation loop. Under most circumstances a multithreaded simulation loop is a tiny bit slower due to the
-    overhead of the thread pool class. This is also made more noticeable due to the demand for extra threads having an influence on the framerate of the render loop as well (whereas the single thread approach only results in slower
+    overhead of the thread pool class. This is also made more noticeable due to the demand for extra threads having an influence on the frame rate of the render loop as well (whereas the single thread approach only results in slower
     simulation update speeds and thereby choppy wasp movement). However, when the computational load of the simulation gets very high (like when there are a lot of food entities and a lot of wasp objects at the same time and
     each wasp is searching the list for the closest food object), the multithreaded approach is way faster and ends up looking a lot smoother. Sadly, dynamically scaling the size of the thread pool does not seem to help. It seems
     to be all or nothing.
@@ -248,6 +247,6 @@ The Wasp-Sim makes use of multiple performance optimizations, some of which have
     decide against it:
   - Dynamically growing and shrinking the list of entities within a chunk is very expensive and necessitates a data structure that would eliminate all the benefits of locality from the earlier sections.
   - If thousands of entities left their chunk at the same time (not very rare) and thereby caused the chunks' data structures to be updated, the simulation ended up coming to a screeching halt until all chunks had been updated.
-  - Performance would be way too dependant on how many entities are in the same chunk.
+  - Performance would be way too dependent on how many entities are in the same chunk.
   - While accessing a chunk based on coordinates using an unordered map should theoretically be very fast, the reality of having to add and remove chunks from the map all the time prevents hashed access from reaching its full potential.
     Using a static set of chunks instead of dynamically growing and shrinking the map might lead to a small improvement in this aspect, but it would also severely limit how dynamic the simulation can be. 
