@@ -204,6 +204,22 @@ Download the following dependencies and put them into `dependencies/` (create th
 - [nlohmann-json v3.11.3](https://github.com/nlohmann/json/releases): Download the `json.hpp` file and put it into `dependencies/`
 - [imgui-1.90.4](https://github.com/ocornut/imgui/releases/tag/v1.90.4): Download the `imgui` folder and put it into `dependencies/`
 
+## Architecture
+#### Overview
+The architecture of this project can be broadly split into three parts, each running on its own thread and spawned in [eriks_wasp_sim.cpp](/src/eriks_wasp_sim.cpp).
+- **Simulation thread**: Handles the update loop of the simulation logic.
+- **Visualization thread**: Handles rendering and GUI input. Reads and modifies the simulation state.
+- **Console thread**: Handles console input from the user. Reads and modifies the simulation state.
+
+#### Simulation
+TODO
+
+#### Visualization
+TODO
+
+#### Console
+TODO
+
 ## Performance notes
 The Wasp-Sim makes use of multiple performance optimizations. This section is where I keep track of their trade-offs and why I chose them.
 
