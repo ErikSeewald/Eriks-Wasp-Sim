@@ -211,6 +211,8 @@ The architecture of this project can be broadly split into three parts, each run
 - **Visualization thread**: Handles rendering and GUI input. Reads and modifies the simulation state.
 - **Console thread**: Handles console input from the user. Reads and modifies the simulation state.
 
+![Base thread architecture diagram](/docs/img/base_thread_architecture.svg)
+
 #### Simulation
 TODO
 
