@@ -47,3 +47,6 @@ imgui.ini
 # Cmake
 build/linux/
 build/windows/
+
+# Drawio
+*.bkp

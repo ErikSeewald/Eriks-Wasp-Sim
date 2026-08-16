@@ -98,7 +98,7 @@ What follows is a short summary of the contract types that currently exist in th
    - Through this goal sharing, a sort of swarming behavior is created.
 
 ## Commands
-The Wasp-Sim uses a CLI that opens alongside the OpenGL window at startup. Type 'help' to see a list of available commands or look through [commands.json](assets/commands/Commands.json) for more information.
+The Wasp-Sim uses a CLI that opens alongside the OpenGL window at startup. Type 'help' to see a list of available commands or look through [Commands.json](assets/commands/Commands.json) for more information.
 
 Each command has the following attributes: 
 - Name and explanation, which are printed by the 'help' command
@@ -220,7 +220,19 @@ TODO
 TODO
 
 #### Console
-TODO
+The console thread begins by reading in [Commands.json](assets/commands/Commands.json). 
+
+Then it starts a loop of repeatedly checking for user input and,
+if new input has been entered, fetching the corresponding handler function for that command from a map of command names to handlers. 
+For an invalid command it prints a syntax error.
+
+Commands can print meta information like syntax and explanations (fetched from the JSON) or read and modify the state of the simulation or of the user interface. 
+See the section on [commands](#commands) for more information.
+
+There are some thread synchronization measures whenever the console thread modifies the state that another thread is working with, but it mostly just boils down to waiting
+for a mutex to unlock. Other threads cannot reject the eventual execution of a command.
+
+![Console architecture diagram](/docs/img/console_architecture.svg)
 
 ## Performance notes
 The Wasp-Sim makes use of multiple performance optimizations. This section is where I keep track of their trade-offs and why I chose them.
