@@ -4,7 +4,7 @@
 
 /**
 * @struct Camera
-* @brief A struct holding position, direction, pitch and yaw of the glut camera.
+* @brief A struct holding position, direction, pitch, and yaw of the glut camera.
 */
 struct Camera 
 {

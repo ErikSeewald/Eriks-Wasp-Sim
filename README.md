@@ -208,7 +208,7 @@ Download the following dependencies and put them into `dependencies/` (create th
 #### Overview
 The architecture of this project can be broadly split into three parts, each running on its own thread and spawned in [eriks_wasp_sim.cpp](/src/eriks_wasp_sim.cpp).
 - **Simulation thread**: Handles the update loop of the simulation logic.
-- **Visualization thread**: Handles rendering and GUI input. Reads and modifies the simulation state.
+- **Graphics thread**: Handles rendering and GUI input. Reads and modifies the simulation state.
 - **Console thread**: Handles console input from the user. Reads and modifies the simulation state.
 
 ![Base thread architecture diagram](/docs/img/base_thread_architecture.svg)
@@ -216,8 +216,18 @@ The architecture of this project can be broadly split into three parts, each run
 #### Simulation
 TODO
 
-#### Visualization
-TODO
+#### Graphics
+The graphics thread begins by loading models and shaders and initializing OpenGL and ImGUI.
+
+Then it begins a rendering loop that updates the camera, renders entities and debug information and updates the UI.
+At the same time, it listens for input events and executes handlers whenever they occur.
+Such events can be key presses, mouse clicking (e.g., initializing a raycast into the scene to select a wasp) or UI interaction.
+While the rendering logic only reads the simulation state, these event handlers may modify it too.
+
+All rendered entity types share the same model-, shader-, and instancing logic ([ModelHandler.h](/src/graphics/ModelHandler.h), [ShaderHandler.h](/src/graphics/ShaderHandler.h), [InstancedRendering.h](/src/graphics/InstancedRendering.h)).
+Unique behavior is implemented in corresponding namespaces (e.g., [WaspRenderer.h](/src/graphics/WaspRenderer.h)) that contain the main rendering function for that entity type, called from the core rendering loop.
+
+![Graphics architecture diagram](/docs/img/graphics_architecture.svg)
 
 #### Console
 The console thread begins by reading in [Commands.json](assets/commands/Commands.json). 

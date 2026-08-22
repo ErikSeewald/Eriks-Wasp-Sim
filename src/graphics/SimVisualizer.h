@@ -8,7 +8,7 @@
 
 /**
 * @namespace SimVisualizer
-* @brief A namespace for all methods for visualizing the simulation with OpenGL 
+* @brief A namespace for the simulation's core graphics rendering loop and its initialization.
 */
 namespace SimVisualizer
 {
