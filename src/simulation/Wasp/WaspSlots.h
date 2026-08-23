@@ -10,7 +10,7 @@ using Strategies::KillStrategy;
 
 /**
 * @namespace WaspSlots
-* @brief A namespace to handle the global set of wasp slots.
+* @brief A namespace to handle the global vector of wasp slots.
 */
 namespace WaspSlots
 { 
@@ -38,7 +38,7 @@ namespace WaspSlots
 	void updateMaxIndex();
 
 	/**
- 	* Use this instead of getWasps()->size() to avoid cases where the wasp vector has not yet been filled up.
+ 	* Use this instead of getWasps()->size() to covoid cases where the wasp vector has not yet been filled up.
 	*/
 	int getSlotCount();
 

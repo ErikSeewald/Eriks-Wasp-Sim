@@ -214,12 +214,23 @@ The architecture of this project can be broadly split into three parts, each run
 ![Base thread architecture diagram](/docs/img/base_thread_architecture.svg)
 
 #### Simulation
-TODO
+The simulation thread begins by spawning all initial entities and initializing the rest of the simulation state.
+
+Then it starts a delta-time-driven update loop in which it updates entities and, less frequently, cleans up memory
+and performs other more resource intensive tasks.
+
+Entities that are updated in this loop inherit from the [Updateable.h](/src/simulation//Updatable.h) class and perform
+their unique update logic based on the rest of the simulation state that they have access to. Most of this is performed
+using multiple threads working on sections of the entire entity pool. Through the use of mutex locking and stricter update
+order for certain things, some predictability is maintained, but it is still worth noting that the behavior of the simulation
+is highly dependent on thread order and resulting RNG states.
+
+![Simulation architecture diagram](/docs/img/simulation_architecture.svg)
 
 #### Graphics
 The graphics thread begins by loading models and shaders and initializing OpenGL and ImGUI.
 
-Then it begins a rendering loop that updates the camera, renders entities and debug information and updates the UI.
+Then it starts a rendering loop that updates the camera, renders entities and debug information and updates the UI.
 At the same time, it listens for input events and executes handlers whenever they occur.
 Such events can be key presses, mouse clicking (e.g., initializing a raycast into the scene to select a wasp) or UI interaction.
 While the rendering logic only reads the simulation state, these event handlers may modify it too.
