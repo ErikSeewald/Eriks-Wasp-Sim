@@ -104,7 +104,7 @@ Each command has the following attributes:
 - Name and explanation, which are printed by the 'help' command
 - Syntax, which can be displayed by typing ```syntax [command] {subcommand}*``` (e.g., ```syntax wasp sethp```)
 - List of subcommands (e.g., 'kill', 'sethp', ... for the 'wasp' command)
-)
+
 Sometimes 'syntax' makes use of command elements (e.g., \<position\> in ```wasp setpos <position>```). These are placeholders that may require a more specific explanation.
 By using the 'element' command (e.g., ```element position```) you can print that explanation.
 
@@ -206,7 +206,7 @@ Download the following dependencies and put them into `dependencies/` (create th
 
 ## Architecture
 #### Overview
-The architecture of this project can be broadly split into three parts, each running on its own thread and spawned in [eriks_wasp_sim.cpp](/src/eriks_wasp_sim.cpp).
+The architecture of this project can broadly be split into three parts, each running on its own thread and spawned in [eriks_wasp_sim.cpp](/src/eriks_wasp_sim.cpp).
 - **Simulation thread**: Handles the update loop of the simulation logic.
 - **Graphics thread**: Handles rendering and GUI input. Reads and modifies the simulation state.
 - **Console thread**: Handles console input from the user. Reads and modifies the simulation state.
@@ -241,13 +241,17 @@ Unique behavior is implemented in corresponding namespaces (e.g., [WaspRenderer.
 ![Graphics architecture diagram](/docs/img/graphics_architecture.svg)
 
 #### Console
-The console thread begins by reading in [Commands.json](assets/commands/Commands.json). 
+The console thread begins by reading [Commands.json](assets/commands/Commands.json) to store the command definitions. 
 
 Then it starts a loop of repeatedly checking for user input and,
 if new input has been entered, fetching the corresponding handler function for that command from a map of command names to handlers. 
 For an invalid command it prints a syntax error.
 
-Commands can print meta information like syntax and explanations (fetched from the JSON) or read and modify the state of the simulation or of the user interface. 
+Commands can 
+- Print meta information like syntax and explanations (fetched from the JSON)
+- Read and modify the state of the simulation
+- Read and modify the state the GUI
+   
 See the section on [commands](#commands) for more information.
 
 There are some thread synchronization measures whenever the console thread modifies the state that another thread is working with, but it mostly just boils down to waiting

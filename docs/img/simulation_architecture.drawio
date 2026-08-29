@@ -87,7 +87,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="knc6EupOlZyj4XBf0Kq5-19" connectable="0" parent="knc6EupOlZyj4XBf0Kq5-18" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="calls in update loop" vertex="1">
+        <mxCell id="knc6EupOlZyj4XBf0Kq5-19" connectable="0" parent="knc6EupOlZyj4XBf0Kq5-18" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="calls update()" vertex="1">
           <mxGeometry relative="1" x="0.4567" y="-1" as="geometry">
             <mxPoint x="-500" y="-1" as="offset" />
           </mxGeometry>
@@ -139,7 +139,7 @@
         <mxCell id="knc6EupOlZyj4XBf0Kq5-29" edge="1" parent="1" source="CHJXNvM-DRkKnB43q2RP-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="knc6EupOlZyj4XBf0Kq5-28">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="knc6EupOlZyj4XBf0Kq5-30" connectable="0" parent="knc6EupOlZyj4XBf0Kq5-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="calls in update loop" vertex="1">
+        <mxCell id="knc6EupOlZyj4XBf0Kq5-30" connectable="0" parent="knc6EupOlZyj4XBf0Kq5-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="calls update()" vertex="1">
           <mxGeometry relative="1" x="-0.5838" y="1" as="geometry">
             <mxPoint x="20" y="1" as="offset" />
           </mxGeometry>
