@@ -15,7 +15,6 @@ using Food::FoodEntity;
  * Note: This process technically does not guarantee finding the closest entity as the wasp may move during the steps
  * and get closer to  "ignored" entities of prior steps, though this basically makes no difference in practice.
  */
-#include <iostream>
 ThoughtStepResult MultiStepThinking::stepFindClosestFood(glm::vec3 position, ThoughtState* thoughtState)
 {
     std::vector<FoodEntity>* foodEntities = Food::getFoodEntities();

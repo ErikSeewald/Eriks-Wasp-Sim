@@ -19,7 +19,7 @@ namespace MultiStepThinking
      * @struct ThoughtState
      * @brief Struct representing the current state of the thoughts/computations of a wasp that span multiple update iterations.
      */
-    struct ThoughtState
+    struct ThoughtStatedocw
     {
         // The closest food entity that the wasp has found so far.
         Food::FoodEntity* curClosestFood = nullptr;
@@ -40,6 +40,7 @@ namespace MultiStepThinking
     /**
      * Performs a single step in the multi step process of finding the closest FoodEntity to the given position.
      * Checks CLOSEST_FOOD_CHECKS_PER_ITERATION entities and writes the currently closest entity to the given ThoughtState.
+     * If this function is called as the first step in the process, it assumes MultiStepThinking::resetClosestFoodThoughtState was called prior.
      * 
      * Returns the ThoughtStepResult of this iteration. Once that result is FINISHED, the ThoughtState contains the final
      * choice for the closest food entity.
