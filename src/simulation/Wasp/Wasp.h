@@ -4,6 +4,7 @@
 #include "WaspGenes.h"
 #include "Food.h"
 #include "Contracts.h"
+#include "MultiStepThinking.h"
 #include <chrono>
 #include <array>
 #include <glm/glm.hpp>
@@ -44,6 +45,9 @@ class Wasp : Updatable
 		* Implementation/Override of the 'Updatable' class update method. Updates the wasps state in the simulation.
 		*/
 		void update();
+
+		// MULTI STEP THINKING
+		MultiStepThinking::ThoughtState thoughtState;
 
 		// ---GENES---
 		WaspGenes::UnboundGenes unboundGenes;

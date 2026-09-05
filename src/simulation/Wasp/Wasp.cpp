@@ -129,19 +129,21 @@ void Wasp::update()
 		currentGoal = nullptr;
 	}
 
-	if (hungerSaturation < balancedGenes.maxHungerSaturation && RNG::randMod(50) == 1)
+	if (hungerSaturation < balancedGenes.maxHungerSaturation * 0.9)
 	{
-		// Randomly target goal. If it is closer than the current goal, switch to it.
-		// Not realistic behaviour but interesting and much more performance efficient than
-		// having all wasps constantly check all food.
-		FoodEntity* food = Simulation::getRandomAvailableFood();
-		if (food != nullptr)
+		// Try to find closer food in a multi step thought process.
+		MultiStepThinking::ThoughtStepResult result = MultiStepThinking::stepFindClosestFood(position, &thoughtState);
+
+		if (result == MultiStepThinking::ThoughtStepResult::FINISHED)
 		{
-			if (currentGoal == nullptr || glm::length(position - food->position) < glm::length(position - *currentGoal))
+			// Only choose it if the food is also in range to be seen
+			if (thoughtState.curClosestFood != nullptr && glm::distance(thoughtState.curClosestFood->position, position) < Wasp::VIEW_RANGE * 2)
 			{
-				currentGoalFoodEntity = food;
-				currentGoal = &food->position;
+				currentGoalFoodEntity = thoughtState.curClosestFood;
+				currentGoal = &currentGoalFoodEntity->position;
 			}
+			
+			MultiStepThinking::resetClosestFoodThoughtState(&thoughtState);
 		}
 	}
 

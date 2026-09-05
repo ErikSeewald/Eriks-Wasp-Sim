@@ -177,6 +177,12 @@ void UI::_drawSelectedWaspUI()
                 ImGui::EndTable();
             }
         }
+
+        // MULTI STEP THINKING
+        if (ImGui::CollapsingHeader("MultiStepThinking"))
+        {
+            ImGui::Text("lastCheckedFoodIndex: %i", wasp->thoughtState.lastCheckedFoodIndex);
+        }
     }
 
     ImGui::End();

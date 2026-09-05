@@ -44,11 +44,6 @@ namespace Simulation
 	std::chrono::steady_clock::time_point* getCachedTimePoint();
 
 	/**
-	* Returns a random food entity that has not been eaten. Returns nullptr if no such entity exists.
-	*/
-	FoodEntity* getRandomAvailableFood();
-
-	/**
 	* Synchronous function that locks the food mutex and checks whether the given FoodEntity has been eaten.
 	* If so, it returns false. Otherwise it sets food->eaten to true and returns true.
 	*/

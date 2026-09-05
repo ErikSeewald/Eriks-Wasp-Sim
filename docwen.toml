@@ -226,3 +226,10 @@ files = [
     "simulation/Wasp/Contracts.cpp",
     "simulation/Wasp/Contracts.h",
 ]
+
+[[filegroup]]
+name = "multistepthinking"
+files = [
+    "simulation/Wasp/MultiStepThinking.h",
+    "simulation/Wasp/MultiStepThinking.cpp",
+]

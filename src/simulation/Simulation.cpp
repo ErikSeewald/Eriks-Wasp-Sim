@@ -169,38 +169,6 @@ std::chrono::steady_clock::time_point* Simulation::getCachedTimePoint()
 }
 
 /**
-* Returns a random food entity that has not been eaten. Returns nullptr if no such entity exists.
-*/
-FoodEntity* Simulation::getRandomAvailableFood()
-{
-    int maxIndex = Food::getMaxIndex();
-    if (maxIndex == 0) { return nullptr; }
-
-    std::vector<FoodEntity>* foodEntities = Food::getFoodEntities();
-    int randIndex = RNG::randBetween(0, maxIndex);
-    FoodEntity* entity = &(*foodEntities)[randIndex];
-
-    // If the randomly selected one has been eaten, search left and then right for uneaten neighbors.
-    // When food is spawned randomly this should preserve the location related randomness.
-    if (entity->eaten)
-    {
-        for (int i = randIndex - 1; i >= 0; i--)
-        {
-            entity = &(*foodEntities)[i];
-            if (!entity->eaten) { return entity; }
-        }
-
-        for (int i = randIndex + 1; i < maxIndex; i++)
-        {
-            entity = &(*foodEntities)[i];
-            if (!entity->eaten) { return entity; }
-        }
-        return nullptr;
-    }
-    return entity;
-}
-
-/**
 * Synchronous function that locks the food mutex and checks whether the given FoodEntity has been eaten.
 * If so, it returns false. Otherwise it sets food->eaten to true and returns true.
 */
