@@ -19,7 +19,7 @@ namespace MultiStepThinking
      * @struct ThoughtState
      * @brief Struct representing the current state of the thoughts/computations of a wasp that span multiple update iterations.
      */
-    struct ThoughtStatedocw
+    struct ThoughtState
     {
         // The closest food entity that the wasp has found so far.
         Food::FoodEntity* curClosestFood = nullptr;
