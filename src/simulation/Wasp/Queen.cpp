@@ -4,6 +4,10 @@
 #include <algorithm>
 #include <numeric>
 
+// The queen wants to stay close to her home at all times.
+glm::vec3 _queenHome = glm::vec3(0.0);
+constexpr float _QUEEN_HOME_RANGE = 50.0;
+
 Queen::Queen() : _allWasps(*WaspSlots::getWasps()), Wasp(W_INDEX, *this) // The queen has no queen.. But she is her own queen.
 {
     // All workers start with a score of 0
@@ -34,6 +38,14 @@ void Queen::update(const std::chrono::duration<double>& deltaTime)
 
     updateFoodStorage();
     Wasp::update();
+
+    // Stay close to home if just randomly wandering around
+    if (currentGoal == nullptr && glm::distance(position, _queenHome) > _QUEEN_HOME_RANGE)
+    {
+        currentGoalFoodEntity = nullptr;
+        currentGoal = &_queenHome;
+    }
+    else if (currentGoal == &_queenHome) { currentGoal == nullptr; }
 }
 
 /**
@@ -162,4 +174,28 @@ void Queen::updateWorkerScore(int w_Index, int scoreChange)
     // Only the value retrieved through getWorkerScore is valid.
     // This wasp owned attribute is only used for fast debug rendering.
     _allWasps[w_Index]._debugWorkerScore = dossier->score;
+}
+
+/**
+ * Overrides wasp contract proposal behavior. The queen does not do contracts.
+ */
+Contracts::Contract* Queen::receiveNewContractProposal(Wasp* proposer, Contracts::ContractType type)
+{
+    return nullptr;
+}
+
+/**
+ * Overrides wasp contract proposal behavior. The queen does not do contracts.
+ */
+bool Queen::receiveContractJoinProposal(Wasp* proposer, Contracts::Contract* contract)
+{
+    return false;
+}
+
+/**
+ * Overrides wasp contract proposal behavior. The queen does not do contracts.
+ */
+void Queen::tryProposeContract(double deltaTime)
+{
+    return;
 }

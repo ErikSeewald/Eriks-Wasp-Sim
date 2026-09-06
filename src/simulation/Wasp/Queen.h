@@ -67,6 +67,15 @@ class Queen : public Wasp
 		*/
 		void resetWorkerDossier(int w_Index);
 
+		/**
+		 * Overrides wasp contract proposal behavior. The queen does not do contracts.
+		 */
+		Contracts::Contract* receiveNewContractProposal(Wasp* proposer, Contracts::ContractType type);
+
+		/**
+		 * Overrides wasp contract proposal behavior. The queen does not do contracts.
+		 */
+		bool receiveContractJoinProposal(Wasp* proposer, Contracts::Contract* contract);
 
 	private:
 		std::vector<Wasp>& _allWasps; // This vec does not represent the wasps that the queen actually KNOWS
@@ -101,4 +110,9 @@ class Queen : public Wasp
 		* Either for her own benefit or for that of her most appreciated workers.
 		*/
 		void updateFoodStorage();
+
+		/**
+		 * Overrides wasp contract proposal behavior. The queen does not do contracts.
+		 */
+		void tryProposeContract(double deltaTime);
 };

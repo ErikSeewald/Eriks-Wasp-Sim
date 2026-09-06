@@ -136,31 +136,32 @@ void Wasp::update()
 
 		if (result == MultiStepThinking::ThoughtStepResult::FINISHED)
 		{
-			// Only choose it if the food is also in range to be seen
-			if (thoughtState.curClosestFood != nullptr && glm::distance(thoughtState.curClosestFood->position, position) < Wasp::VIEW_RANGE * 2)
+			FoodEntity* food = thoughtState.curClosestFood;
+
+			float foodRange = Wasp::VIEW_RANGE * 2.0;
+			if (food != nullptr && glm::distance(food->position, position) < foodRange)
 			{
-				currentGoalFoodEntity = thoughtState.curClosestFood;
-				currentGoal = &currentGoalFoodEntity->position;
+				currentGoalFoodEntity = food;
+				currentGoal = &food->position;
 			}
-			
+
+			// Depending on a wasps loyalty, it may choose to fly close to the queen if it could not find food
+			if (currentGoal == nullptr && (RNG::randBetween(0.0, 1.0) * unboundGenes.queenLoyalty) > 0.5)
+			{
+				currentGoal = &queen.position;
+			}
+
 			MultiStepThinking::resetClosestFoodThoughtState(&thoughtState);
 		}
 	}
 
-	// Highly loyal wasps will move close to the queen if she needs food
-	else if (queen.hungerSaturation < 0.5 * queen.balancedGenes.maxHungerSaturation)
-	{
-		if (glm::distance(position, queen.position) > Queen::INTERACTION_RADIUS)
-		{ 
-			if (RNG::randBetween(0.0, 1.0) * unboundGenes.queenLoyalty > 0.75) { currentGoal = &queen.position; } 
-		}
-
-		else if (currentGoal == &queen.position) // No need to keep moving towards her if already in range
-		{
-			currentGoal = nullptr;
-		}
+	// If the wasp is currently flying toward the queen, reset its goal once it has reached a radius around it
+	if (currentGoal == &queen.position && glm::distance(position, queen.position) < Queen::INTERACTION_RADIUS * 4.0)
+	{ 
+		currentGoal = nullptr;
 	}
 
+	// --- CONTRACT SWARMING ---
 	// Override the goal while the wasp is out of range in a SwarmContract
 	for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
 	{
