@@ -9,17 +9,13 @@ layout (location = 2) in vec3 iPosition;
 layout (location = 3) in vec3 iViewingVector;
 layout (location = 4) in int w_Index;
 layout (location = 5) in uint waspBitmap; // See WaspRenderer.ccp for the bitmap format
-layout (location = 6) in float relativeWorkerScore;
-layout (location = 7) in float relativeHunger;
-layout (location = 8) in float relativeHealth;
+layout (location = 6) in float renderModeFloat1;
 
 uniform mat4 uViewProj;
 
 flat out int w_IndexFlat;
 flat out uint waspBitmapFlat;
-flat out float relativeWorkerScoreFlat;
-flat out float relativeHungerFlat;
-flat out float relativeHealthFlat;
+flat out float renderModeFloat1Flat;
 out vec3 vNormal;
 
 // Vert shader for drawing a instanced wasp entity.
@@ -50,7 +46,5 @@ void main()
 	// Pass these to the frag shader without interpolation
 	w_IndexFlat = w_Index;
 	waspBitmapFlat = waspBitmap;
-	relativeWorkerScoreFlat = relativeWorkerScore;
-	relativeHungerFlat = relativeHunger;
-	relativeHealthFlat = relativeHealth;
+	renderModeFloat1Flat = renderModeFloat1;
 }

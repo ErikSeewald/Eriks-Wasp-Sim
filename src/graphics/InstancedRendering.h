@@ -54,8 +54,9 @@ namespace InstancedRendering
         glm::vec3 viewingVector;
         int w_Index;
         uint32_t waspBitmap;
-        float relativeWorkerScore;
-        float relativeHunger;
-        float relativeHealth;
+
+        // Floats that can be filled with different data depending on the rendering mode
+        // (e.g., relativeWorkerScore, relativeHunger)
+        float renderModeFloat1;
     };
 }

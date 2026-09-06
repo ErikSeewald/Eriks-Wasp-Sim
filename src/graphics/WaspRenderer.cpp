@@ -136,10 +136,46 @@ inline uint32_t _modifyWaspBitmap(const uint32_t& baseBitmap, const Wasp& wasp)
 }
 
 /**
+ * Sets the renderModeFloat1 (first float with RenderMode specific data) for the given wasp
+ * and the given RenderMode.
+ * 
+ * Also takes in maxWorkerScore which should be calculated outside of the wasp loop once to save computation.
+ */
+inline float _setRenderModeFloat1(const Wasp& wasp, RenderMode::WaspRenderMode renderMode, float maxWorkerScore)
+{
+    switch (renderMode)
+    {
+        case RenderMode::WaspRenderMode::QueenLoyalty:
+            return wasp.unboundGenes.queenLoyalty;
+
+        case RenderMode::WaspRenderMode::RelativeWorkerScore:
+            // _debugWorkerScore is used for optimization (set by the queen when the worker score changes)
+            return wasp._debugWorkerScore / maxWorkerScore;       
+
+        case RenderMode::WaspRenderMode::RelativeHunger:
+            return wasp.hungerSaturation / wasp.balancedGenes.maxHungerSaturation;
+
+        case RenderMode::WaspRenderMode::RelativeHealth:
+            return wasp.hp / wasp.balancedGenes.maxHP;
+
+        case RenderMode::WaspRenderMode::ContractDesire:
+            return wasp.unboundGenes.contractDesire;
+
+        case RenderMode::WaspRenderMode::FlyingSpeed:
+            return wasp.balancedGenes.flyingSpeed;
+
+        default:
+            return 0.0;
+    } 
+}
+
+/**
 * Renders the given wasps.
 */
 void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
 {
+    RenderMode::WaspRenderMode renderMode = UI::getUIState()->waspRenderMode;
+
     const bool isQueen = false; // The queen is handled by its own function.
     uint32_t baseWaspBitmap = _constructWaspBitmap(isQueen); // Shared bitmap values for all normal wasps
     float maxWorkerScore = (float) WaspSlots::getQueen().getCurrentMaxWorkerScore(); // Used for rendering the relative score
@@ -170,18 +206,15 @@ void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
                 const Wasp& w = wasps[i];
                 if (!w.isAlive) { continue; }
 
-                uint32_t bitmap = _modifyWaspBitmap(baseWaspBitmap, w);
-
-                // _debugWorkerScore is used for optimization (set by the queen when the worker score changes)
-                float relativeWorkerScore = w._debugWorkerScore / maxWorkerScore;
-                float relativeHunger = w.hungerSaturation / w.balancedGenes.maxHungerSaturation;
-                float relativeHealth = w.hp / w.balancedGenes.maxHP;
-
                 // weakest memory ordering that still guarantees atomicity
                 int idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
+
+                // Gather data
+                uint32_t bitmap = _modifyWaspBitmap(baseWaspBitmap, w);
+                float renderModeFloat1 = _setRenderModeFloat1(w, renderMode, maxWorkerScore);
                 wasp_instanceData[idx] = InstanceDataWasp 
                 { 
-                    w.position, w.viewingVector, i, bitmap, relativeWorkerScore, relativeHunger, relativeHealth
+                    w.position, w.viewingVector, i, bitmap, renderModeFloat1
                 };
             }
         });
@@ -204,12 +237,12 @@ void WaspRenderer::drawQueen(const Queen& queen)
 
     const bool isQueen = true;
     uint32_t queenBitmap = _constructWaspBitmap(isQueen);
-    float relativeWorkerScore = 0.0;
-    float relativeHunger = queen.hungerSaturation / queen.balancedGenes.maxHungerSaturation;
-    float relativeHealth = queen.hp / queen.balancedGenes.maxHP;
+
+    float paramMaxWorkerScore = -1.0; // The queen has no worker score so it also does not need the max score for a relative score view.
+    float renderModeFloat1 = _setRenderModeFloat1(queen, UI::getUIState()->waspRenderMode, paramMaxWorkerScore);
 
     std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp { 
-            queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap, relativeWorkerScore, relativeHunger, relativeHealth
+            queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap, renderModeFloat1
         });
     InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, waspShaderProgram);
 }

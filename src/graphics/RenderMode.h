@@ -17,9 +17,12 @@ namespace RenderMode
         RandomOranges,
         FullRandomColors,
         GreenIfHasGoal,
+        QueenLoyalty,
         RelativeWorkerScore,
         RelativeHunger,
         RelativeHealth,
         IsContractPartner,
+        ContractDesire,
+        FlyingSpeed
     };
 }

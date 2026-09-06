@@ -169,10 +169,13 @@ On the right side of the screen, there is the options window. It displays the fo
   | **RandomOranges** | Individual wasps are rendered with unique orange colors. |
   | **FullRandomColors** | Every wasp has a random color. |
   | **GreenIfHasGoal** | Wasps are red if they do not currently have an active goal and green if they do. |
+  | **QueenLoyalty** | Wasps with low loyalty genes are blue while wasps with high loyalty genes are red. |
   | **RelativeWorkerScore** | Wasps range from blue (low worker score) to red (high worker score) relative to the wasp with the highest worker score. The queen is green. |
   | **RelativeHunger** | Wasps range from green (fully saturated) to red (starving). |
   | **RelativeHealth** | Wasps range from green (full HP) to red (about to die). |
   | **IsContractualPartner** | Wasps that are partners in contracts of the currently selected wasp are green. Others are bright red if they have contracts and dark red if they have no contracts. |
+  | **ContractDesire** | Wasps with low contract desire genes are blue while wasps with high contract desire genes are red. |
+  | **FlyingSpeed** | Wasps with low speed genes are blue while wasps with high speed genes are red. |
 
 ## Build instructions
 #### Linux

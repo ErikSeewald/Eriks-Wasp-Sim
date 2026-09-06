@@ -2,9 +2,7 @@
 
 flat in int w_IndexFlat;
 flat in uint waspBitmapFlat; // See WaspRenderer.ccp for the bitmap format
-flat in float relativeWorkerScoreFlat;
-flat in float relativeHungerFlat;
-flat in float relativeHealthFlat;
+flat in float renderModeFloat1Flat;
 in vec3 vNormal;
 
 out vec4 FragColor;
@@ -51,26 +49,43 @@ void main()
         case 4u: // GreenIfHasGoal
             bool hasGoal = (waspBitmapFlat & 2u) == 2u;
             baseColor = hasGoal ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);
-            break;     
+            break;
 
-        case 5u: // RelativeWorkerScore
+        case 5u: // QueenLoyalty
+            float loyalty = renderModeFloat1Flat * 0.5; // Assumes most loyalties are in the 0.0 - 2.0 range. May change.
+            baseColor = vec3(loyalty, 0.1, 1.0 - loyalty);
+            break;
+
+        case 6u: // RelativeWorkerScore
             bool isQueen = (waspBitmapFlat & 1u) == 1u;
-            float r = relativeWorkerScoreFlat;
+            float r = renderModeFloat1Flat;
             baseColor = isQueen ? vec3(0.0, 1.0, 0.0) : vec3(r, 0.1, 1.0 - r);
             break;
 
-        case 6u: // RelativeHunger
-            baseColor = vec3(1.0 - relativeHungerFlat, relativeHungerFlat, 0.1);
+        case 7u: // RelativeHunger
+            float hunger = renderModeFloat1Flat;
+            baseColor = vec3(1.0 - hunger, hunger, 0.1);
             break;
 
-        case 7u: // RelativeHealth
-            baseColor = vec3(1.0 - relativeHealthFlat, relativeHealthFlat, 0.1);
+        case 8u: // RelativeHealth
+            float health = renderModeFloat1Flat;
+            baseColor = vec3(1.0 - health, health, 0.1);
             break; 
 
-        case 8u: // IsContractPartner
+        case 9u: // IsContractPartner
             bool isPartner = (waspBitmapFlat & 4u) == 4u;
             float hasContract = (waspBitmapFlat & 8u) == 8u ? 1.0 : 0.25;
             baseColor = isPartner ? vec3(0.0, hasContract, 0.0) : vec3(hasContract, 0.0, 0.0);
+            break;
+
+        case 10u: // ContractDesire
+            float desire = renderModeFloat1Flat * 0.75; // Assumes most desires are in the 0.0 - 1.5 range. May change.
+            baseColor = vec3(desire, 0.1, 1.0 - desire);
+            break;
+
+        case 11u: // FlyingSpeed
+            float speed = renderModeFloat1Flat * 0.1; // Assumes most speeds are in the 0.0 - 10.0 range. May change.
+            baseColor = vec3(speed, 0.1, 1.0 - speed);
             break;
     }
     

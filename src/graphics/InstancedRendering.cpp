@@ -180,7 +180,7 @@ void InstancedRendering::setupInstancing<InstanceDataWasp>(GLuint VAO, GLuint* i
     );
     glVertexAttribDivisor(5, 1);
 
-    // relativeWorkerScore attribute at location 6
+    // renderModeFloat1 attribute at location 6
     glEnableVertexAttribArray(6);
     glVertexAttribPointer(
         6,          // location
@@ -188,34 +188,9 @@ void InstancedRendering::setupInstancing<InstanceDataWasp>(GLuint VAO, GLuint* i
         GL_FLOAT,   // data type
         GL_FALSE,   // normalized?
         sizeof(InstanceDataWasp), // Offset between consecutive instances
-        (void*) offsetof(InstanceDataWasp, relativeWorkerScore)
+        (void*) offsetof(InstanceDataWasp, renderModeFloat1)
     );
     glVertexAttribDivisor(6, 1);
-
-    // relativeHunger attribute at location 7
-    glEnableVertexAttribArray(7);
-    glVertexAttribPointer(
-        7,          // location
-        1,          // size (float)
-        GL_FLOAT,   // data type
-        GL_FALSE,   // normalized?
-        sizeof(InstanceDataWasp), // Offset between consecutive instances
-        (void*) offsetof(InstanceDataWasp, relativeHunger)
-    );
-    glVertexAttribDivisor(7, 1);
-
-    // relativeHealth attribute at location 8
-    glEnableVertexAttribArray(8);
-    glVertexAttribPointer(
-        8,          // location
-        1,          // size (float)
-        GL_FLOAT,   // data type
-        GL_FALSE,   // normalized?
-        sizeof(InstanceDataWasp), // Offset between consecutive instances
-        (void*) offsetof(InstanceDataWasp, relativeHealth)
-    );
-    glVertexAttribDivisor(8, 1);
-
 
     glBindVertexArray(0);
 }
