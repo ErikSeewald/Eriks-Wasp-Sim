@@ -278,4 +278,19 @@ void WaspRenderer::drawSelectedWasp()
     {
         DebugRenderer::scheduleLine(wasp->position, *wasp->currentGoal, goalVecColor);
     }
+
+    // DRAW VIEW RADIUS
+    DebugRenderer::drawRoughSphere(wasp->position, Wasp::VIEW_RANGE * 2.0);
+
+    // DRAW SWARM CONTRACT
+    for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
+    {
+        Contracts::Contract* contract = wasp->contracts.at(i);
+        if (contract != nullptr && contract->getType() == Contracts::ContractType::SwarmContractType)
+        {
+            Contracts::SwarmContract* swarmContract = (Contracts::SwarmContract*) contract;
+            Wasp* partner1 = swarmContract->getPartners().at(0);
+            DebugRenderer::drawRoughSphere(partner1->position, swarmContract->range);
+        }
+    }
 }

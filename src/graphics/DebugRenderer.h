@@ -30,4 +30,9 @@ namespace DebugRenderer
     * and clears the schedule.
     */
     void drawScheduledLines();
+
+    /**
+     * Draws a rough approximation of a sphere wireframe at the given position with the given radius.
+     */
+    void drawRoughSphere(const glm::vec3& position, float radius);
 }

@@ -32,12 +32,19 @@ GLuint line_instanceVBO;
 int line_vertexCount;
 const std::string lineModelFile = "debug/Line.obj";
 
+GLuint roughSphere_VAO;
+GLuint roughSphere_VBO;
+GLuint roughSphere_EBO;
+GLuint roughSphere_instanceVBO;
+int roughSphere_vertexCount;
+const std::string roughSphereModelFile = "debug/RoughSphere.obj";
+
 //SHADER
 GLuint lineShaderProgram;
 const std::string lineVertShaderFile = "line.vert";
 const std::string colorFragShaderFile = "instance_color.frag";
 
-GLuint gridShaderProgram;
+GLuint basicDebugShaderProgram;
 const std::string basicVertShaderFile = "instance_basic.vert";
 
 //INSTANCES
@@ -65,8 +72,16 @@ void DebugRenderer::init()
     }
     InstancedRendering::setupInstancing<InstanceDataLine>(line_VAO, &line_instanceVBO);
 
+    // ROUGH SPHERE
+    if (!ModelHandler::loadModel(roughSphereModelFile, &roughSphere_VAO, &roughSphere_VBO, &roughSphere_EBO, &roughSphere_vertexCount))
+    {
+        std::cerr << "Failed to load roughSphere model" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    InstancedRendering::setupInstancing<InstanceDataBasic>(roughSphere_VAO, &roughSphere_instanceVBO);
+
     // SHADERS
-    gridShaderProgram = ShaderHandler::buildShaderProgram(basicVertShaderFile, colorFragShaderFile);
+    basicDebugShaderProgram = ShaderHandler::buildShaderProgram(basicVertShaderFile, colorFragShaderFile);
     lineShaderProgram = ShaderHandler::buildShaderProgram(lineVertShaderFile, colorFragShaderFile);
 }
 
@@ -76,7 +91,7 @@ void DebugRenderer::init()
 void DebugRenderer::drawGrid()
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    InstancedRendering::drawInstanceData<InstanceDataBasic>(gridInstanceData, grid_VAO, grid_instanceVBO, grid_vertexCount, gridShaderProgram);
+    InstancedRendering::drawInstanceData<InstanceDataBasic>(gridInstanceData, grid_VAO, grid_instanceVBO, grid_vertexCount, basicDebugShaderProgram);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     scheduleLine(rootVec, axisXVec, axisXColor);
@@ -107,4 +122,18 @@ void DebugRenderer::drawScheduledLines()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     linesInstanceData.clear();
+}
+
+/**
+ * Draws a rough approximation of a sphere wireframe at the given position with the given radius.
+ */
+void DebugRenderer::drawRoughSphere(const glm::vec3& position, float radius)
+{
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    constexpr glm::vec4 color = glm::vec4(1.0f);
+    std::vector<InstanceDataBasic> singleInstanceData(1, InstanceDataBasic{ position, color, radius});
+    InstancedRendering::drawInstanceData(singleInstanceData, roughSphere_VAO, roughSphere_instanceVBO, roughSphere_vertexCount, basicDebugShaderProgram);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

@@ -87,6 +87,18 @@ void InstancedRendering::setupInstancing<InstanceDataBasic>(GLuint VAO, GLuint* 
     );
     glVertexAttribDivisor(3, 1);
 
+    // Scale attribute at location 4
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(
+        4, // location
+        1, // size (float)
+        GL_FLOAT, // data type
+        GL_FALSE, // normalized?
+        sizeof(InstanceDataBasic), // Offset between consecutive instances
+        (void*)offsetof(InstanceDataBasic, scale)
+    );
+    glVertexAttribDivisor(4, 1);
+
     glBindVertexArray(0);
 }
 

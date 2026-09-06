@@ -25,12 +25,13 @@ namespace InstancedRendering
     void drawInstanceData(const std::vector<T>& instanceData, GLuint modelVAO, GLuint instanceVBO, int indexCount, GLuint shaderProgram);
 
     /**
-    * Small instance data struct with only a position and color attribute for each instance.
+    * Small instance data struct with only a position, color, and scale attribute for each instance.
     */
     struct InstanceDataBasic
     {
         glm::vec3 position;
         glm::vec4 color;
+        float scale = 1.0;
     };
 
     /**
