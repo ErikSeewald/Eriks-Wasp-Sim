@@ -50,6 +50,14 @@ void UI::_drawSelectedWaspUI()
         ImGui::Text("w_Index: %i", w_Index);
         ImGui::Text("workerScore: %i", WaspSlots::getQueen().getWorkerScore(w_Index));
 
+        // DEBUG
+        if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::Checkbox("Display current goal", &uiState.drawSelectedWaspGoal);
+            ImGui::Checkbox("Display viewing radius", &uiState.drawSelectedWaspViewingRadius);
+            ImGui::Checkbox("Display swarm contract radius", &uiState.drawSelectedWaspSwarmContract);
+        }         
+
         // POSITION
         if (ImGui::CollapsingHeader("Position", ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -76,7 +84,6 @@ void UI::_drawSelectedWaspUI()
                 {
                     ImGui::Text("No current goal");
                 }
-                ImGui::Checkbox("Display current goal", &uiState.drawSelectedWaspGoal);
             }
             
         }
@@ -387,12 +394,13 @@ void UI::_drawOptionsUI()
 
         // WaspRenderMode
         ImGui::Text("WaspRenderMode:");
-        const int MODES = 12;
+        const int MODES = 13;
         const static char* WASP_RENDER_MODE_STRING_NAMES[MODES] = 
         {
             "UniformFlat", "UniformColor", "RandomOranges", "FullRandomColors", 
             "GreenIfHasGoal", "QueenLoyalty", "RelativeWorkerScore", "RelativeHunger",
-            "RelativeHealth", "IsContractPartner", "ContractDesire", "FlyingSpeed"
+            "RelativeHealth", "IsContractPartner", "ContractDesire", "FlyingSpeed",
+            "IsInViewRange"
         };
         int current = static_cast<int>(uiState.waspRenderMode);
         bool changed = ImGui::Combo(" ", &current, WASP_RENDER_MODE_STRING_NAMES, MODES);

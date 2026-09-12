@@ -127,11 +127,10 @@ void DebugRenderer::drawScheduledLines()
 /**
  * Draws a rough approximation of a sphere wireframe at the given position with the given radius.
  */
-void DebugRenderer::drawRoughSphere(const glm::vec3& position, float radius)
+void DebugRenderer::drawRoughSphere(const glm::vec3& position, float radius, const glm::vec4& color)
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    constexpr glm::vec4 color = glm::vec4(1.0f);
     std::vector<InstanceDataBasic> singleInstanceData(1, InstanceDataBasic{ position, color, radius});
     InstancedRendering::drawInstanceData(singleInstanceData, roughSphere_VAO, roughSphere_instanceVBO, roughSphere_vertexCount, basicDebugShaderProgram);
 

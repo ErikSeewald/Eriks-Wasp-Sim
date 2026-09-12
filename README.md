@@ -123,13 +123,18 @@ By using the 'element' command (e.g., ```element position```) you can print that
 When you left-click a wasp with your mouse, that wasp is selected.
 It is now being drawn with a red wireframe and a "Selected wasp" UI window will have opened.
 Here you can see some of the following:
+- An option to render debug information such as:
+  - A line toward the wasp's current goal
+  - A sphere representing the view range of the wasp
+  - A sphere representing a radius around partner 1 in the wasp's [SwarmContract](#contract-types) (if it has one)
 - The wasp's w_Index (unique identifier, index in the wasp array)
 - The worker score that the queen has assigned to this wasp
 - The wasp's position, viewing vector and movement speed
-- The wasp's current goal/target (and an option to render a line from the wasp to that position)
+- The position of the wasp's current goal/target
 - The wasp's health and hunger points
 - The values of the wasp's [genes](#genes)
 - The contracts that the wasp is a partner in. Clicking one of them opens the [Contract-window](#contract-window)
+- Information about the current state of multi-step thought processes of the wasp. See [Performance notes](#performance-notes) for more information.
 
 #### Contract-window
 When a contract has been selected from the [Selected-wasp-window](#selected-wasp-window), a window containing information on this specific contract opens with the following information:
@@ -176,6 +181,7 @@ On the right side of the screen, there is the options window. It displays the fo
   | **IsContractualPartner** | Wasps that are partners in contracts of the currently selected wasp are green. Others are bright red if they have contracts and dark red if they have no contracts. |
   | **ContractDesire** | Wasps with low contract desire genes are blue while wasps with high contract desire genes are red. |
   | **FlyingSpeed** | Wasps with low speed genes are blue while wasps with high speed genes are red. |
+  | **IsInViewRange** | Wasps are green if they are in the view range of the selected wasp and blue if they are not. |
 
 ## Build instructions
 #### Linux
@@ -301,6 +307,11 @@ The Wasp-Sim makes use of multiple performance optimizations. This section is wh
     to be all or nothing.
   - Another quirk of thread pooling is specific to battery devices like laptops that have situational power saving modes: Using thread pooling in the simulation loop is slower than the single threaded approach when running on battery
     but a lot faster when connected to power.
+* **MultiStepThinking**: Certain computations, such as checking all food entities to find the closest one, would lead to intense resource requirements if a hundred thousand wasps were checking ten thousand entities each frame. Multi-step-thinking solves that problem:
+    - Wasps have a *ThoughtState* struct that can store the state of a computation across multiple update iterations.
+    - This way, they can perform only a subset of a large computation at a time and still end up with a result quickly while requiring comparatively little resources.
+    - For example, a wasp might only check 50 food entities in one iteration, but that still means it will check three thousand in a single second.
+    - When watching in real time, each wasp seems to recognize close entities near immediately. Spatial coherence (without which, the simulation would be pretty boring) can thereby be preserved even at enormous wasp counts.
 * **No Chunks**: Originally, I intended to make use of dynamically loaded chunks to, for example, minimize the amount of entities the code needs to loop through when finding neighbors. However, there were significant downsides that made me
     decide against it:
   - Dynamically growing and shrinking the list of entities within a chunk is very expensive and necessitates a data structure that would eliminate all the benefits of locality from the earlier sections.

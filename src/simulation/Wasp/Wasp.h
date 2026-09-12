@@ -19,7 +19,7 @@ class Wasp : Updatable
 {
 	public:
 		// CONSTANTS
-		static constexpr int VIEW_RANGE = 10; // How far the wasp can see other entities
+		static constexpr float VIEW_RANGE = 20.0; // How far the wasp can see other entities
 		static constexpr std::chrono::milliseconds RESOURCE_TICK_INTERVAL{2000}; // How often do resource attributes like hp and hunger get ticked
 		static constexpr int MAX_NUM_CONTRACTS = 4; // A limit here should make for more interestic cost-benefit decisions
 		const int w_Index; // Position in the wasp vector

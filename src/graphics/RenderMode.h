@@ -23,6 +23,7 @@ namespace RenderMode
         RelativeHealth,
         IsContractPartner,
         ContractDesire,
-        FlyingSpeed
+        FlyingSpeed,
+        IsInViewRange,
     };
 }

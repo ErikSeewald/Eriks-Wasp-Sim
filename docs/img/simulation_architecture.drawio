@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64; rv:145.0) Gecko/20100101 Firefox/145.0">
   <diagram name="Page-1" id="Ah7Q9ZmUbwWuYC7_xnaO">
-    <mxGraphModel dx="1588" dy="910" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="3" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2778" dy="1592" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="3" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -8,7 +8,7 @@
           <mxGeometry height="190" width="170" x="260" y="210" as="geometry" />
         </mxCell>
         <mxCell id="xv4yWP0K_oXi5kMlbUM6-106" parent="1" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=0;collapsible=0;whiteSpace=wrap;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" value="simulation" vertex="1">
-          <mxGeometry height="580" width="990" x="500" y="160" as="geometry" />
+          <mxGeometry height="700" width="990" x="500" y="160" as="geometry" />
         </mxCell>
         <mxCell id="CHJXNvM-DRkKnB43q2RP-13" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;container=0;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Simulation&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;div style=&quot;height:2px;&quot;&gt;&amp;nbsp; &amp;nbsp; Namespace for the core loop&lt;br&gt;&amp;nbsp; &amp;nbsp; of the wasp colony simulation.&lt;/div&gt;" vertex="1">
           <mxGeometry height="83.08" width="200" x="520" y="210" as="geometry" />
@@ -80,10 +80,10 @@
         <mxCell id="knc6EupOlZyj4XBf0Kq5-18" edge="1" parent="1" source="CHJXNvM-DRkKnB43q2RP-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" target="knc6EupOlZyj4XBf0Kq5-13">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="510.03" y="250.03" />
-              <mxPoint x="510.03" y="720.03" />
-              <mxPoint x="1200.03" y="720.03" />
-              <mxPoint x="1200.03" y="542.31" />
+              <mxPoint x="510.05" y="250.05" />
+              <mxPoint x="510.05" y="840" />
+              <mxPoint x="1200.05" y="840" />
+              <mxPoint x="1200.05" y="542.29" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -110,7 +110,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="knc6EupOlZyj4XBf0Kq5-27" parent="1" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=0;collapsible=0;whiteSpace=wrap;fillColor=#67B519;fontColor=#ffffff;strokeColor=#2D7600;" value="simulation/&lt;br&gt;wasp" vertex="1">
-          <mxGeometry height="384.62" width="440" x="530" y="310" as="geometry" />
+          <mxGeometry height="510" width="440" x="530" y="310" as="geometry" />
         </mxCell>
         <mxCell id="knc6EupOlZyj4XBf0Kq5-38" edge="1" parent="1" source="knc6EupOlZyj4XBf0Kq5-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.004;entryY=0.475;entryDx=0;entryDy=0;entryPerimeter=0;" target="knc6EupOlZyj4XBf0Kq5-13">
           <mxGeometry relative="1" as="geometry">
@@ -126,10 +126,11 @@
             <mxPoint y="1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="knc6EupOlZyj4XBf0Kq5-73" edge="1" parent="1" source="knc6EupOlZyj4XBf0Kq5-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.95;exitY=1.007;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;endArrow=none;endFill=0;startArrow=diamond;startFill=1;" target="knc6EupOlZyj4XBf0Kq5-72">
+        <mxCell id="knc6EupOlZyj4XBf0Kq5-73" edge="1" parent="1" source="knc6EupOlZyj4XBf0Kq5-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.898;exitY=1.008;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;endArrow=none;endFill=0;startArrow=diamond;startFill=1;" target="knc6EupOlZyj4XBf0Kq5-72">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="950" y="637.3" />
+              <mxPoint x="939.6" y="637.29" />
+              <mxPoint x="930" y="637.29" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -203,7 +204,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="knc6EupOlZyj4XBf0Kq5-72" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;container=0;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;WaspGenes&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;div style=&quot;height:2px;&quot;&gt;&amp;nbsp; &amp;nbsp; Namespace for structs that&lt;br&gt;&amp;nbsp; &amp;nbsp; define collections of wasp&lt;br&gt;&amp;nbsp; &amp;nbsp; traits as genes of a wasp&lt;br&gt;&amp;nbsp; &amp;nbsp; entity.&lt;/div&gt;" vertex="1">
-          <mxGeometry height="94.62" width="170" x="760" y="590" as="geometry" />
+          <mxGeometry height="94.62" width="170" x="760" y="586" as="geometry" />
         </mxCell>
         <mxCell id="knc6EupOlZyj4XBf0Kq5-74" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;container=0;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Contracts&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;div style=&quot;height:2px;&quot;&gt;&amp;nbsp; &amp;nbsp; Namespace for classes&lt;br&gt;&amp;nbsp; &amp;nbsp; representing contracts&lt;br&gt;&amp;nbsp; &amp;nbsp; that can be formed&lt;br&gt;&amp;nbsp; &amp;nbsp; between multiple wasp&lt;br&gt;&amp;nbsp; &amp;nbsp; entities.&lt;/div&gt;" vertex="1">
           <mxGeometry height="113.08" width="160" x="560" y="571.54" as="geometry" />
@@ -239,6 +240,18 @@
         <mxCell id="knc6EupOlZyj4XBf0Kq5-79" connectable="0" parent="knc6EupOlZyj4XBf0Kq5-78" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="uses" vertex="1">
           <mxGeometry relative="1" x="0.3143" y="1" as="geometry">
             <mxPoint x="8" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Beeh3JhUuyn5429mOuil-1" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;container=0;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;MultiStepThinking&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;div style=&quot;height:2px;&quot;&gt;&amp;nbsp; &amp;nbsp; Namespace for functions &lt;br&gt;&amp;nbsp; &amp;nbsp; and structs that allow wasps&lt;br&gt;&amp;nbsp; &amp;nbsp; to compute complex tasks&lt;br&gt;&amp;nbsp; &amp;nbsp; over multiple update iterations&amp;nbsp; &amp;nbsp; &amp;nbsp; instead of all at once.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="113.08" width="180" x="750" y="691.62" as="geometry" />
+        </mxCell>
+        <mxCell id="Beeh3JhUuyn5429mOuil-2" edge="1" parent="1" source="knc6EupOlZyj4XBf0Kq5-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.955;exitY=1.007;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;endArrow=none;endFill=0;startArrow=diamond;startFill=1;" target="Beeh3JhUuyn5429mOuil-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="951" y="748.2" />
+            </Array>
+            <mxPoint x="950" y="550" as="sourcePoint" />
+            <mxPoint x="940" y="750" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>

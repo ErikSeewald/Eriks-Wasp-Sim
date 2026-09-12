@@ -87,6 +87,11 @@ void main()
             float speed = renderModeFloat1Flat * 0.1; // Assumes most speeds are in the 0.0 - 10.0 range. May change.
             baseColor = vec3(speed, 0.1, 1.0 - speed);
             break;
+
+        case 12u: // IsInViewRange
+            bool inRange = (waspBitmapFlat & 16u) == 16u;
+            baseColor = inRange ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0);
+            break;
     }
     
     vec3 color = baseColor * brightness;

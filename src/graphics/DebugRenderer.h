@@ -34,5 +34,5 @@ namespace DebugRenderer
     /**
      * Draws a rough approximation of a sphere wireframe at the given position with the given radius.
      */
-    void drawRoughSphere(const glm::vec3& position, float radius);
+    void drawRoughSphere(const glm::vec3& position, float radius, const glm::vec4& color);
 }

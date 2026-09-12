@@ -138,15 +138,14 @@ void Wasp::update()
 		{
 			FoodEntity* food = thoughtState.curClosestFood;
 
-			float foodRange = Wasp::VIEW_RANGE * 2.0;
-			if (food != nullptr && glm::distance(food->position, position) < foodRange)
+			if (food != nullptr && glm::distance(food->position, position) < Wasp::VIEW_RANGE)
 			{
 				currentGoalFoodEntity = food;
 				currentGoal = &food->position;
 			}
 
 			// Depending on a wasps loyalty, it may choose to fly close to the queen if it could not find food
-			if (currentGoal == nullptr && (RNG::randBetween(0.0, 1.0) * unboundGenes.queenLoyalty) > 0.5)
+			if (currentGoal == nullptr && (RNG::randBetween(0.0, 1.0) * unboundGenes.queenLoyalty) > 0.75)
 			{
 				currentGoal = &queen.position;
 			}

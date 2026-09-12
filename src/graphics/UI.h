@@ -23,6 +23,8 @@ namespace UI
 	{
 		Wasp* selectedWasp;
 		bool drawSelectedWaspGoal = false;
+		bool drawSelectedWaspViewingRadius = false;
+		bool drawSelectedWaspSwarmContract = false;
 		bool drawGrid = true;
 		bool isPaused = false;
 		RenderMode::WaspRenderMode waspRenderMode = RenderMode::WaspRenderMode::RandomOranges;
