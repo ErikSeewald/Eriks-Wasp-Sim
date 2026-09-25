@@ -55,8 +55,9 @@ class Wasp : Updatable
 
 		// ---CONTRACTS---
 		// A wasp can only have a maximum number of contracts and ONLY ONE per ContractType.
-		std::array<Contracts::Contract*, MAX_NUM_CONTRACTS> contracts;
-
+		// (DO NOT forget the {} or else there is no guaranteed initialization to nullptr -> undefined behavior)
+		std::array<Contracts::Contract*, MAX_NUM_CONTRACTS> contracts{}; 
+ 
 		/**
 		* Allows the given wasp to propose a contract of the given type to this wasp.
 		* Performs the terms negotiation and creates the contract if the proposal was accepted.
