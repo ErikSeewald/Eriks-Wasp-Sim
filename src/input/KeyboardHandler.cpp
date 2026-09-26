@@ -13,10 +13,10 @@ bool specialKeyStates[256];
 void KeyboardHandler::updateCamera(Camera* camera)
 {
     float deltaTime = ImGui::GetIO().DeltaTime;
-    float cameraSpeed = 6.0f * deltaTime;
+    float cameraSpeed = 30.0f * deltaTime;
     float radAngleSpeed = 2.0f * deltaTime;
 
-    if (keyStates[' ']) { cameraSpeed *= 5.0f; }
+    if (keyStates[' ']) { cameraSpeed *= 0.1f; }
 
     if (keyStates['w'])
     {

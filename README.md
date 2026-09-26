@@ -111,7 +111,7 @@ By using the 'element' command (e.g., ```element position```) you can print that
 ## Controls
 #### Movement
 - Use [W,A,S,D] to move
-- Hold SPACE to move more quickly
+- Hold SPACE to move more slowly.
 - Use the arrow keys to rotate the camera.
 
 ## UI
@@ -204,7 +204,8 @@ On the right side of the screen, there is the options window. It displays the fo
     ```
     ./EriksWaspSim
     ```
-    (The executable needs to remain within the Eriks-Wasp-Sim project folder. Otherwise it will not work)
+    - (The executable needs to remain within the Eriks-Wasp-Sim project folder. Otherwise it will not work)
+    - (OpenGL 3.3 or newer is required. Using 'MESA_GL_VERSION_OVERRIDE=3.3 ./EriksWaspSim' may help.)
 
 #### Dependencies
 Download the following dependencies and put them into `dependencies/` (create the directory if it doesn't already exist):

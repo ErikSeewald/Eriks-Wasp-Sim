@@ -34,6 +34,13 @@ void SimVisualizer::init(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
+    // Version should be AT LEAST >= 3.3 (otherwise things like glVertexAttribDivisor are nullptrs)
+    if (!GLEW_VERSION_3_3) 
+    {
+        std::cerr << "Error: OpenGL 3.3 or newer is required. (Try forcing it with '$ MESA_GL_VERSION_OVERRIDE=3.3 ./EriksWaspSim')";
+        exit(EXIT_FAILURE);
+    }
+
     // IMGUI
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
