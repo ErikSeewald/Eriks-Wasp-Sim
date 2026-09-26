@@ -5,38 +5,41 @@
 #include "MouseRayCast.h"
 #include "imgui.h"
 
-void MouseHandler::mouseClick(int button, int state, int x, int y)
+namespace MouseHandler
 {
-    // Call the imgui MouseFunc. If the mouse event occurred inside the gui, return afterwards.
-    // If not, then move on to the custom mouse handling functions.
-    ImGui_ImplGLUT_MouseFunc(button, state, x, y);
-    if (ImGui::GetIO().WantCaptureMouse)
+    void mouseClick(int button, int state, int x, int y)
     {
-        return;
-    }
-
-    UI::UI_STATE* uiState = UI::getUIState();
-
-    //LEFT CLICK
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-    {
-        Wasp* oldSelected = uiState->selectedWasp;
-        uiState->selectedWasp = MouseRayCast::selectWasp(x, y);
-        
-        // Clear the selected contract if the newly selected wasp is not a partner in it.
-        // (Too much risk for confusion otherwise)
-        if (uiState->selectedContract != nullptr) 
+        // Call the imgui MouseFunc. If the mouse event occurred inside the gui, return afterwards.
+        // If not, then move on to the custom mouse handling functions.
+        ImGui_ImplGLUT_MouseFunc(button, state, x, y);
+        if (ImGui::GetIO().WantCaptureMouse)
         {
-            bool isPartner = false;
-            for (const Wasp* partner : uiState->selectedContract->getPartners())
+            return;
+        }
+
+        UI::UI_STATE* uiState = UI::getUIState();
+
+        //LEFT CLICK
+        if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+        {
+            Wasp* oldSelected = uiState->selectedWasp;
+            uiState->selectedWasp = MouseRayCast::selectWasp(x, y);
+            
+            // Clear the selected contract if the newly selected wasp is not a partner in it.
+            // (Too much risk for confusion otherwise)
+            if (uiState->selectedContract != nullptr) 
             {
-                if (partner == uiState->selectedWasp) 
-                { 
-                    isPartner = true;
-                    break;
+                bool isPartner = false;
+                for (const Wasp* partner : uiState->selectedContract->getPartners())
+                {
+                    if (partner == uiState->selectedWasp) 
+                    { 
+                        isPartner = true;
+                        break;
+                    }
                 }
+                if (!isPartner) { uiState->selectedContract = nullptr; }
             }
-            if (!isPartner) { uiState->selectedContract = nullptr; }
         }
     }
 }

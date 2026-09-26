@@ -16,296 +16,299 @@
 
 using InstancedRendering::InstanceDataWasp;
 
-//MESH
-GLuint wasp_VAO;
-GLuint wasp_VBO;
-GLuint wasp_EBO;
-GLuint wasp_instanceVBO;
-int wasp_vertexCount;
-const std::string waspModelFile = "wasp/Wasp.obj";
-
-GLuint queen_VAO;
-GLuint queen_VBO;
-GLuint queen_EBO;
-GLuint queen_instanceVBO;
-int queen_vertexCount;
-const std::string queenModelFile = "wasp/Queen.obj";
-
-//SHADER
-GLuint waspShaderProgram;
-const std::string waspVertShaderFile = "wasp.vert";
-const std::string waspFragShaderFile = "wasp.frag";
-
-GLuint selectedWaspShaderProgram;
-const std::string selectedWaspFragShaderFile = "selected_entity.frag";
-const glm::vec4 goalVecColor = glm::vec4(0.2f, 0.5f, 1.0f, 1.0f);
-const glm::vec4 viewingRangeColor = glm::vec4(0.0f, 1.0f, 0.3f, 1.0f);
-
-//THREADED INSTANCE DATA
-std::vector<InstanceDataWasp> wasp_instanceData;
-std::mutex wasp_instanceDataMutex;
-static const int threadPoolSize = ThreadPool::choosePoolSize();
-static ThreadPool pool(threadPoolSize);
-
-/**
-* Initializes the WaspRenderer. Loads models and builds shaders.
-*/
-void WaspRenderer::init()
+namespace WaspRenderer
 {
-    if (!ModelHandler::loadModel(waspModelFile, &wasp_VAO, &wasp_VBO, &wasp_EBO, &wasp_vertexCount))
+    //MESH
+    GLuint wasp_VAO;
+    GLuint wasp_VBO;
+    GLuint wasp_EBO;
+    GLuint wasp_instanceVBO;
+    int wasp_vertexCount;
+    const std::string waspModelFile = "wasp/Wasp.obj";
+
+    GLuint queen_VAO;
+    GLuint queen_VBO;
+    GLuint queen_EBO;
+    GLuint queen_instanceVBO;
+    int queen_vertexCount;
+    const std::string queenModelFile = "wasp/Queen.obj";
+
+    //SHADER
+    GLuint waspShaderProgram;
+    const std::string waspVertShaderFile = "wasp.vert";
+    const std::string waspFragShaderFile = "wasp.frag";
+
+    GLuint selectedWaspShaderProgram;
+    const std::string selectedWaspFragShaderFile = "selected_entity.frag";
+    const glm::vec4 goalVecColor = glm::vec4(0.2f, 0.5f, 1.0f, 1.0f);
+    const glm::vec4 viewingRangeColor = glm::vec4(0.0f, 1.0f, 0.3f, 1.0f);
+
+    //THREADED INSTANCE DATA
+    std::vector<InstanceDataWasp> wasp_instanceData;
+    std::mutex wasp_instanceDataMutex;
+    static const int threadPoolSize = ThreadPool::choosePoolSize();
+    static ThreadPool pool(threadPoolSize);
+
+    /**
+    * Initializes the WaspRenderer. Loads models and builds shaders.
+    */
+    void init()
     {
-        std::cerr << "Failed to load wasp model" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    InstancedRendering::setupInstancing<InstanceDataWasp>(wasp_VAO, &wasp_instanceVBO);
-
-    if (!ModelHandler::loadModel(queenModelFile, &queen_VAO, &queen_VBO, &queen_EBO, &queen_vertexCount))
-    {
-        std::cerr << "Failed to load queen model" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    InstancedRendering::setupInstancing<InstanceDataWasp>(queen_VAO, &queen_instanceVBO);
-
-    waspShaderProgram = ShaderHandler::buildShaderProgram(waspVertShaderFile, waspFragShaderFile);
-    selectedWaspShaderProgram = ShaderHandler::buildShaderProgram(waspVertShaderFile, selectedWaspFragShaderFile);
-}
-
-/**
-* Constructs the base information in the bitmap that is used by the wasp shader.
-* This bitmap is shared by many wasp entities, _modifyWaspBitmap being used to add entity-specific information.
-*
-* Format:
-* 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
-* RM RM RM RM 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  VR HC  C  G  Q
-*
-* With:
-* RM - Byte representing RenderMode::WaspRenderMode
-* G  - Does this wasp currently have a goal? Then 1, otherwise 0
-* Q  - Is this wasp the queen? Then 1, otherwise 0
-* C  - Is this wasp in a contract with the selected Wasp? Then 1, otherwise 0
-* HC - Does this wasp have at least 1 active contract? Then 1, otherwise 0
-* VR - Is the wasp in the view range of the selected wasp? Then 1, otherwise 0
-*
-* Note:
-* - *C* and *HC* are only calculated if IsContractPartner is on.
-*/
-inline uint32_t _constructWaspBitmap(bool isQueen)
-{
-    uint32_t bitmap = isQueen ? 0b1 : 0b0; // Q
-    bitmap |= ((uint32_t) UI::getUIState()->waspRenderMode) << 28; // RM
-    return bitmap;
-}
-
-/**
-* Adds entity-specific information to the given baseBitmap.
-* See _constructWaspBitmap
-*/
-inline uint32_t _modifyWaspBitmap(const uint32_t& baseBitmap, const Wasp& wasp)
-{
-    UI::UI_STATE* uiState = UI::getUIState();
-
-    uint32_t bitmap = baseBitmap;
-    bitmap |= wasp.currentGoal != nullptr ? 0b10 : 0b00; // G
-
-    // C & HC
-    if (uiState->waspRenderMode == RenderMode::WaspRenderMode::IsContractPartner)
-    {
-        bool found = false;
-        for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
+        if (!ModelHandler::loadModel(waspModelFile, &wasp_VAO, &wasp_VBO, &wasp_EBO, &wasp_vertexCount))
         {
-            if (wasp.contracts[i] != nullptr && wasp.contracts[i]->isValid())
-            {
-                bitmap |= 0b1000;
-                if (uiState->selectedWasp == nullptr) { break; }
+            std::cerr << "Failed to load wasp model" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        InstancedRendering::setupInstancing<InstanceDataWasp>(wasp_VAO, &wasp_instanceVBO);
 
-                for (Wasp* partner : wasp.contracts[i]->getPartners())
+        if (!ModelHandler::loadModel(queenModelFile, &queen_VAO, &queen_VBO, &queen_EBO, &queen_vertexCount))
+        {
+            std::cerr << "Failed to load queen model" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        InstancedRendering::setupInstancing<InstanceDataWasp>(queen_VAO, &queen_instanceVBO);
+
+        waspShaderProgram = ShaderHandler::buildShaderProgram(waspVertShaderFile, waspFragShaderFile);
+        selectedWaspShaderProgram = ShaderHandler::buildShaderProgram(waspVertShaderFile, selectedWaspFragShaderFile);
+    }
+
+    /**
+    * Constructs the base information in the bitmap that is used by the wasp shader.
+    * This bitmap is shared by many wasp entities, _modifyWaspBitmap being used to add entity-specific information.
+    *
+    * Format:
+    * 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+    * RM RM RM RM 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  VR HC  C  G  Q
+    *
+    * With:
+    * RM - Byte representing RenderMode::WaspRenderMode
+    * G  - Does this wasp currently have a goal? Then 1, otherwise 0
+    * Q  - Is this wasp the queen? Then 1, otherwise 0
+    * C  - Is this wasp in a contract with the selected Wasp? Then 1, otherwise 0
+    * HC - Does this wasp have at least 1 active contract? Then 1, otherwise 0
+    * VR - Is the wasp in the view range of the selected wasp? Then 1, otherwise 0
+    *
+    * Note:
+    * - *C* and *HC* are only calculated if IsContractPartner is on.
+    */
+    inline uint32_t _constructWaspBitmap(bool isQueen)
+    {
+        uint32_t bitmap = isQueen ? 0b1 : 0b0; // Q
+        bitmap |= ((uint32_t) UI::getUIState()->waspRenderMode) << 28; // RM
+        return bitmap;
+    }
+
+    /**
+    * Adds entity-specific information to the given baseBitmap.
+    * See _constructWaspBitmap
+    */
+    inline uint32_t _modifyWaspBitmap(const uint32_t& baseBitmap, const Wasp& wasp)
+    {
+        UI::UI_STATE* uiState = UI::getUIState();
+
+        uint32_t bitmap = baseBitmap;
+        bitmap |= wasp.currentGoal != nullptr ? 0b10 : 0b00; // G
+
+        // C & HC
+        if (uiState->waspRenderMode == RenderMode::WaspRenderMode::IsContractPartner)
+        {
+            bool found = false;
+            for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
+            {
+                if (wasp.contracts[i] != nullptr && wasp.contracts[i]->isValid())
                 {
-                    if (partner == uiState->selectedWasp) 
+                    bitmap |= 0b1000;
+                    if (uiState->selectedWasp == nullptr) { break; }
+
+                    for (Wasp* partner : wasp.contracts[i]->getPartners())
                     {
-                        bitmap |= 0b100;
-                        found = true;
-                        break;
+                        if (partner == uiState->selectedWasp) 
+                        {
+                            bitmap |= 0b100;
+                            found = true;
+                            break;
+                        }
                     }
                 }
+                if (found) { break; }
             }
-            if (found) { break; }
         }
-    }
 
-    // VR
-    else if (uiState->selectedWasp != nullptr && uiState->waspRenderMode == RenderMode::WaspRenderMode::IsInViewRange)
-    {
-        if (glm::distance(wasp.position, uiState->selectedWasp->position) < Wasp::VIEW_RANGE)
+        // VR
+        else if (uiState->selectedWasp != nullptr && uiState->waspRenderMode == RenderMode::WaspRenderMode::IsInViewRange)
         {
-            bitmap |= 0b10000;
-        }
-    }
-
-    return bitmap;
-}
-
-/**
- * Sets the renderModeFloat1 (first float with RenderMode specific data) for the given wasp
- * and the given RenderMode.
- * 
- * Also takes in maxWorkerScore which should be calculated outside of the wasp loop once to save computation.
- */
-inline float _setRenderModeFloat1(const Wasp& wasp, RenderMode::WaspRenderMode renderMode, float maxWorkerScore)
-{
-    switch (renderMode)
-    {
-        case RenderMode::WaspRenderMode::QueenLoyalty:
-            return wasp.unboundGenes.queenLoyalty;
-
-        case RenderMode::WaspRenderMode::RelativeWorkerScore:
-            // _debugWorkerScore is used for optimization (set by the queen when the worker score changes)
-            return wasp._debugWorkerScore / maxWorkerScore;       
-
-        case RenderMode::WaspRenderMode::RelativeHunger:
-            return wasp.hungerSaturation / wasp.balancedGenes.maxHungerSaturation;
-
-        case RenderMode::WaspRenderMode::RelativeHealth:
-            return wasp.hp / wasp.balancedGenes.maxHP;
-
-        case RenderMode::WaspRenderMode::ContractDesire:
-            return wasp.unboundGenes.contractDesire;
-
-        case RenderMode::WaspRenderMode::FlyingSpeed:
-            return wasp.balancedGenes.flyingSpeed;
-
-        default:
-            return 0.0;
-    } 
-}
-
-/**
-* Renders the given wasps.
-*/
-void WaspRenderer::drawWasps(const std::vector<Wasp>& wasps)
-{
-    RenderMode::WaspRenderMode renderMode = UI::getUIState()->waspRenderMode;
-
-    const bool isQueen = false; // The queen is handled by its own function.
-    uint32_t baseWaspBitmap = _constructWaspBitmap(isQueen); // Shared bitmap values for all normal wasps
-    float maxWorkerScore = (float) WaspSlots::getQueen().getCurrentMaxWorkerScore(); // Used for rendering the relative score
-    if (maxWorkerScore == 0.0) { maxWorkerScore = INFINITY; } // Avoid div by zero
-
-    std::atomic<size_t> instanceIndex(0); // Thread safe index into wasp_instanceData
-
-    int maxIndex = WaspSlots::getMaxIndex();
-    wasp_instanceData.resize(maxIndex);
-
-    // Note: Updating wasp_instanceData like this every frame ends up being better than having it updated by
-    // the simulation threads whenever it changes and letting the shader check isAlive. 
-    // It only frees up some time on devices with dedicated GPUs, but not enough to be worth it. 
-    // On devices with integrated GPUs that approach is actually slower.
-
-    // Use threads to collect the necessary data for hardware instancing and safely insert it into wasp_instanceData. 
-    // A single thread works on section of the wasps vector defined by the start and end indices.
-    // This leads to high memory/cache locality.
-    int sectionSize = std::floor(maxIndex / threadPoolSize);
-    for (int t = 0; t < threadPoolSize; ++t)
-    {
-        int start = sectionSize * t;
-        int end = t < threadPoolSize - 1 ? sectionSize * (t + 1) : maxIndex;
-
-        pool.enqueue([&, start, end]() {
-            for (int i = start; i < end; ++i)
+            if (glm::distance(wasp.position, uiState->selectedWasp->position) < Wasp::VIEW_RANGE)
             {
-                const Wasp& w = wasps[i];
-                if (!w.isAlive) { continue; }
-
-                // weakest memory ordering that still guarantees atomicity
-                int idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
-
-                // Gather data
-                uint32_t bitmap = _modifyWaspBitmap(baseWaspBitmap, w);
-                float renderModeFloat1 = _setRenderModeFloat1(w, renderMode, maxWorkerScore);
-                wasp_instanceData[idx] = InstanceDataWasp 
-                { 
-                    w.position, w.viewingVector, i, bitmap, renderModeFloat1
-                };
+                bitmap |= 0b10000;
             }
-        });
+        }
+
+        return bitmap;
     }
 
-    pool.waitFinishAll();
-
-    // Shrink to size of added instances
-    wasp_instanceData.resize(instanceIndex.load(std::memory_order_relaxed));
-
-    InstancedRendering::drawInstanceData(wasp_instanceData, wasp_VAO, wasp_instanceVBO, wasp_vertexCount, waspShaderProgram);
-}
-
-/**
-* Draws the given queen.
-*/
-void WaspRenderer::drawQueen(const Queen& queen)
-{
-    if (!queen.isAlive) { return; }
-
-    const bool isQueen = true;
-    uint32_t queenBitmap = _constructWaspBitmap(isQueen);
-
-    float paramMaxWorkerScore = -1.0; // The queen has no worker score so it also does not need the max score for a relative score view.
-    float renderModeFloat1 = _setRenderModeFloat1(queen, UI::getUIState()->waspRenderMode, paramMaxWorkerScore);
-
-    std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp { 
-            queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap, renderModeFloat1
-        });
-    InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, waspShaderProgram);
-}
-
-/**
-* Visualizes the wasp selected by the user, provided it exists.
-*/
-void WaspRenderer::drawSelectedWasp() 
-{
-    UI::UI_STATE* uiState = UI::getUIState();
-    Wasp* wasp = uiState->selectedWasp;
-    if (wasp == nullptr)
+    /**
+     * Sets the renderModeFloat1 (first float with RenderMode specific data) for the given wasp
+     * and the given RenderMode.
+     * 
+     * Also takes in maxWorkerScore which should be calculated outside of the wasp loop once to save computation.
+     */
+    inline float _setRenderModeFloat1(const Wasp& wasp, RenderMode::WaspRenderMode renderMode, float maxWorkerScore)
     {
-        return;
-    }
-    std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp{ wasp->position, wasp->viewingVector });
-
-    // DRAW WIREFRAME WITH DEPTH TESTING DISABLED
-    glDisable(GL_DEPTH_TEST);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    if (wasp == &WaspSlots::getQueen())
-    { InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, selectedWaspShaderProgram); }
-    
-    else
-    { InstancedRendering::drawInstanceData(singleInstanceData, wasp_VAO, wasp_instanceVBO, wasp_vertexCount, selectedWaspShaderProgram); }
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable(GL_DEPTH_TEST);
-
-    //DRAW GOAL
-    if (uiState->drawSelectedWaspGoal && wasp->currentGoal != nullptr)
-    {
-        DebugRenderer::scheduleLine(wasp->position, *wasp->currentGoal, goalVecColor);
-    }
-
-    // DRAW VIEW RADIUS
-    if (uiState->drawSelectedWaspViewingRadius)
-    {
-        DebugRenderer::drawRoughSphere(wasp->position, Wasp::VIEW_RANGE, viewingRangeColor);
-    }
-
-    // DRAW SWARM CONTRACT
-    if (uiState->drawSelectedWaspSwarmContract)
-    {
-        for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
+        switch (renderMode)
         {
-            Contracts::Contract* contract = wasp->contracts.at(i);
-            if (contract != nullptr && contract->getType() == Contracts::ContractType::SwarmContractType)
+            case RenderMode::WaspRenderMode::QueenLoyalty:
+                return wasp.unboundGenes.queenLoyalty;
+
+            case RenderMode::WaspRenderMode::RelativeWorkerScore:
+                // _debugWorkerScore is used for optimization (set by the queen when the worker score changes)
+                return wasp._debugWorkerScore / maxWorkerScore;       
+
+            case RenderMode::WaspRenderMode::RelativeHunger:
+                return wasp.hungerSaturation / wasp.balancedGenes.maxHungerSaturation;
+
+            case RenderMode::WaspRenderMode::RelativeHealth:
+                return wasp.hp / wasp.balancedGenes.maxHP;
+
+            case RenderMode::WaspRenderMode::ContractDesire:
+                return wasp.unboundGenes.contractDesire;
+
+            case RenderMode::WaspRenderMode::FlyingSpeed:
+                return wasp.balancedGenes.flyingSpeed;
+
+            default:
+                return 0.0;
+        } 
+    }
+
+    /**
+    * Renders the given wasps.
+    */
+    void drawWasps(const std::vector<Wasp>& wasps)
+    {
+        RenderMode::WaspRenderMode renderMode = UI::getUIState()->waspRenderMode;
+
+        const bool isQueen = false; // The queen is handled by its own function.
+        uint32_t baseWaspBitmap = _constructWaspBitmap(isQueen); // Shared bitmap values for all normal wasps
+        float maxWorkerScore = (float) WaspSlots::getQueen().getCurrentMaxWorkerScore(); // Used for rendering the relative score
+        if (maxWorkerScore == 0.0) { maxWorkerScore = INFINITY; } // Avoid div by zero
+
+        std::atomic<size_t> instanceIndex(0); // Thread safe index into wasp_instanceData
+
+        int maxIndex = WaspSlots::getMaxIndex();
+        wasp_instanceData.resize(maxIndex);
+
+        // Note: Updating wasp_instanceData like this every frame ends up being better than having it updated by
+        // the simulation threads whenever it changes and letting the shader check isAlive. 
+        // It only frees up some time on devices with dedicated GPUs, but not enough to be worth it. 
+        // On devices with integrated GPUs that approach is actually slower.
+
+        // Use threads to collect the necessary data for hardware instancing and safely insert it into wasp_instanceData. 
+        // A single thread works on section of the wasps vector defined by the start and end indices.
+        // This leads to high memory/cache locality.
+        int sectionSize = std::floor(maxIndex / threadPoolSize);
+        for (int t = 0; t < threadPoolSize; ++t)
+        {
+            int start = sectionSize * t;
+            int end = t < threadPoolSize - 1 ? sectionSize * (t + 1) : maxIndex;
+
+            pool.enqueue([&, start, end]() {
+                for (int i = start; i < end; ++i)
+                {
+                    const Wasp& w = wasps[i];
+                    if (!w.isAlive) { continue; }
+
+                    // weakest memory ordering that still guarantees atomicity
+                    int idx = instanceIndex.fetch_add(1, std::memory_order_relaxed);
+
+                    // Gather data
+                    uint32_t bitmap = _modifyWaspBitmap(baseWaspBitmap, w);
+                    float renderModeFloat1 = _setRenderModeFloat1(w, renderMode, maxWorkerScore);
+                    wasp_instanceData[idx] = InstanceDataWasp 
+                    { 
+                        w.position, w.viewingVector, i, bitmap, renderModeFloat1
+                    };
+                }
+            });
+        }
+
+        pool.waitFinishAll();
+
+        // Shrink to size of added instances
+        wasp_instanceData.resize(instanceIndex.load(std::memory_order_relaxed));
+
+        InstancedRendering::drawInstanceData(wasp_instanceData, wasp_VAO, wasp_instanceVBO, wasp_vertexCount, waspShaderProgram);
+    }
+
+    /**
+    * Draws the given queen.
+    */
+    void drawQueen(const Queen& queen)
+    {
+        if (!queen.isAlive) { return; }
+
+        const bool isQueen = true;
+        uint32_t queenBitmap = _constructWaspBitmap(isQueen);
+
+        float paramMaxWorkerScore = -1.0; // The queen has no worker score so it also does not need the max score for a relative score view.
+        float renderModeFloat1 = _setRenderModeFloat1(queen, UI::getUIState()->waspRenderMode, paramMaxWorkerScore);
+
+        std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp { 
+                queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap, renderModeFloat1
+            });
+        InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, waspShaderProgram);
+    }
+
+    /**
+    * Visualizes the wasp selected by the user, provided it exists.
+    */
+    void drawSelectedWasp() 
+    {
+        UI::UI_STATE* uiState = UI::getUIState();
+        Wasp* wasp = uiState->selectedWasp;
+        if (wasp == nullptr)
+        {
+            return;
+        }
+        std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp{ wasp->position, wasp->viewingVector });
+
+        // DRAW WIREFRAME WITH DEPTH TESTING DISABLED
+        glDisable(GL_DEPTH_TEST);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        if (wasp == &WaspSlots::getQueen())
+        { InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, selectedWaspShaderProgram); }
+        
+        else
+        { InstancedRendering::drawInstanceData(singleInstanceData, wasp_VAO, wasp_instanceVBO, wasp_vertexCount, selectedWaspShaderProgram); }
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glEnable(GL_DEPTH_TEST);
+
+        //DRAW GOAL
+        if (uiState->drawSelectedWaspGoal && wasp->currentGoal != nullptr)
+        {
+            DebugRenderer::scheduleLine(wasp->position, *wasp->currentGoal, goalVecColor);
+        }
+
+        // DRAW VIEW RADIUS
+        if (uiState->drawSelectedWaspViewingRadius)
+        {
+            DebugRenderer::drawRoughSphere(wasp->position, Wasp::VIEW_RANGE, viewingRangeColor);
+        }
+
+        // DRAW SWARM CONTRACT
+        if (uiState->drawSelectedWaspSwarmContract)
+        {
+            for (int i = 0; i < Wasp::MAX_NUM_CONTRACTS; i++)
             {
-                // Draw the radius around partner 1
-                Contracts::SwarmContract* swarmContract = (Contracts::SwarmContract*) contract;
-                Wasp* partner1 = swarmContract->getPartners().at(0);
-                DebugRenderer::drawRoughSphere(partner1->position, swarmContract->range, goalVecColor);
+                Contracts::Contract* contract = wasp->contracts.at(i);
+                if (contract != nullptr && contract->getType() == Contracts::ContractType::SwarmContractType)
+                {
+                    // Draw the radius around partner 1
+                    Contracts::SwarmContract* swarmContract = (Contracts::SwarmContract*) contract;
+                    Wasp* partner1 = swarmContract->getPartners().at(0);
+                    DebugRenderer::drawRoughSphere(partner1->position, swarmContract->range, goalVecColor);
+                }
             }
         }
     }

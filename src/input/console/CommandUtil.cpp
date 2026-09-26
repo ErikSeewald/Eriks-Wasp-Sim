@@ -7,237 +7,239 @@
 #include <iostream>
 #include <sstream>
 
-const std::string invalidSyntaxPrint = "Invalid syntax!";
-const std::string syntaxNotFoundPrint = "No syntax for this command found";
-const json invalidJson = json();
-
-using CommandUtil::CommandEntity;
-CommandEntity CommandUtil::convertToEntity(const std::string& subcommand)
+namespace CommandUtil
 {
-    if (subcommand == "wasp")
+    const std::string invalidSyntaxPrint = "Invalid syntax!";
+    const std::string syntaxNotFoundPrint = "No syntax for this command found";
+    const json invalidJson = json();
+
+    CommandEntity convertToEntity(const std::string& subcommand)
     {
-        return CommandEntity::WASP;
-    }
-
-    else if (subcommand == "food")
-    {
-        return CommandEntity::FOOD;
-    }
-
-    return CommandEntity::INVALID;
-}
-
-using Strategies::SpawnStrategy;
-SpawnStrategy CommandUtil::convertToSpawnStrategy(const std::string& subcommand)
-{
-    if (subcommand == "point")
-    {
-        return SpawnStrategy::POINT;
-    }
-
-    else if (subcommand == "random")
-    {
-        return SpawnStrategy::RANDOM;
-    }
-
-    return SpawnStrategy::INVALID;
-}
-
-using Strategies::KillStrategy;
-KillStrategy CommandUtil::convertToKillStrategy(const std::string& subcommand)
-{
-    if (subcommand == "random")
-    {
-        return KillStrategy::RANDOM;
-    }
-
-    return KillStrategy::INVALID;
-}
-
-glm::vec3 CommandUtil::convertToPosition(const std::string& subcommand)
-{
-    static const std::string hereString = "here";
-    static const std::string selectedString = "selected";
-
-    if (subcommand == hereString)
-    {
-        return SimVisualizer::getCamera().position;
-    }
-
-    if (subcommand == selectedString)
-    {
-        Wasp* selectedWasp = UI::getUIState()->selectedWasp;
-        if (selectedWasp != NULL)
+        if (subcommand == "wasp")
         {
-            return selectedWasp->position;
+            return CommandEntity::WASP;
+        }
+
+        else if (subcommand == "food")
+        {
+            return CommandEntity::FOOD;
+        }
+
+        return CommandEntity::INVALID;
+    }
+
+    using Strategies::SpawnStrategy;
+    SpawnStrategy convertToSpawnStrategy(const std::string& subcommand)
+    {
+        if (subcommand == "point")
+        {
+            return SpawnStrategy::POINT;
+        }
+
+        else if (subcommand == "random")
+        {
+            return SpawnStrategy::RANDOM;
+        }
+
+        return SpawnStrategy::INVALID;
+    }
+
+    using Strategies::KillStrategy;
+    KillStrategy convertToKillStrategy(const std::string& subcommand)
+    {
+        if (subcommand == "random")
+        {
+            return KillStrategy::RANDOM;
+        }
+
+        return KillStrategy::INVALID;
+    }
+
+    glm::vec3 convertToPosition(const std::string& subcommand)
+    {
+        static const std::string hereString = "here";
+        static const std::string selectedString = "selected";
+
+        if (subcommand == hereString)
+        {
+            return SimVisualizer::getCamera().position;
+        }
+
+        if (subcommand == selectedString)
+        {
+            Wasp* selectedWasp = UI::getUIState()->selectedWasp;
+            if (selectedWasp != NULL)
+            {
+                return selectedWasp->position;
+            }
+            else
+            {
+                printError(noWaspSelectedPrint);
+                return infVec;
+            }
+        }
+
+        // OTHERWISE: x,y,z COORDINATES
+        std::istringstream stream(subcommand);
+        float x, y, z;
+        char comma1, comma2;
+
+        stream >> x >> comma1 >> y >> comma2 >> z;
+
+        // Check if parsing succeeded and commas are in place
+        if (!stream.fail() && comma1 == ',' && comma2 == ',' && stream.eof())
+        {
+            return glm::vec3(x, y, z);
         }
         else
         {
-            printError(noWaspSelectedPrint);
             return infVec;
         }
     }
 
-    // OTHERWISE: x,y,z COORDINATES
-    std::istringstream stream(subcommand);
-    float x, y, z;
-    char comma1, comma2;
-
-    stream >> x >> comma1 >> y >> comma2 >> z;
-
-    // Check if parsing succeeded and commas are in place
-    if (!stream.fail() && comma1 == ',' && comma2 == ',' && stream.eof())
+    int convertToInt(const std::string& subcommand)
     {
-        return glm::vec3(x, y, z);
-    }
-    else
-    {
-        return infVec;
-    }
-}
-
-int CommandUtil::convertToInt(const std::string& subcommand)
-{
-    try
-    {
-        return std::stoi(subcommand);
-    }
-    catch (std::invalid_argument&)
-    {
-        return -1;
-    }
-    catch (std::out_of_range&)
-    {
-        return -1;
-    }
-}
-
-float CommandUtil::convertToFloat(const std::string & subcommand)
-{
-    try
-    {
-        return std::stof(subcommand);
-    }
-    catch (const std::invalid_argument&)
-    {
-        return -1.0f;
-    }
-    catch (const std::out_of_range&)
-    {
-        return -1.0f;
-    }
-}
-
-json CommandUtil::getCommandJson(const std::string& subcommand)
-{
-    // Find the json command object for the subcommand string by walking through the json hierarchy
-    // one word of the string at a time.
-
-    //FIND BASE COMMAND
-    std::string curCommandString = subcommand;
-    std::string firstWord = StringUtil::getFirstWord(curCommandString);
-    json curCommand = JsonHandler::findByName(Console::getCommands(), firstWord);
-
-    //GO THROUGH SUBCOMMANDS
-    while (!curCommandString.empty())
-    {
-        // cut the last parent command out of the curCommandString
-        curCommandString = StringUtil::cutFirstWord(curCommandString);
-
-        firstWord = StringUtil::getFirstWord(curCommandString);
-        if (firstWord.empty()) { break; }
-
-        // look for a subcommand with a name equal to firstWord
-        bool subcommandFound = false;
-        for (const json& subcommand : curCommand["subcommands"])
+        try
         {
-            if (subcommand["name"] == firstWord)
+            return std::stoi(subcommand);
+        }
+        catch (std::invalid_argument&)
+        {
+            return -1;
+        }
+        catch (std::out_of_range&)
+        {
+            return -1;
+        }
+    }
+
+    float convertToFloat(const std::string & subcommand)
+    {
+        try
+        {
+            return std::stof(subcommand);
+        }
+        catch (const std::invalid_argument&)
+        {
+            return -1.0f;
+        }
+        catch (const std::out_of_range&)
+        {
+            return -1.0f;
+        }
+    }
+
+    json getCommandJson(const std::string& subcommand)
+    {
+        // Find the json command object for the subcommand string by walking through the json hierarchy
+        // one word of the string at a time.
+
+        //FIND BASE COMMAND
+        std::string curCommandString = subcommand;
+        std::string firstWord = StringUtil::getFirstWord(curCommandString);
+        json curCommand = JsonHandler::findByName(Console::getCommands(), firstWord);
+
+        //GO THROUGH SUBCOMMANDS
+        while (!curCommandString.empty())
+        {
+            // cut the last parent command out of the curCommandString
+            curCommandString = StringUtil::cutFirstWord(curCommandString);
+
+            firstWord = StringUtil::getFirstWord(curCommandString);
+            if (firstWord.empty()) { break; }
+
+            // look for a subcommand with a name equal to firstWord
+            bool subcommandFound = false;
+            for (const json& subcommand : curCommand["subcommands"])
             {
-                curCommand = subcommand;
-                subcommandFound = true;
-                break;
+                if (subcommand["name"] == firstWord)
+                {
+                    curCommand = subcommand;
+                    subcommandFound = true;
+                    break;
+                }
+            }
+
+            if (!subcommandFound)
+            {
+                printInvalidSyntaxError();
+                return invalidJson;
             }
         }
 
-        if (!subcommandFound)
+        return curCommand;
+    }
+
+    /**
+    * Prints the name and description of the given command.
+    * Leads to a runtime error if the given json is invalid.
+    *
+    * @param command the command to print
+    */
+    void printCommandDescription(const json& command)
+    {
+        // extract json values like this because '<<' puts quotation marks around normal json values
+        std::string name = command["name"].get<std::string>();
+        std::string description = command["description"].get<std::string>();
+
+        std::cout << "\n " << name;
+
+        int tabCount = 4 - (name.length() / 3.2);
+        for (int i = 0; i < tabCount; i++)
         {
-            printInvalidSyntaxError();
-            return invalidJson;
+            std::cout << "\t";
+        }
+
+        std::cout << description << std::endl;
+    }
+
+    /**
+    * Prints the syntax of the given command.
+    * Leads to a runtime error if the given json is invalid.
+    *
+    * @param command the command to print the syntax of
+    */
+    void printCommandSyntax(const json& command)
+    {
+        static const std::string syntaxKey = "syntax";
+        if (!JsonHandler::hasKey(command, syntaxKey))
+        {
+            std::cout << syntaxNotFoundPrint << std::endl;
+            return;
+        }
+
+        std::string syntax = command[syntaxKey].get<std::string>();
+        std::cout << syntax << std::endl;
+    }
+
+    /**
+    * Prints all subcommands of the parent command, provided it can be found.
+    *
+    * @param parentCommandName the 'name' value of the parent command
+    */
+    void printSubCommands(const json& parentCommandName)
+    {
+        static const std::string subcommandsKey = "subcommands";
+
+        const json& command = JsonHandler::findByName(Console::getCommands(), parentCommandName);
+        if (!JsonHandler::hasKey(command, subcommandsKey))
+        {
+            return;
+        }
+
+        for (const json& subcommand : command[subcommandsKey])
+        {
+            printCommandDescription(subcommand);
         }
     }
 
-    return curCommand;
-}
-
-/**
-* Prints the name and description of the given command.
-* Leads to a runtime error if the given json is invalid.
-*
-* @param command the command to print
-*/
-void CommandUtil::printCommandDescription(const json& command)
-{
-    // extract json values like this because '<<' puts quotation marks around normal json values
-    std::string name = command["name"].get<std::string>();
-    std::string description = command["description"].get<std::string>();
-
-    std::cout << "\n " << name;
-
-    int tabCount = 4 - (name.length() / 3.2);
-    for (int i = 0; i < tabCount; i++)
+    void printInvalidSyntaxError()
     {
-        std::cout << "\t";
+        std::cout << invalidSyntaxPrint << std::endl;
     }
 
-    std::cout << description << std::endl;
-}
-
-/**
-* Prints the syntax of the given command.
-* Leads to a runtime error if the given json is invalid.
-*
-* @param command the command to print the syntax of
-*/
-void CommandUtil::printCommandSyntax(const json& command)
-{
-    static const std::string syntaxKey = "syntax";
-    if (!JsonHandler::hasKey(command, syntaxKey))
+    void printError(std::string message)
     {
-        std::cout << syntaxNotFoundPrint << std::endl;
-        return;
+        std::cout << "ERROR: " << message << std::endl;
     }
-
-    std::string syntax = command[syntaxKey].get<std::string>();
-    std::cout << syntax << std::endl;
-}
-
-/**
-* Prints all subcommands of the parent command, provided it can be found.
-*
-* @param parentCommandName the 'name' value of the parent command
-*/
-void CommandUtil::printSubCommands(const json& parentCommandName)
-{
-    static const std::string subcommandsKey = "subcommands";
-
-    const json& command = JsonHandler::findByName(Console::getCommands(), parentCommandName);
-    if (!JsonHandler::hasKey(command, subcommandsKey))
-    {
-        return;
-    }
-
-    for (const json& subcommand : command[subcommandsKey])
-    {
-        printCommandDescription(subcommand);
-    }
-}
-
-void CommandUtil::printInvalidSyntaxError()
-{
-    std::cout << invalidSyntaxPrint << std::endl;
-}
-
-void CommandUtil::printError(std::string message)
-{
-    std::cout << "ERROR: " << message << std::endl;
 }

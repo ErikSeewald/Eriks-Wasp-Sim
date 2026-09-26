@@ -14,167 +14,170 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "GL/freeglut.h"
 
-Camera camera;
-
-/**
-* Initializes freeglut and ImGUI with all necessary parameters.
-*/
-void SimVisualizer::init(int argc, char** argv)
+namespace SimVisualizer
 {
-    glutInit(&argc, argv);
+    Camera camera;
 
-    glutInitWindowSize(1280, 720);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutCreateWindow("Eriks Wasp Sim");
-
-    //GLEW
-    if (glewInit() != GLEW_OK)
+    /**
+    * Initializes freeglut and ImGUI with all necessary parameters.
+    */
+    void init(int argc, char** argv)
     {
-        std::cerr << "Error: glewInit failed" << std::endl;
-        exit(EXIT_FAILURE);
+        glutInit(&argc, argv);
+
+        glutInitWindowSize(1280, 720);
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+        glutCreateWindow("Eriks Wasp Sim");
+
+        //GLEW
+        if (glewInit() != GLEW_OK)
+        {
+            std::cerr << "Error: glewInit failed" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+
+        // Version should be AT LEAST >= 3.3 (otherwise things like glVertexAttribDivisor are nullptrs)
+        if (!GLEW_VERSION_3_3) 
+        {
+            std::cerr << "Error: OpenGL 3.3 or newer is required. (Try forcing it with '$ MESA_GL_VERSION_OVERRIDE=3.3 ./EriksWaspSim')";
+            exit(EXIT_FAILURE);
+        }
+
+        // IMGUI
+        ImGui::CreateContext();
+        ImGui::StyleColorsDark();
+        ImGui_ImplGLUT_Init();
+        ImGui_ImplGLUT_InstallFuncs();
+        ImGui_ImplOpenGL3_Init("#version 130");
+        UI::getUIState()->drawGrid = true;
+
+        //EVENT HANDLERS
+        // (Overwrite the ones previously installed by ImGui_ImplGLUT_InstallFuncs().
+        // If the ImGui_ImplGLUT function is also needed they need to call it themselves)
+        glutKeyboardFunc(KeyboardHandler::keyboardDown);
+        glutKeyboardUpFunc(KeyboardHandler::keyboardUp);
+
+        glutSpecialFunc(KeyboardHandler::specialKeyDown);
+        glutSpecialUpFunc(KeyboardHandler::specialKeyUp);
+
+        glutMouseFunc(MouseHandler::mouseClick);
+
+        glutDisplayFunc(SimVisualizer::render);
+        glutReshapeFunc(SimVisualizer::reshape);
+        glutCloseFunc(SimVisualizer::onWindowClose);
+
+        //CAMERA
+        camera.position = glm::vec3(3.0f, 3.0f, 3.0f);
+        camera.direction = glm::vec3(-1.0f, 0.0f, -1.0f);
+        updateCamera();
+
+        //RENDERERS
+        DebugRenderer::init();
+        WaspRenderer::init();
+        FoodRenderer::init();
+        
+        glutTimerFunc(0, SimVisualizer::timer, 0);
+        glutMainLoop();
     }
 
-    // Version should be AT LEAST >= 3.3 (otherwise things like glVertexAttribDivisor are nullptrs)
-    if (!GLEW_VERSION_3_3) 
+    /**
+    * The glut timer function for the SimVisualizer. Updates the display.
+    */
+    void timer(int value)
     {
-        std::cerr << "Error: OpenGL 3.3 or newer is required. (Try forcing it with '$ MESA_GL_VERSION_OVERRIDE=3.3 ./EriksWaspSim')";
-        exit(EXIT_FAILURE);
+        glutPostRedisplay();
+        glutTimerFunc(15, timer, 0);
     }
 
-    // IMGUI
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
-    ImGui_ImplGLUT_Init();
-    ImGui_ImplGLUT_InstallFuncs();
-    ImGui_ImplOpenGL3_Init("#version 130");
-    UI::getUIState()->drawGrid = true;
+    /**
+    * The reshape function for the SimVisualizer. Handles proper window-reshape modifications
+    * and calls ImGui_ImplGLUT_ReshapeFunc because it overrides ImGui_ImplGLUT_InstallFuncs.
+    */
+    void reshape(int width, int height)
+    {
+        glViewport(0, 0, width, height);
+        ImGui_ImplGLUT_ReshapeFunc(width, height);
+    }
 
-    //EVENT HANDLERS
-    // (Overwrite the ones previously installed by ImGui_ImplGLUT_InstallFuncs().
-    // If the ImGui_ImplGLUT function is also needed they need to call it themselves)
-    glutKeyboardFunc(KeyboardHandler::keyboardDown);
-    glutKeyboardUpFunc(KeyboardHandler::keyboardUp);
+    /** 
+    * Handles the GLUT window close event. Calls Console::freeTerminal().
+    * On linux, if the application exits without freeTerminal(), the terminal 
+    * will still be captured by readline after exiting.
+    */
+    void onWindowClose()
+    {
+        Console::freeTerminal();
+    }
 
-    glutSpecialFunc(KeyboardHandler::specialKeyDown);
-    glutSpecialUpFunc(KeyboardHandler::specialKeyUp);
+    /**
+    * The main render method of the SimVisualizer. Other render calls branch from here.
+    * Assumes that 'init' has already been called.
+    */
+    void render()
+    { 
+        UI::UI_STATE* uiState = UI::getUIState();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
 
-    glutMouseFunc(MouseHandler::mouseClick);
+        // SCENE
+        updateCamera();
 
-    glutDisplayFunc(SimVisualizer::render);
-    glutReshapeFunc(SimVisualizer::reshape);
-    glutCloseFunc(SimVisualizer::onWindowClose);
+        if (uiState->drawGrid) { DebugRenderer::drawGrid(); }
 
-    //CAMERA
-    camera.position = glm::vec3(3.0f, 3.0f, 3.0f);
-    camera.direction = glm::vec3(-1.0f, 0.0f, -1.0f);
-    updateCamera();
+        FoodRenderer::drawFood(*Food::getFoodEntities());
+        WaspRenderer::drawWasps(*WaspSlots::getWasps());
+        WaspRenderer::drawQueen(WaspSlots::getQueen());
+        WaspRenderer::drawSelectedWasp();
 
-    //RENDERERS
-    DebugRenderer::init();
-    WaspRenderer::init();
-    FoodRenderer::init();
+        DebugRenderer::drawScheduledLines();
     
-    glutTimerFunc(0, timer, 0);
-    glutMainLoop();
-}
+        // UI
+        UI::drawUI();
 
-/**
-* The glut timer function for the SimVisualizer. Updates the display.
-*/
-void SimVisualizer::timer(int value)
-{
-    glutPostRedisplay();
-    glutTimerFunc(15, timer, 0);
-}
+        glutSwapBuffers();
+    }
 
-/**
-* The reshape function for the SimVisualizer. Handles proper window-reshape modifications
-* and calls ImGui_ImplGLUT_ReshapeFunc because it overrides ImGui_ImplGLUT_InstallFuncs.
-*/
-void SimVisualizer::reshape(int width, int height)
-{
-    glViewport(0, 0, width, height);
-    ImGui_ImplGLUT_ReshapeFunc(width, height);
-}
+    /**
+    * Updates the camera's position and matrices based on the current user inputs.
+    */
+    void updateCamera()
+    {
+        KeyboardHandler::updateCamera(&camera);
 
-/** 
-* Handles the GLUT window close event. Calls Console::freeTerminal().
-* On linux, if the application exits without freeTerminal(), the terminal 
-* will still be captured by readline after exiting.
-*/
-void SimVisualizer::onWindowClose()
-{
-    Console::freeTerminal();
-}
+        camera.direction = glm::vec3(
+            cos(camera.yawRad) * cos(camera.pitchRad),
+            sin(camera.pitchRad),
+            sin(camera.yawRad) * cos(camera.pitchRad)
+        );
 
-/**
-* The main render method of the SimVisualizer. Other render calls branch from here.
-* Assumes that 'SimVisualizer::init' has already been called.
-*/
-void SimVisualizer::render()
-{ 
-    UI::UI_STATE* uiState = UI::getUIState();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
+        camera.view = glm::lookAt(
+            camera.position,
+            camera.position + camera.direction,
+            upVector
+        );
 
-    // SCENE
-    SimVisualizer::updateCamera();
+        camera.projection = glm::perspective(
+            CameraSettings::FOV_RADIANS,
+            (float) glutGet(GLUT_WINDOW_WIDTH) / (float) glutGet(GLUT_WINDOW_HEIGHT),
+            CameraSettings::NEAR_CLIP,
+            CameraSettings::FAR_CLIP
+        );
+    }
 
-    if (uiState->drawGrid) { DebugRenderer::drawGrid(); }
+    /**
+    * Jumps the camera close to and turns it to look at the given position.
+    */
+    void jumpToAndLookAt(const glm::vec3& position)
+    {
+        camera.position = position - glm::vec3(0.0, 0.0, 5.0);
 
-    FoodRenderer::drawFood(*Food::getFoodEntities());
-    WaspRenderer::drawWasps(*WaspSlots::getWasps());
-    WaspRenderer::drawQueen(WaspSlots::getQueen());
-    WaspRenderer::drawSelectedWasp();
+        glm::vec3 dir = glm::normalize(position - camera.position);
+        camera.pitchRad = asin(dir.y);
+        camera.yawRad = atan2(dir.z, dir.x);
+    }
 
-    DebugRenderer::drawScheduledLines();
- 
-    // UI
-    UI::drawUI();
-
-    glutSwapBuffers();
-}
-
-/**
-* Updates the camera's position and matrices based on the current user inputs.
-*/
-void SimVisualizer::updateCamera()
-{
-    KeyboardHandler::updateCamera(&camera);
-
-    camera.direction = glm::vec3(
-        cos(camera.yawRad) * cos(camera.pitchRad),
-        sin(camera.pitchRad),
-        sin(camera.yawRad) * cos(camera.pitchRad)
-    );
-
-    camera.view = glm::lookAt(
-        camera.position,
-        camera.position + camera.direction,
-        SimVisualizer::upVector
-    );
-
-    camera.projection = glm::perspective(
-        CameraSettings::FOV_RADIANS,
-        (float) glutGet(GLUT_WINDOW_WIDTH) / (float) glutGet(GLUT_WINDOW_HEIGHT),
-        CameraSettings::NEAR_CLIP,
-        CameraSettings::FAR_CLIP
-    );
-}
-
-/**
-* Jumps the camera close to and turns it to look at the given position.
-*/
-void SimVisualizer::jumpToAndLookAt(const glm::vec3& position)
-{
-    camera.position = position - glm::vec3(0.0, 0.0, 5.0);
-
-    glm::vec3 dir = glm::normalize(position - camera.position);
-    camera.pitchRad = asin(dir.y);
-    camera.yawRad = atan2(dir.z, dir.x);
-}
-
-const Camera& SimVisualizer::getCamera()
-{
-    return camera;
+    const Camera& getCamera()
+    {
+        return camera;
+    }
 }

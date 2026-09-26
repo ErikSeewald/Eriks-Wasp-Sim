@@ -13,178 +13,181 @@ using namespace std::chrono;
 using Strategies::SpawnStrategy;
 using Food::FoodEntity;
 
-//DELTA TIME
-std::chrono::duration<double> deltaTime;
-steady_clock::time_point previousTime;
-steady_clock::time_point currentTime;
-
-//THREADS
-static const int threadPoolSize = ThreadPool::choosePoolSize();
-static ThreadPool sim_pool(threadPoolSize);
-
-/**
-* Starts and runs the simulation loop.
-*/
-void Simulation::startLoop() 
+namespace Simulation
 {
-    _loopInit();
+    //DELTA TIME
+    std::chrono::duration<double> deltaTime;
+    steady_clock::time_point previousTime;
+    steady_clock::time_point currentTime;
 
-    static const double secondsBetweenUpdates = 1.0 / 60.0;
-    while (true) 
+    //THREADS
+    static const int threadPoolSize = ThreadPool::choosePoolSize();
+    static ThreadPool sim_pool(threadPoolSize);
+
+    /**
+    * Starts and runs the simulation loop.
+    */
+    void startLoop() 
     {
-        // SIMULATION LOGIC
-        if (!UI::getUIState()->isPaused) 
+        _loopInit();
+
+        static const double secondsBetweenUpdates = 1.0 / 60.0;
+        while (true) 
         {
-            updateWasps();
-            ResourceSpawner::update(&deltaTime);
-            Contracts::updateContractTimer(&deltaTime);
-        }
-
-        // CLEANUPS AND EXPENSIVE UPDATES
-        static const double SECONDS_BETWEEN_CLEANUPS = 5.0;
-        static double secondsSinceLastCleanup = 0.0;
-
-        secondsSinceLastCleanup += deltaTime.count();
-        if (secondsSinceLastCleanup > SECONDS_BETWEEN_CLEANUPS)
-        {
-            WaspSlots::updateMaxIndex();
-            Food::updateMaxIndex();
-            Contracts::cleanupExpiredContracts();
-            secondsSinceLastCleanup = 0.0;
-        }
-
-        // DELTA TIME
-        updateDeltaTime();
-
-        double sleepTimeSeconds = secondsBetweenUpdates - deltaTime.count();
-        if (sleepTimeSeconds > 0) {
-            std::this_thread::sleep_for(milliseconds(static_cast<int>(sleepTimeSeconds * 1000)));
-        }
-    }
-
-}
-
-void Simulation::updateWasps()
-{
-    //WASPS (Divide wasp array into local sections and use threads to update them)
-    std::vector<Wasp>* wasps = WaspSlots::getWasps();
-    int maxIndex = WaspSlots::getMaxIndex();
-
-    // Every iteration a few wasp are 'privileged', meaning they are allowed to perform
-    // computationally expensive tasks like checking for the closest other wasp.
-    // The privileged wasps change in index order to be 'fair' :)
-    const int waspsPrivilegedAtOnce = 5000;
-    static int curPrivilegedWaspIndex = 0;
-    for (int i = curPrivilegedWaspIndex; i < curPrivilegedWaspIndex + waspsPrivilegedAtOnce; i++)
-    {
-        // Note, some of these wasps might not be alive and therefore wont benefit.
-        // But that is a sacrifice I am willing to make.
-        if (maxIndex > 0) { wasps->at(i % maxIndex).setPrivileged(true); }
-    }
-
-    int sectionSize = std::floor(maxIndex / threadPoolSize);
-    for (int i = 0; i < threadPoolSize; ++i)
-    {
-        int start = sectionSize * i;
-        int end = (i < threadPoolSize - 1) ? sectionSize * (i + 1) : maxIndex;
-
-        sim_pool.enqueue([start, end, &wasps] 
-        {
-            for (int j = start; j < end; ++j)
+            // SIMULATION LOGIC
+            if (!UI::getUIState()->isPaused) 
             {
-                Wasp* wasp = &(*wasps)[j];
-                wasp->update();
+                updateWasps();
+                ResourceSpawner::update(&deltaTime);
+                Contracts::updateContractTimer(&deltaTime);
             }
-        });
+
+            // CLEANUPS AND EXPENSIVE UPDATES
+            static const double SECONDS_BETWEEN_CLEANUPS = 5.0;
+            static double secondsSinceLastCleanup = 0.0;
+
+            secondsSinceLastCleanup += deltaTime.count();
+            if (secondsSinceLastCleanup > SECONDS_BETWEEN_CLEANUPS)
+            {
+                WaspSlots::updateMaxIndex();
+                Food::updateMaxIndex();
+                Contracts::cleanupExpiredContracts();
+                secondsSinceLastCleanup = 0.0;
+            }
+
+            // DELTA TIME
+            updateDeltaTime();
+
+            double sleepTimeSeconds = secondsBetweenUpdates - deltaTime.count();
+            if (sleepTimeSeconds > 0) {
+                std::this_thread::sleep_for(milliseconds(static_cast<int>(sleepTimeSeconds * 1000)));
+            }
+        }
+
     }
-    sim_pool.waitFinishAll();
 
-    //SELECTED WASP
-    UI::UI_STATE* uiState = UI::getUIState();
-    Wasp* selectedWasp = uiState->selectedWasp;
-    if (selectedWasp != nullptr && !selectedWasp->isAlive)
+    void updateWasps()
     {
-        uiState->selectedWasp = nullptr;
-    }
+        //WASPS (Divide wasp array into local sections and use threads to update them)
+        std::vector<Wasp>* wasps = WaspSlots::getWasps();
+        int maxIndex = WaspSlots::getMaxIndex();
 
-    //QUEEN
-    WaspSlots::getQueen().update(deltaTime);
-
-    //PRIVILEGED WASPS
-    maxIndex = WaspSlots::getMaxIndex();
-    if (maxIndex > 0)
-    {
+        // Every iteration a few wasp are 'privileged', meaning they are allowed to perform
+        // computationally expensive tasks like checking for the closest other wasp.
+        // The privileged wasps change in index order to be 'fair' :)
+        const int waspsPrivilegedAtOnce = 5000;
+        static int curPrivilegedWaspIndex = 0;
         for (int i = curPrivilegedWaspIndex; i < curPrivilegedWaspIndex + waspsPrivilegedAtOnce; i++)
         {
-            wasps->at(i % maxIndex).setPrivileged(false);
+            // Note, some of these wasps might not be alive and therefore wont benefit.
+            // But that is a sacrifice I am willing to make.
+            if (maxIndex > 0) { wasps->at(i % maxIndex).setPrivileged(true); }
         }
 
-        // I know looping back at maxIndex means the waiting time between being privileged is always
-        // changing, but such is life. A larger hive means less privilege for the individual.
-        curPrivilegedWaspIndex = (curPrivilegedWaspIndex + waspsPrivilegedAtOnce) % maxIndex;
+        int sectionSize = std::floor(maxIndex / threadPoolSize);
+        for (int i = 0; i < threadPoolSize; ++i)
+        {
+            int start = sectionSize * i;
+            int end = (i < threadPoolSize - 1) ? sectionSize * (i + 1) : maxIndex;
+
+            sim_pool.enqueue([start, end, &wasps] 
+            {
+                for (int j = start; j < end; ++j)
+                {
+                    Wasp* wasp = &(*wasps)[j];
+                    wasp->update();
+                }
+            });
+        }
+        sim_pool.waitFinishAll();
+
+        //SELECTED WASP
+        UI::UI_STATE* uiState = UI::getUIState();
+        Wasp* selectedWasp = uiState->selectedWasp;
+        if (selectedWasp != nullptr && !selectedWasp->isAlive)
+        {
+            uiState->selectedWasp = nullptr;
+        }
+
+        //QUEEN
+        WaspSlots::getQueen().update(deltaTime);
+
+        //PRIVILEGED WASPS
+        maxIndex = WaspSlots::getMaxIndex();
+        if (maxIndex > 0)
+        {
+            for (int i = curPrivilegedWaspIndex; i < curPrivilegedWaspIndex + waspsPrivilegedAtOnce; i++)
+            {
+                wasps->at(i % maxIndex).setPrivileged(false);
+            }
+
+            // I know looping back at maxIndex means the waiting time between being privileged is always
+            // changing, but such is life. A larger hive means less privilege for the individual.
+            curPrivilegedWaspIndex = (curPrivilegedWaspIndex + waspsPrivilegedAtOnce) % maxIndex;
+        }
+
+        else { curPrivilegedWaspIndex = 0; }
+
     }
 
-    else { curPrivilegedWaspIndex = 0; }
-
-}
-
-void Simulation::updateDeltaTime()
-{
-    currentTime = steady_clock::now();
-    deltaTime = duration_cast<duration<double>>(currentTime - previousTime);
-    previousTime = currentTime;
-}
-
-/**
-* Initializes everything needed for loop() to run
-*/
-void Simulation::_loopInit()
-{
-    previousTime = steady_clock::now();
-
-    WaspSlots::init();
-    static const int initWaspCount = 10000;
-    WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM, 50);
-
-    WaspSlots::getQueen().isAlive = true;
-}
-
-/**
-* Returns the simulations's last delta time
-*/
-std::chrono::duration<double>* Simulation::getDeltaTime()
-{
-    return &deltaTime;
-}
-
-/**
-* Returns the last cached steady_clock::now() call.
-* Updated every tick of the simulation.
-* Useful for having one uniform time_point that all entities on on tick adhere too. 
-* Also faster.
-*/
-std::chrono::steady_clock::time_point* Simulation::getCachedTimePoint()
-{
-    return &currentTime;
-}
-
-/**
-* Synchronous function that locks the food mutex and checks whether the given FoodEntity has been eaten.
-* If so, it returns false. Otherwise it sets food->eaten to true and returns true.
-*/
-bool Simulation::attemptEatFoodMutex(FoodEntity* food)
-{
-    // Currently only one mutex for all food. Not sure whether the trade of for
-    // individual mutexes for individual food entites would be worth it.
-    static std::mutex foodMutex;
-
-    std::lock_guard<std::mutex> lock(foodMutex);
-    if (food->eaten)
-    { 
-        return false; 
+    void updateDeltaTime()
+    {
+        currentTime = steady_clock::now();
+        deltaTime = duration_cast<duration<double>>(currentTime - previousTime);
+        previousTime = currentTime;
     }
 
-    food->eaten = true;
-    Food::registerEntityEaten();
-    return true;
+    /**
+    * Initializes everything needed for loop() to run
+    */
+    void _loopInit()
+    {
+        previousTime = steady_clock::now();
+
+        WaspSlots::init();
+        static const int initWaspCount = 10000;
+        WaspSlots::spawnWasps(glm::vec3(5, 5, 5), initWaspCount, SpawnStrategy::RANDOM, 50);
+
+        WaspSlots::getQueen().isAlive = true;
+    }
+
+    /**
+    * Returns the simulations's last delta time
+    */
+    std::chrono::duration<double>* getDeltaTime()
+    {
+        return &deltaTime;
+    }
+
+    /**
+    * Returns the last cached steady_clock::now() call.
+    * Updated every tick of the simulation.
+    * Useful for having one uniform time_point that all entities on on tick adhere too. 
+    * Also faster.
+    */
+    std::chrono::steady_clock::time_point* getCachedTimePoint()
+    {
+        return &currentTime;
+    }
+
+    /**
+    * Synchronous function that locks the food mutex and checks whether the given FoodEntity has been eaten.
+    * If so, it returns false. Otherwise it sets food->eaten to true and returns true.
+    */
+    bool attemptEatFoodMutex(FoodEntity* food)
+    {
+        // Currently only one mutex for all food. Not sure whether the trade of for
+        // individual mutexes for individual food entites would be worth it.
+        static std::mutex foodMutex;
+
+        std::lock_guard<std::mutex> lock(foodMutex);
+        if (food->eaten)
+        { 
+            return false; 
+        }
+
+        food->eaten = true;
+        Food::registerEntityEaten();
+        return true;
+    }
 }

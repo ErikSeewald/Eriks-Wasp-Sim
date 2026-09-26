@@ -93,6 +93,10 @@ class Queen : public Wasp
 
 		int storedFoodAmount; // Additional food that the queen does not need for its own hunger saturation.
 
+		// The queen wants to stay close to her home at all times.
+		glm::vec3 _queenHome = glm::vec3(0.0);
+		constexpr static float _QUEEN_HOME_RANGE = 50.0;
+
 		/**
 		* Updates 'wIndexSortedByWorkerScore' with the current worker score iteration.
 		* Due to performance reason, this is only done rarely when needed (like for handouts)

@@ -14,122 +14,125 @@
 #include <readline/history.h>
 #endif
 
-//PRINTS
-const std::string initPrint = "Welcome to Erik's Wasp Sim! \nType 'help' to see a list of available commands. \n";
-const std::string postCommandPrint = "\n\n$ ";
-
-//COMMANDS JSON
-const std::string baseDir = "assets/commands/";
-const std::string commandsFile = baseDir + "Commands.json";
-
-//COMMAND HANDLERS
-CommandHandlerMap mainCommandHandlers =
+namespace Console
 {
-        {"help", MetaCommandHandlers::commandHelp},
-        {"syntax", MetaCommandHandlers::commandSyntax},
-        {"element", MetaCommandHandlers::commandElement},
-        {"wasp", WaspCommandHandlers::commandWasp},
-        {"spawn", OtherCommandHandlers::commandSpawn},
-        {"kill", OtherCommandHandlers::commandKill},
-        {"rset", OtherCommandHandlers::commandResourceSettings}
-};
+    //PRINTS
+    const std::string initPrint = "Welcome to Erik's Wasp Sim! \nType 'help' to see a list of available commands. \n";
+    const std::string postCommandPrint = "\n\n$ ";
 
-json commands;
+    //COMMANDS JSON
+    const std::string baseDir = "assets/commands/";
+    const std::string commandsFile = baseDir + "Commands.json";
 
-const json& Console::getCommands()
-{
-    return commands;
-}
-
-/**
-* Safely frees the terminal from readline on linux.
-* Without this function the terminal can be blocked from receiving
-* input by readline even after the program has exited.
-*/
-void Console::freeTerminal()
-{
-
-#if defined(__linux__) || defined(__APPLE__)
-        rl_cleanup_after_signal();
-        rl_callback_handler_remove();
-        rl_free_line_state();
-#endif
-
-    std::cout << std::endl;
-    
-}
-
-void Console::_init()
-{
-    //LOAD COMMANDS JSON
-    std::string commandsFilePath = DirectoryHandler::appendToProjectRoot(commandsFile);
-    commands = JsonHandler::loadJson(commandsFilePath);
-
-    std::cout << initPrint;
-
-#if defined(__linux__) || defined(__APPLE__)
-    rl_catch_signals = 0; // Disables readline's signal handlers
-#endif
-}
-
-/**
-* Initializes the console and starts the loop needed to get continuous input from the user.
-*/
-void Console::startLoop()
-{
-    _init();
-
-    std::string command;
-
-    while (true)
+    //COMMAND HANDLERS
+    CommandHandlerMap mainCommandHandlers =
     {
-#if defined(_WIN32) || defined(_WIN64)
-        std::cout << postCommandPrint;
-        std::getline(std::cin, command);
-#else
-        char* line = readline(postCommandPrint.c_str());
-        if (!line) {exit(0);}
+            {"help", MetaCommandHandlers::commandHelp},
+            {"syntax", MetaCommandHandlers::commandSyntax},
+            {"element", MetaCommandHandlers::commandElement},
+            {"wasp", WaspCommandHandlers::commandWasp},
+            {"spawn", OtherCommandHandlers::commandSpawn},
+            {"kill", OtherCommandHandlers::commandKill},
+            {"rset", OtherCommandHandlers::commandResourceSettings}
+    };
 
-        command = line;
-        free(line);
+    json commands;
 
-        if (!command.empty()) {add_history(command.c_str());}
-#endif
-
-        processCommand(command, mainCommandHandlers);
+    const json& getCommands()
+    {
+        return commands;
     }
 
-    freeTerminal();
-}
-
-/**
-* Tries to process the given subcommand by finding a fitting command handler in the CommandHandlerMap
-* of the subcommands parent command.
-* Prints an error message if no fitting command handler is found.
-*
-* @param subcommand the subcommand to process
-* @param commandHandlers the CommandHandlerMap for the parent command
-*/
-void Console::processCommand(const std::string& command, CommandHandlerMap& commandHandlers)
-{
-    std::string trimmedCommand = StringUtil::trimLeadingWhitespace(command);
-
-    std::string firstWord = StringUtil::getFirstWord(trimmedCommand);
-    CommandHandlerMap::iterator iterator = commandHandlers.find(firstWord);
-    if (iterator != commandHandlers.end())
+    /**
+    * Safely frees the terminal from readline on linux.
+    * Without this function the terminal can be blocked from receiving
+    * input by readline even after the program has exited.
+    */
+    void freeTerminal()
     {
-        // Execute the command handler function and pass the subcommand after firstWord to it
-        iterator->second(trimmedCommand.substr(firstWord.length()));
-    }
-    else
-    {
-        CommandUtil::printInvalidSyntaxError();
-    }
-}
 
-void Console::sendDebugMessage(const std::string& message)
-{
-    std::cout << "\r" << std::string(80, ' ') << "\r"; // clear current line
-    std::cout << message << std::endl;
-    std::cout << postCommandPrint; // back to normal state
+    #if defined(__linux__) || defined(__APPLE__)
+            rl_cleanup_after_signal();
+            rl_callback_handler_remove();
+            rl_free_line_state();
+    #endif
+
+        std::cout << std::endl;
+        
+    }
+
+    void _init()
+    {
+        //LOAD COMMANDS JSON
+        std::string commandsFilePath = DirectoryHandler::appendToProjectRoot(commandsFile);
+        commands = JsonHandler::loadJson(commandsFilePath);
+
+        std::cout << initPrint;
+
+    #if defined(__linux__) || defined(__APPLE__)
+        rl_catch_signals = 0; // Disables readline's signal handlers
+    #endif
+    }
+
+    /**
+    * Initializes the console and starts the loop needed to get continuous input from the user.
+    */
+    void startLoop()
+    {
+        _init();
+
+        std::string command;
+
+        while (true)
+        {
+    #if defined(_WIN32) || defined(_WIN64)
+            std::cout << postCommandPrint;
+            std::getline(std::cin, command);
+    #else
+            char* line = readline(postCommandPrint.c_str());
+            if (!line) {exit(0);}
+
+            command = line;
+            free(line);
+
+            if (!command.empty()) {add_history(command.c_str());}
+    #endif
+
+            processCommand(command, mainCommandHandlers);
+        }
+
+        freeTerminal();
+    }
+
+    /**
+    * Tries to process the given subcommand by finding a fitting command handler in the CommandHandlerMap
+    * of the subcommands parent command.
+    * Prints an error message if no fitting command handler is found.
+    *
+    * @param subcommand the subcommand to process
+    * @param commandHandlers the CommandHandlerMap for the parent command
+    */
+    void processCommand(const std::string& command, CommandHandlerMap& commandHandlers)
+    {
+        std::string trimmedCommand = StringUtil::trimLeadingWhitespace(command);
+
+        std::string firstWord = StringUtil::getFirstWord(trimmedCommand);
+        CommandHandlerMap::iterator iterator = commandHandlers.find(firstWord);
+        if (iterator != commandHandlers.end())
+        {
+            // Execute the command handler function and pass the subcommand after firstWord to it
+            iterator->second(trimmedCommand.substr(firstWord.length()));
+        }
+        else
+        {
+            CommandUtil::printInvalidSyntaxError();
+        }
+    }
+
+    void sendDebugMessage(const std::string& message)
+    {
+        std::cout << "\r" << std::string(80, ' ') << "\r"; // clear current line
+        std::cout << message << std::endl;
+        std::cout << postCommandPrint; // back to normal state
+    }
 }

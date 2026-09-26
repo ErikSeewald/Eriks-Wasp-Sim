@@ -40,7 +40,7 @@ namespace SimVisualizer
 
     /**
     * The main render method of the SimVisualizer. Other render calls branch from here.
-    * Assumes that 'SimVisualizer::init' has already been called.
+    * Assumes that 'init' has already been called.
     */
     void render();
 

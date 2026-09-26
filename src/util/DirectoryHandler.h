@@ -16,13 +16,13 @@ namespace DirectoryHandler
 
 	/**
 	* Returns the absolute path to the root of the project.
-	* Assumes DirectoryHandler::init() has been called prior.
+	* Assumes init() has been called prior.
 	*/
 	const std::string& getProjectRootPath();
 
 	/**
 	* Appends the given string to the absolute path to the root of the project and returns it.
-	* Assumes DirectoryHandler::init() has been called prior.
+	* Assumes init() has been called prior.
 	*/
 	std::string appendToProjectRoot(const std::string& toAppend);
 

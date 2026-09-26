@@ -2,139 +2,140 @@
 #include <cstdlib>
 #include <mutex>
 
-using Food::FoodEntity;
-
-// Follows the same slot pattern as WaspSlots.h
-// For more info read the docs (SLOT_COUNT, spawnWasps, killWasps) over there
-const static int SLOT_COUNT = 10000;
-
-int food_maxIndex = 0;
-int uneatenFoodCount = 0;
-
-static std::mutex foodMutex; // A single mutex for all food operations that need to be lockable.
-
-
-std::vector<FoodEntity> foodEntities(SLOT_COUNT, {0, glm::vec3(0,0,0), true});
-
-std::vector<FoodEntity>* Food::getFoodEntities()
+namespace Food
 {
-	return &foodEntities;
-}
+    // Follows the same slot pattern as WaspSlots.h
+    // For more info read the docs (SLOT_COUNT, spawnWasps, killWasps) over there
+    const static int SLOT_COUNT = 10000;
 
-/**
-* Returns an index that can be used as the upper bound for loops.
-* After this index there are no more uneaten food entities in the list.
-* This optimization relies heavily on well managed calls to updateMaxIndex()
-* and on killing entities with higher indices before entities with smaller indices.
-*/
-int Food::getMaxIndex()
-{
-    return food_maxIndex;
-}
+    int food_maxIndex = 0;
+    int uneatenFoodCount = 0;
 
-/**
-* Updates maxIndex by finding the largest index containing an uneaten food entity in the entity vector.
-*/
-void Food::updateMaxIndex()
-{
-    int index = -1;
-    for (int i = 0; i < SLOT_COUNT; ++i)
+    static std::mutex foodMutex; // A single mutex for all food operations that need to be lockable.
+
+
+    std::vector<FoodEntity> foodEntities(SLOT_COUNT, {0, glm::vec3(0,0,0), true});
+
+    std::vector<FoodEntity>* getFoodEntities()
     {
-        FoodEntity* food = &foodEntities[i];
-        if (!food->eaten) { index = i; }
-    }
-    food_maxIndex = index >= 0 ? index + 1 : 0; // +1 here to make using it for loops easier
-}
-
-/**
-* Returns wether there are enough food slots available to accommodate foodAddAmount.
-*/
-bool Food::spaceAvailable(int foodAddAmount)
-{
-    std::lock_guard<std::mutex> lock(foodMutex);
-    return uneatenFoodCount + foodAddAmount <= SLOT_COUNT;
-}
-
-/**
-* Used to register that a food entity has been eaten thereby update uneatenFoodCount.
-*/
-void Food::registerEntityEaten()
-{
-    std::lock_guard<std::mutex> lock(foodMutex);
-    uneatenFoodCount--;
-}
-
-bool Food::spawnFood(glm::vec3 position, int amount, SpawnStrategy strategy, float spawnRadius)
-{
-    if (!spaceAvailable(amount))
-    {
-        return false;
+        return &foodEntities;
     }
 
-    std::lock_guard<std::mutex> lock(foodMutex);
-    int spawnedAmount = 0;
-
-    for (int i = 0; i < SLOT_COUNT && spawnedAmount < amount; ++i)
+    /**
+    * Returns an index that can be used as the upper bound for loops.
+    * After this index there are no more uneaten food entities in the list.
+    * This optimization relies heavily on well managed calls to updateMaxIndex()
+    * and on killing entities with higher indices before entities with smaller indices.
+    */
+    int getMaxIndex()
     {
-        FoodEntity* food = &foodEntities[i];
-        if (!food->eaten) { continue; }
+        return food_maxIndex;
+    }
 
-        if (strategy == SpawnStrategy::RANDOM)
+    /**
+    * Updates maxIndex by finding the largest index containing an uneaten food entity in the entity vector.
+    */
+    void updateMaxIndex()
+    {
+        int index = -1;
+        for (int i = 0; i < SLOT_COUNT; ++i)
         {
-            // Generate randomly on a cube of side length spawnRadius and then clamp it back onto
-            // a sphere of that radius
-            glm::vec3 offset(
-                ((((float)std::rand() / RAND_MAX) * 2.0f) - 1.0f) * spawnRadius,
-                ((((float)std::rand() / RAND_MAX) * 2.0f) - 1.0f) * spawnRadius,
-                ((((float)std::rand() / RAND_MAX) * 2.0f) - 1.0f) * spawnRadius
-            );
+            FoodEntity* food = &foodEntities[i];
+            if (!food->eaten) { index = i; }
+        }
+        food_maxIndex = index >= 0 ? index + 1 : 0; // +1 here to make using it for loops easier
+    }
 
-            float len = glm::length(offset);
-            if (len > spawnRadius) { offset = (offset / len) * spawnRadius; }
+    /**
+    * Returns wether there are enough food slots available to accommodate foodAddAmount.
+    */
+    bool spaceAvailable(int foodAddAmount)
+    {
+        std::lock_guard<std::mutex> lock(foodMutex);
+        return uneatenFoodCount + foodAddAmount <= SLOT_COUNT;
+    }
 
-            food->position = position + offset;
+    /**
+    * Used to register that a food entity has been eaten thereby update uneatenFoodCount.
+    */
+    void registerEntityEaten()
+    {
+        std::lock_guard<std::mutex> lock(foodMutex);
+        uneatenFoodCount--;
+    }
+
+    bool spawnFood(glm::vec3 position, int amount, SpawnStrategy strategy, float spawnRadius)
+    {
+        if (!spaceAvailable(amount))
+        {
+            return false;
         }
 
-        else
+        std::lock_guard<std::mutex> lock(foodMutex);
+        int spawnedAmount = 0;
+
+        for (int i = 0; i < SLOT_COUNT && spawnedAmount < amount; ++i)
         {
-            food->position = position;
+            FoodEntity* food = &foodEntities[i];
+            if (!food->eaten) { continue; }
+
+            if (strategy == SpawnStrategy::RANDOM)
+            {
+                // Generate randomly on a cube of side length spawnRadius and then clamp it back onto
+                // a sphere of that radius
+                glm::vec3 offset(
+                    ((((float)std::rand() / RAND_MAX) * 2.0f) - 1.0f) * spawnRadius,
+                    ((((float)std::rand() / RAND_MAX) * 2.0f) - 1.0f) * spawnRadius,
+                    ((((float)std::rand() / RAND_MAX) * 2.0f) - 1.0f) * spawnRadius
+                );
+
+                float len = glm::length(offset);
+                if (len > spawnRadius) { offset = (offset / len) * spawnRadius; }
+
+                food->position = position + offset;
+            }
+
+            else
+            {
+                food->position = position;
+            }
+
+            food->hungerPoints = 10;
+            food->eaten = false;
+            spawnedAmount++;
         }
 
-        food->hungerPoints = 10;
-        food->eaten = false;
-        spawnedAmount++;
+        uneatenFoodCount += spawnedAmount;
+        updateMaxIndex();
+        return true;
     }
 
-    uneatenFoodCount += spawnedAmount;
-    updateMaxIndex();
-    return true;
-}
-
-int Food::killFood(int amountToKill, KillStrategy strategy)
-{
-    if (strategy == KillStrategy::ALL)
+    int killFood(int amountToKill, KillStrategy strategy)
     {
-        amountToKill = -1;
+        if (strategy == KillStrategy::ALL)
+        {
+            amountToKill = -1;
+        }
+        
+        // This can be locked because registerEntityEaten(), which also tries to lock, is never called.
+        std::lock_guard<std::mutex> lock(foodMutex);
+        int killedAmount = 0;
+
+        // Note: Even though the default KillStrategy is named 'RANDOM', in reality food is
+        // always killed based on its index starting from the back of the vector. This ensures
+        // that food_maxIndex is always as small as possible when using the kill function.
+        // When using a random SpawnStrategy this index based approach still looks random.
+        for (int i = SLOT_COUNT - 1; i >= 0 && killedAmount != amountToKill; --i)
+        {
+            FoodEntity* food = &foodEntities[i];
+            if (food->eaten) { continue; }
+
+            food->eaten = true;
+            killedAmount++;
+        }
+
+        uneatenFoodCount -= killedAmount;
+        updateMaxIndex();
+        return killedAmount;
     }
-    
-    // This can be locked because registerEntityEaten(), which also tries to lock, is never called.
-    std::lock_guard<std::mutex> lock(foodMutex);
-    int killedAmount = 0;
-
-    // Note: Even though the default KillStrategy is named 'RANDOM', in reality food is
-    // always killed based on its index starting from the back of the vector. This ensures
-    // that food_maxIndex is always as small as possible when using the kill function.
-    // When using a random SpawnStrategy this index based approach still looks random.
-    for (int i = SLOT_COUNT - 1; i >= 0 && killedAmount != amountToKill; --i)
-    {
-        FoodEntity* food = &foodEntities[i];
-        if (food->eaten) { continue; }
-
-        food->eaten = true;
-        killedAmount++;
-    }
-
-    uneatenFoodCount -= killedAmount;
-    updateMaxIndex();
-    return killedAmount;
 }

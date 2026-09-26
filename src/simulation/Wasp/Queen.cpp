@@ -4,10 +4,6 @@
 #include <algorithm>
 #include <numeric>
 
-// The queen wants to stay close to her home at all times.
-glm::vec3 _queenHome = glm::vec3(0.0);
-constexpr float _QUEEN_HOME_RANGE = 50.0;
-
 Queen::Queen() : _allWasps(*WaspSlots::getWasps()), Wasp(W_INDEX, *this) // The queen has no queen.. But she is her own queen.
 {
     // All workers start with a score of 0
