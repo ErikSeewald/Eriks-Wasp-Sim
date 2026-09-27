@@ -97,14 +97,6 @@ int Wasp::addHungerSaturationBounded(int saturationPoints)
 }
 
 /**
-*  Sets the 'privileged' state of the wasp, dictating whether it is allowed to perform certain expensive computations.
-*/ 
-void Wasp::setPrivileged(bool privileged)
-{
-	isPrivileged = privileged;
-}
-
-/**
 * Implementation/Override of the 'Updatable' class update method. Updates the wasps state in the simulation.
 */
 void Wasp::update()

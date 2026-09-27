@@ -37,11 +37,6 @@ class Wasp : Updatable
 		void respawn();
 
 		/**
-		*  Sets the 'privileged' state of the wasp, dictating whether it is allowed to perform certain expensive computations.
-		*/ 
-		void setPrivileged(bool privileged);
-
-		/**
 		* Implementation/Override of the 'Updatable' class update method. Updates the wasps state in the simulation.
 		*/
 		void update();
@@ -119,7 +114,6 @@ class Wasp : Updatable
 		
 		// NORMAL INTERACTION AND PRIVILEGE 
 		std::chrono::steady_clock::time_point lastResourceTick;
-		bool isPrivileged; // Whether the wasp is currently allowed to perform certain expensive computations
 
 		// CONTRACT
 		const double SECONDS_BETWEEN_CONTRACT_PROPOSALS = 5.0;

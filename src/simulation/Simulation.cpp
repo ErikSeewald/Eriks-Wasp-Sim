@@ -72,18 +72,6 @@ namespace Simulation
         std::vector<Wasp>* wasps = WaspSlots::getWasps();
         int maxIndex = WaspSlots::getMaxIndex();
 
-        // Every iteration a few wasp are 'privileged', meaning they are allowed to perform
-        // computationally expensive tasks like checking for the closest other wasp.
-        // The privileged wasps change in index order to be 'fair' :)
-        const int waspsPrivilegedAtOnce = 5000;
-        static int curPrivilegedWaspIndex = 0;
-        for (int i = curPrivilegedWaspIndex; i < curPrivilegedWaspIndex + waspsPrivilegedAtOnce; i++)
-        {
-            // Note, some of these wasps might not be alive and therefore wont benefit.
-            // But that is a sacrifice I am willing to make.
-            if (maxIndex > 0) { wasps->at(i % maxIndex).setPrivileged(true); }
-        }
-
         int sectionSize = std::floor(maxIndex / threadPoolSize);
         for (int i = 0; i < threadPoolSize; ++i)
         {
@@ -111,23 +99,6 @@ namespace Simulation
 
         //QUEEN
         WaspSlots::getQueen().update(deltaTime);
-
-        //PRIVILEGED WASPS
-        maxIndex = WaspSlots::getMaxIndex();
-        if (maxIndex > 0)
-        {
-            for (int i = curPrivilegedWaspIndex; i < curPrivilegedWaspIndex + waspsPrivilegedAtOnce; i++)
-            {
-                wasps->at(i % maxIndex).setPrivileged(false);
-            }
-
-            // I know looping back at maxIndex means the waiting time between being privileged is always
-            // changing, but such is life. A larger hive means less privilege for the individual.
-            curPrivilegedWaspIndex = (curPrivilegedWaspIndex + waspsPrivilegedAtOnce) % maxIndex;
-        }
-
-        else { curPrivilegedWaspIndex = 0; }
-
     }
 
     void updateDeltaTime()
