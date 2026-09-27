@@ -65,6 +65,7 @@ namespace FoodRenderer
         }
 
         // DRAW
-        InstancedRendering::drawInstanceData(food_instanceData, food_VAO, food_instanceVBO, food_vertexCount, foodShaderProgram);
+        InstancedRendering::drawInstanceData(food_instanceData, food_VAO, food_instanceVBO, 
+            food_vertexCount, foodShaderProgram, GL_TRIANGLES);
     }
 }

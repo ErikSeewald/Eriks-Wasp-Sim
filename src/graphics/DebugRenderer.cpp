@@ -20,13 +20,6 @@ namespace DebugRenderer
     const glm::vec4 axisZColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
     //MESH
-    GLuint grid_VAO;
-    GLuint grid_VBO;
-    GLuint grid_EBO;
-    GLuint grid_instanceVBO;
-    int grid_vertexCount;
-    const std::string gridModelFile = "debug/Grid.obj";
-
     GLuint line_VAO;
     GLuint line_VBO;
     GLuint line_EBO;
@@ -50,22 +43,49 @@ namespace DebugRenderer
     const std::string basicVertShaderFile = "instance_basic.vert";
 
     //INSTANCES
-    std::vector<InstanceDataBasic> gridInstanceData{ InstanceDataBasic{ rootVec, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f)}};
     std::vector<InstanceDataLine> linesInstanceData{};
+    std::vector<InstanceDataLine> gridInstanceData{};
+
+    /**
+     * Initializes the instance data for drawing a grid of lines around the center.
+     */
+    void _initializeGridInstanceData()
+    {
+        constexpr glm::vec4 gridColor{ 0.4f, 0.4f, 0.4f, 1.0f };
+        constexpr int gridSize = 10;
+        float gridSizeFloat = (float) gridSize;
+        gridInstanceData.reserve(gridSize * 6);
+
+        // XY PLANE
+        for (int i = 1; i <= gridSize; ++i)
+        {
+            const float x = (float) i;
+            gridInstanceData.push_back({ {0.0f, x, 0.0f}, {gridSizeFloat, x, 0.0f}, gridColor});
+            gridInstanceData.push_back({ {x, 0.0f, 0.0f}, {x, gridSizeFloat, 0.0f}, gridColor });
+        }
+
+        // YZ PLANE
+        for (int i = 1; i <= gridSize; ++i)
+        {
+            const float y = (float) i;
+            gridInstanceData.push_back({ {0.0f, y, 0.0f}, {0.0f, y, gridSizeFloat}, gridColor });
+            gridInstanceData.push_back({ {0.0f, 0.0f, y}, {0.0f, gridSizeFloat, y}, gridColor });
+        }
+
+        // XZ PLANE
+        for (int i = 1; i <= gridSize; ++i)
+        {
+            const float z = (float) i;
+            gridInstanceData.push_back({ {z, 0.0f, 0.0f}, {z, 0.0f, gridSizeFloat}, gridColor });
+            gridInstanceData.push_back({ {gridSizeFloat, 0.0f, z}, {0.0f, 0.0f, z}, gridColor });
+        }
+    }
 
     /**
     * Initializes the DebugRenderer. Loads models and builds shaders.
     */
     void init()
     {
-        // GRID
-        if (!ModelHandler::loadModel(gridModelFile, &grid_VAO, &grid_VBO, &grid_EBO, &grid_vertexCount))
-        {
-            std::cerr << "Failed to load grid model" << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        InstancedRendering::setupInstancing<InstanceDataBasic>(grid_VAO, &grid_instanceVBO);
-
         // LINE
         if (!ModelHandler::loadModel(lineModelFile, &line_VAO, &line_VBO, &line_EBO, &line_vertexCount))
         {
@@ -85,6 +105,9 @@ namespace DebugRenderer
         // SHADERS
         basicDebugShaderProgram = ShaderHandler::buildShaderProgram(basicVertShaderFile, colorFragShaderFile);
         lineShaderProgram = ShaderHandler::buildShaderProgram(lineVertShaderFile, colorFragShaderFile);
+
+        // GRID
+        _initializeGridInstanceData();
     }
 
     /**
@@ -92,10 +115,14 @@ namespace DebugRenderer
     */
     void drawGrid()
     {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        InstancedRendering::drawInstanceData<InstanceDataBasic>(gridInstanceData, grid_VAO, grid_instanceVBO, grid_vertexCount, basicDebugShaderProgram);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        // GRID
+        linesInstanceData.insert(
+            linesInstanceData.end(),
+            gridInstanceData.begin(),
+            gridInstanceData.end()
+        );
 
+        // AXIS LINES
         scheduleLine(rootVec, axisXVec, axisXColor);
         scheduleLine(rootVec, axisYVec, axisYColor);
         scheduleLine(rootVec, axisZVec, axisZColor);
@@ -119,9 +146,8 @@ namespace DebugRenderer
     {
         if (linesInstanceData.empty()) { return; }
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        InstancedRendering::drawInstanceData<InstanceDataLine>(linesInstanceData, line_VAO, line_instanceVBO, line_vertexCount, lineShaderProgram);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        InstancedRendering::drawInstanceData<InstanceDataLine>(linesInstanceData, line_VAO, line_instanceVBO, 
+            line_vertexCount, lineShaderProgram, GL_LINES);
 
         linesInstanceData.clear();
     }
@@ -131,10 +157,13 @@ namespace DebugRenderer
      */
     void drawRoughSphere(const glm::vec3& position, float radius, const glm::vec4& color)
     {
+        // InstancedRendering needs to interpret it as GL_TRIANGLES for correct mesh order while
+        // glPolygonMode needs GL_LINE for drawing the wireframe.
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         std::vector<InstanceDataBasic> singleInstanceData(1, InstanceDataBasic{ position, color, radius});
-        InstancedRendering::drawInstanceData(singleInstanceData, roughSphere_VAO, roughSphere_instanceVBO, roughSphere_vertexCount, basicDebugShaderProgram);
+        InstancedRendering::drawInstanceData(singleInstanceData, roughSphere_VAO, roughSphere_instanceVBO, 
+            roughSphere_vertexCount, basicDebugShaderProgram, GL_TRIANGLES);
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }

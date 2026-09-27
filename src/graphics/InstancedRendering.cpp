@@ -6,10 +6,11 @@ namespace InstancedRendering
     /**
     * Draws the given instance data using hardware instancing with the given modelVAO, instanceVBO,
     * vertexCount and shaderProgram. Assumes HardwareInstancing::setupInstancing has been called beforehand.
+    * Additionally, through primitiveType (usually GL_TRIANGLES or GL_LINES), the type to render is specified.
     */
     template <typename T>
     void drawInstanceData(const std::vector<T>& instanceData, GLuint modelVAO, GLuint instanceVBO,
-        int indexCount, GLuint shaderProgram)
+        int indexCount, GLuint shaderProgram, GLenum primitiveType)
     {
         glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
         glBufferData(
@@ -31,7 +32,7 @@ namespace InstancedRendering
 
         glBindVertexArray(modelVAO);
         glDrawElementsInstanced(
-            GL_TRIANGLES,
+            primitiveType,
             indexCount,
             GL_UNSIGNED_INT,
             (void*)0,
@@ -46,13 +47,13 @@ namespace InstancedRendering
 
     //----- IMPLEMENTATIONS -----
     template void drawInstanceData<InstanceDataBasic>(
-        const std::vector<InstanceDataBasic>&, GLuint, GLuint, int, GLuint);
+        const std::vector<InstanceDataBasic>&, GLuint, GLuint, int, GLuint, GLenum);
 
     template void drawInstanceData<InstanceDataLine>(
-        const std::vector<InstanceDataLine>&, GLuint, GLuint, int, GLuint);
+        const std::vector<InstanceDataLine>&, GLuint, GLuint, int, GLuint, GLenum);
 
     template void drawInstanceData<InstanceDataWasp>(
-        const std::vector<InstanceDataWasp>&, GLuint, GLuint, int, GLuint);
+        const std::vector<InstanceDataWasp>&, GLuint, GLuint, int, GLuint, GLenum);
 
     template <>
     void setupInstancing<InstanceDataBasic>(GLuint VAO, GLuint* instanceVBO)

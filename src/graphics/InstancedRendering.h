@@ -20,9 +20,11 @@ namespace InstancedRendering
     /**
     * Draws the given instance data using hardware instancing with the given modelVAO, instanceVBO,
     * vertexCount and shaderProgram. Assumes ShaderHandler::setupInstancing has been called beforehand.
+    * Additionally, through primitiveType (usually GL_TRIANGLES or GL_LINES), the type to render is specified.
     */
     template <typename T>
-    void drawInstanceData(const std::vector<T>& instanceData, GLuint modelVAO, GLuint instanceVBO, int indexCount, GLuint shaderProgram);
+    void drawInstanceData(const std::vector<T>& instanceData, GLuint modelVAO, GLuint instanceVBO, 
+        int indexCount, GLuint shaderProgram, GLenum primitiveType);
 
     /**
     * Small instance data struct with only a position, color, and scale attribute for each instance.

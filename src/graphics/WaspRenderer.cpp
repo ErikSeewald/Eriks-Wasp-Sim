@@ -236,7 +236,8 @@ namespace WaspRenderer
         // Shrink to size of added instances
         wasp_instanceData.resize(instanceIndex.load(std::memory_order_relaxed));
 
-        InstancedRendering::drawInstanceData(wasp_instanceData, wasp_VAO, wasp_instanceVBO, wasp_vertexCount, waspShaderProgram);
+        InstancedRendering::drawInstanceData(wasp_instanceData, wasp_VAO, wasp_instanceVBO, 
+            wasp_vertexCount, waspShaderProgram, GL_TRIANGLES);
     }
 
     /**
@@ -255,7 +256,8 @@ namespace WaspRenderer
         std::vector<InstanceDataWasp> singleInstanceData(1, InstanceDataWasp { 
                 queen.position, queen.viewingVector, Queen::W_INDEX, queenBitmap, renderModeFloat1
             });
-        InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, waspShaderProgram);
+        InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, 
+            queen_vertexCount, waspShaderProgram, GL_TRIANGLES);
     }
 
     /**
@@ -274,15 +276,24 @@ namespace WaspRenderer
         // DRAW WIREFRAME WITH DEPTH TESTING DISABLED
         glDisable(GL_DEPTH_TEST);
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // ^ InstancedRendering needs to interpret it as GL_TRIANGLES for correct mesh order while
+        // glPolygonMode needs GL_LINE for drawing the wireframe.
 
         if (wasp == &WaspSlots::getQueen())
-        { InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, queen_vertexCount, selectedWaspShaderProgram); }
+        { 
+            InstancedRendering::drawInstanceData(singleInstanceData, queen_VAO, queen_instanceVBO, 
+                queen_vertexCount, selectedWaspShaderProgram, GL_TRIANGLES); 
+        }
         
         else
-        { InstancedRendering::drawInstanceData(singleInstanceData, wasp_VAO, wasp_instanceVBO, wasp_vertexCount, selectedWaspShaderProgram); }
+        { 
+            InstancedRendering::drawInstanceData(singleInstanceData, wasp_VAO, wasp_instanceVBO, 
+                wasp_vertexCount, selectedWaspShaderProgram, GL_TRIANGLES); 
+            }
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glEnable(GL_DEPTH_TEST);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 
         //DRAW GOAL
         if (uiState->drawSelectedWaspGoal && wasp->currentGoal != nullptr)
