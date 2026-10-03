@@ -112,7 +112,7 @@ class Wasp : Updatable
 		const int QUEEN_INTERACTION_TIMEOUT = 1000; 
 		int queenInteractionCountdown = 0;
 		
-		// NORMAL INTERACTION AND PRIVILEGE 
+		// NORMAL INTERACTION
 		std::chrono::steady_clock::time_point lastResourceTick;
 
 		// CONTRACT
